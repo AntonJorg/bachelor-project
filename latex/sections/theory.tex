@@ -1,0 +1,190 @@
+\section{Adversarial tree search}
+
+Consider a deterministic zero-sum two-player game as a 4-tuple 
+$G = (S, A, T, U)$, where $S$ is the set of all states, $A$ is the
+set of all actions, some of which may not be applicable in some
+states and $T: S \times A \rightarrow S$ is the transition function
+describing the result of taking a certain action in a certain state.
+Let $S^\circ \subset S$ be the set of all terminal states, 
+then $U: S^\circ \rightarrow \mathrm{R}$ is the utility function 
+associating each terminal state with a real number. Since not all
+actions are applicable in all states, let $A(s) \subseteq A$ denote
+the subset of actions that are applicable in the state $s$.
+
+To enforce the zero-sum property, the first player to take action will
+recieve a utility of $U(s)$ in terminal states, while the second player
+recieves $-U(s)$. The first player will be reffered to as the Max player,
+and the second as the Min player, as they seek to respectively maximize 
+and minimize the utility function.
+
+The question is now, given a state $s_0 \in S$, what action should
+a rational agent take? To answer this question, we model the game
+as a game tree, starting with a root node containing the current state
+$s_0$. Each node $n$ in the game tree has a set of children
+$n.children = \{ T(n.state, a) \; | \; a \in A(n.state) \}$, that
+is exactly one node for each state reachable from $n.state$ by 
+an applicable action.
+
+% Node styles
+\begin{figure}[H]
+    \centering
+    
+    \tikzset{
+    max node/.style={circle,draw,inner sep=5},
+    min node/.style={circle,draw,inner sep=5, fill=gray}
+    }
+    \begin{tikzpicture}[scale=12]
+    % Specify spacing for each level of the tree
+    \tikzstyle{level 1}=[level distance=1.7mm,sibling distance=4mm]
+    \tikzstyle{level 2}=[level distance=1.7mm,sibling distance=2mm]
+    % The Tree
+    \node(0)[max node]{$s_0$}
+    child{node(1)[min node]{$s_1$}
+        child{node[max node, label=below:{$U(s_3)=1$}]{$s_3$}
+            edge from parent node[left]{$a_0$}
+        }
+        child{node[max node, label=below:{$U(s_4)=-1$}]{$s_4$}
+            edge from parent node[right]{$a_1$}
+        }
+        edge from parent node[left]{$a_0$}
+    }
+    child{node(2)[min node]{$s_2$}
+        child{node[max node]{$s_5$}
+            child{node[min node, label=below:{$U(s_6)=0$}]{$s_6$}
+                edge from parent node[left]{$a_0$}
+            }
+            child{node[min node, label=below:{$U(s_4)=-1$}]{$s_4$}
+                edge from parent node[right]{$a_1$}
+            } 
+            edge from parent node[right]{$a_0$}
+        }
+        edge from parent node[right]{$a_1$}
+    };
+
+    \end{tikzpicture}
+
+    \caption{A simple game tree where white nodes correspond to the
+    Max player's turn, and grey nodes to the Min player's. Notice how
+    not all actions are applicable in all states, terminal states do
+    not have to be on the same depth, and a given terminal state will have
+    the same utility regardless of the path leading to it.}
+    \label{fig:game_tree}
+
+\end{figure}
+
+
+In the game from figure \ref{fig:game_tree}, it is easy to see that in
+order to maximize the utility function, the Max player should take action
+$a_1$, forcing the Min player into action $a_0$, and then taking $a_0$
+for a utility of $0$. While a higher utility is available in the subtree
+stemming from first taking $a_0$, an optimal Min player would pick $a_1$
+every time, leading to a worse outcome for Max.
+
+While it is easy to see these optimal decisions in a small game tree, even
+Tic Tac Toe has a game tree complexity (the number of nodes in the game 
+tree) on the order of $10^5$, while games like Chess and Go reach 
+$10^{123}$ and $10^{360}$ respectively. Trees of these sizes are currently
+impossible to search completely, so in order to construct a game playing
+agent based on tree search methods, it is necessary to reduce the amount
+of nodes that needs to be searched.
+
+\subsection{MiniMax}
+
+The classical approach to adversarial search, minimax builds on the
+idea of minimizing the maximum amount of utility that your opponent can
+achieve, in other words making their optimal choice as bad as possible.
+The minimax value of a state can be recursively defined as
+
+\begin{equation}
+    MiniMax(s) = \begin{cases}
+        U(s) & s \in S^\circ \\
+        \max_{a \in A(s)} MiniMax(R(s, a)) & Player(s) = Max \\
+        \min_{a \in A(s)} MiniMax(R(s, a)) & Player(s) = Min
+    \end{cases}
+    \label{eq:minimax}
+\end{equation}
+where $Player(s)$ returns the player which turn it is to take action in
+state $s$. From this optimal play can be achieved by following the policy
+given by:
+\begin{equation}
+    TakeAction(s) = \begin{cases}
+        \arg\max_{a \in A(s)} MiniMax(R(s, a)) & Player(s) = Max \\
+        \arg\min_{a \in A(s)} MiniMax(R(s, a)) & Player(s) = Min
+    \end{cases}
+    \label{eq:minimax_policy}
+\end{equation}
+This means that optimal play for the Max player simply consists of choosing
+the action which leads to the state with the highest minimax value, and
+vice versa for the Min player. The pseudocode for implementing minimax
+is as follows:
+
+\begin{algorithm}[H]
+    \caption{Pure MiniMax search}
+    \label{alg:minimax}
+    \begin{algorithmic}[1]
+    
+    \Procedure{MiniMax}{$s$}
+        \State \Return $\arg\max_{a \in A(s)}$ Min-Value(R(s, a))
+    \EndProcedure
+    \end{algorithmic}
+
+    \begin{algorithmic}[1]
+
+    \Procedure{MaxValue}{$s$}
+        \If{$s \in S^\circ$}
+            \Return $U(s)$
+        \EndIf
+        \State $v \leftarrow -\infty$
+        \For{$a \in A(s)$}
+            \State $v \leftarrow \max(v, MinValue(R(s, a)))$
+        \EndFor
+        \State \Return $v$
+    \EndProcedure
+    
+    \end{algorithmic}
+        
+    \begin{algorithmic}[1]
+
+    \Procedure{MinValue}{$s$}
+        \If{$s \in S^\circ$}
+            \Return $U(s)$
+        \EndIf
+        \State $v \leftarrow \infty$
+        \For{$a \in A(s)$}
+            \State $v \leftarrow \min(v, MaxValue(R(s, a)))$
+        \EndFor
+        \State \Return $v$
+    \EndProcedure
+
+    \end{algorithmic}
+    \end{algorithm}
+
+Since minimax is essentially a depth first
+search (DFS) with added backup of the minimax values, it has a time complexity
+of $\mathcal{O}(b^m)$ and a space complexity of $\mathcal{O}(m)$,
+where $b$ is the average number of applicable actions, also called the 
+branching factor, and $m$ is the depth of the deepest node in the game tree.
+Most notably however, is that it searches the \textit{entire}
+game tree, making it infeasible for the vast majority of games.
+
+Two main methods exist to make minimax practical on large 
+game trees: depth limited search, and $\alpha\beta$-pruning.
+These methods are compatible, and most if not all modern methods
+implement both. 
+
+The simplest of the two methods is depth limited search, which
+as the name suggests terminates the recursion at a predetermined
+depth instead of continuing to a terminal state. However, from 
+the definition of games in the beginning of this section it is
+clear that only terminal states have a utility value, so the
+algorithm has nothing to return if recursion stops earlier. To
+overcome this issue, an evaluation function 
+$E: S \rightarrow \mathbb{R}$ is introduced, representing an
+estimate of the true minimax value of the position \revise. 
+This evaluation function can be based on domain knowledge e.g.
+piece values and positioning principles in chess, it can be
+learned using neural networks, or it can be a combination of both.
+
+
+
+\subsection{MCTS}

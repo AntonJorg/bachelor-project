@@ -1,0 +1,25 @@
+\section{Generalizing search algorithms}
+
+
+
+\begin{itemize}
+    \item A selection step
+    \item An expansion step
+    \item A method for evaluating states
+    \item A backpropagation step
+    \item A backpropagation condition
+    \item A termination condition
+\end{itemize}
+
+\begin{lstlisting}
+function TreeSearch(Root)
+    while not ShouldTerminate():
+        Node = Select(Root)
+        Leaf = Expand(Node)
+        Value = Evaluate(Leaf)
+        if ShouldBackpropagate(Leaf, Value):
+            Backpropagate(Leaf, Value)
+
+    return GetBestMove(Root)
+\end{lstlisting}
+

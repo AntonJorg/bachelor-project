@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+% Optional bibliography:
+%\usepackage{biblatex}
+%\addbibresource{references.bib}
+
+
+%import aaaalll the settings:
+\input{setup/settings.tex}
+
+% Defining document information
+\title{A Generalized Approach To Search Algorithms In Games}
+\newcommand{\subtitle}{Hello}
+\newcommand{\course}{BSc Artificial Intelligence and Data}
+\date{December 2022}
+\author{Anton Thestrup Jørgensen \\ s194268}
+
+\begin{document}
+
+\pagenumbering{roman}
+
+\include{setup/title_page}
+
+\newpage
+\thispagestyle{plain}
+\input{sections/abstract}
+
+
+\newpage
+\thispagestyle{plain}
+\input{sections/preface}
+
+\newpage
+\thispagestyle{plain}
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+\input{sections/introduction}
+
+\newpage
+\input{sections/theory}
+
+\newpage
+\input{sections/generalizing}
+
+\newpage
+\input{sections/experiments}
+
+\end{document}
