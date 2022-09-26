@@ -15,9 +15,6 @@ class ConnectFourState:
     1  8 15 22 29 36 43
     0  7 14 21 28 35 42 
 
-
-
-
     """
 
     def __init__(self, width, height):
@@ -51,7 +48,7 @@ class ConnectFourState:
                 else:
                     board += ". "
             board += "\n"
-        board += f"Applicable actions: {[i + 1 for i in self.applicable_actions]}\n"
+        board += f"Applicable actions: {self.applicable_actions}\n"
         board += f"Piece mask : {bin(self.piece_mask)}\n"
         board += f"Player mask: {bin(self.player_mask)}\n"
         board += f"Moves made : {str(self.moves)}\n"
@@ -60,16 +57,19 @@ class ConnectFourState:
 
     @property
     def applicable_actions(self) -> List[int]:
-        return [i for i in range(7) if not self.piece_mask & (1 << 5 + i * 7)]
+        a = self.height - 1
+        b = self.height + 1
+        return [i for i in range(self.width) if not self.piece_mask & (1 << a + i * b)]
 
     def utility(self) -> int:
         # the winner can only be the previous player to move
         pieces = self.player_mask ^ self.piece_mask
-        previous_player = 1 if self.moves % 2 else -1
+        previous_player = 1 if self.moves % 2 else 0
 
         # horizontal
-        m = pieces & pieces >> 7
-        if m & m >> 14 > 0:
+        shift = self.height + 1
+        m = pieces & pieces >> shift
+        if m & m >> 2 * shift > 0:
             return previous_player
 
         # vertical
@@ -78,20 +78,31 @@ class ConnectFourState:
             return previous_player
 
         # diagonal
-        m = pieces & pieces >> 6
-        if m & m >> 12 > 0:
+        shift = self.height
+        m = pieces & pieces >> shift
+        if m & m >> 2 * shift > 0:
             return previous_player
 
         # antidiagonal
-        m = pieces & pieces >> 8
-        if m & m >> 16 > 0:
+        shift = self.height + 2
+        m = pieces & pieces >> shift
+        if m & m >> 2 * shift > 0:
             return previous_player
 
-        return 0
+        return 0.5
+
+    def is_terminal(self):
+        return not self.applicable_actions or self.utility() != 0.5
+
+    def copy(self) -> 'ConnectFourState':
+        new = ConnectFourState(self.width, self.height)
+        new.piece_mask = self.piece_mask
+        new.player_mask = self.player_mask
+        new.moves = self.moves
+
+        return new
 
     def visualize(self, savepath=None):
-
-        # set axis limits of plot (x=0 to 20, y=0 to 20)
         plt.axis([0, 10 * self.width, 0, 10 * self.height])
         plt.axis("off")
         plt.gca().set_aspect('equal', adjustable='box')
@@ -164,17 +175,12 @@ class ConnectFour:
 if __name__ == "__main__":
     c4 = ConnectFour()
 
-    state = c4.initial_state(5, 4)
-
-    c4.apply_many(state, "0123321001233210")
-
-    state.visualize()
+    state = c4.initial_state(7, 6)
 
     print(state)
 
-    while not state.utility():
+    while not state.is_terminal():
         action = int(input("Enter move: ")) - 1
         c4.result(state, action)
 
         print(state)
-        state.visualize()

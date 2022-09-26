@@ -137,3 +137,6 @@ dmypy.json
 *.pdf
 *.out
 *.toc
+
+# logs
+/logs
