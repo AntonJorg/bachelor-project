@@ -43,10 +43,11 @@ class TreeSearchAgent:
 
         root = TreeSearchNode(None, None, self.state)
 
-        while not self.should_terminate(self):
+        while not self.should_terminate(self, root):
             self.state = self.initial_state.copy()
             node = self.select(self, root)
             leaf = self.expand(self, node)
+            # include check here?
             value = self.evaluate(self, leaf)
             if self.should_backpropagate(self, leaf, value):
                 self.backpropagate(self, leaf, value)
@@ -64,9 +65,15 @@ class TreeSearchNode:
         self.utility = 0
         self.count = 0
         self.c = sqrt(2)
+        self.evaluated = False
 
     def __repr__(self):
-        return f"Node(action={self.generating_action}, utility={self.utility}, count={self.count})"
+        return f"Node(action={self.generating_action}, utility={self.utility}, count={self.count}, {self.evaluated})"
+
+    def print_tree(self, depth=0):
+        print(depth * "--", self)
+        for c in self.children:
+            c.print_tree(depth + 1)
 
 
 def no_op(*args):
@@ -112,6 +119,7 @@ def uct_select(agent, root):
 def expand_next(agent, node):
     if agent.state.is_terminal():
         return node
+
     action = node.unexpanded_actions.pop()
     agent.game.result(agent.state, action)
 
@@ -136,7 +144,7 @@ def most_robust_child(agent, node: TreeSearchNode):
     return sorted(node.children, key=lambda c: c.count)[-1].generating_action
 
 
-def timed_termination(agent: TreeSearchAgent):
+def timed_termination(agent: TreeSearchAgent, root):
     return time.time() - agent.start_time > agent.search_time_allowed
 
 
@@ -147,6 +155,62 @@ def backpropagate_sum(agent, node, value):
         backpropagate_sum(agent, node.parent, value)
 
 # minimax components
+
+
+def dfs_select(agent, root):
+    # TODO: A node should have at most one unevaluated child, how to utilize this?
+    unevaluated_children = [c for c in root.children if not c.evaluated]
+
+    if not unevaluated_children or agent.state.is_terminal():
+        return root
+
+    child = unevaluated_children[0]
+
+    agent.game.result(agent.state, child.generating_action)
+
+    return dfs_select(agent, child)
+
+
+def backpropagate_minimax(agent, node, value):
+    node.utility = agent.state.utility()
+    node.evaluated = True
+
+    def bp(node):
+        if all(c.evaluated for c in node.children) and not node.unexpanded_actions:
+            if agent.state.moves % 2:  # current player = min, last player = max
+                node.utility = max(c.utility for c in node.children)
+            else:
+                node.utility = min(c.utility for c in node.children)
+
+            node.evaluated = True
+
+            if node.parent:
+                agent.game.reverse(agent.state, node.generating_action)
+                bp(node.parent)
+
+    bp(node.parent)
+
+
+def when_terminal(agent, node, value):
+    return agent.state.is_terminal()
+
+
+def utility(agent, node):
+    if agent.state.is_terminal():
+        return agent.state.utility()
+    else:
+        return None
+
+
+def when_fully_evaluated(agent, root):
+    return root.evaluated
+
+
+def get_minimax_move(agent, root):
+    if agent.initial_state.moves % 2:
+        return sorted(root.children, key=lambda c: c.utility)[0].generating_action
+    else:
+        return sorted(root.children, key=lambda c: c.utility)[-1].generating_action
 
 
 def random_agent(): return TreeSearchAgent(
@@ -175,11 +239,11 @@ def mcts_agent(): return TreeSearchAgent(
 
 def minimax_agent(): return TreeSearchAgent(
     game=ConnectFour(),
-    select=no_op,
-    expand=no_op,
-    evaluate=no_op,
-    backpropagate=no_op,
-    should_backpropagate=no_op,
-    should_terminate=always,
-    get_best_move=random_move
+    select=dfs_select,
+    expand=expand_next,
+    evaluate=utility,
+    backpropagate=backpropagate_minimax,
+    should_backpropagate=when_terminal,
+    should_terminate=when_fully_evaluated,
+    get_best_move=get_minimax_move
 )

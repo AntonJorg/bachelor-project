@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 
 class ConnectFourState:
     """
-    Bitboard representation for a 7x6 board. The bits marked by dots
-    are used for denoting a full row.
+    Represents the Connect 4 board as two binary numbers; the piece mask
+    and the player mask. Each bit in the numbers correspond to a field on 
+    the board as such:
 
     .  .  .  .  .  .  .
     5 12 19 26 33 40 47
@@ -15,6 +16,15 @@ class ConnectFourState:
     1  8 15 22 29 36 43
     0  7 14 21 28 35 42 
 
+    Bitboard representation for a 7x6 board. The bits marked by dots
+    are used for denoting a full row.
+
+    The piece mask describes which fields contain a piece, and the
+    player mask describes which of those pieces belong to the current
+    player.
+
+    Though the move count could be inferred from the piece mask,
+    this state also keeps a separate move count.
     """
 
     def __init__(self, width, height):
@@ -57,44 +67,69 @@ class ConnectFourState:
 
     @property
     def applicable_actions(self) -> List[int]:
+        """
+        Returns the actions that are applicable in the current
+        state, ie. the actions corresponding to non-full rows.
+        """
         a = self.height - 1
         b = self.height + 1
         return [i for i in range(self.width) if not self.piece_mask & (1 << a + i * b)]
 
     def utility(self) -> int:
+        """
+        Returns the utility of terminal states according to the
+        following cases:
+
+            Player 1 win: 1.0
+            Player 2 win: 0.0
+            Draw        : 0.5
+
+        Even though the utility function is theoretically
+        only defined on terminal states, this implementation does not
+        check if that is the case, but will simply return 0.5 for
+        non-terminal states, as there is no winner.
+        """
         # the winner can only be the previous player to move
         pieces = self.player_mask ^ self.piece_mask
-        previous_player = 1 if self.moves % 2 else 0
+        utility_of_win = self.moves % 2
 
-        # horizontal
+        # check horizontal win
         shift = self.height + 1
         m = pieces & pieces >> shift
         if m & m >> 2 * shift > 0:
-            return previous_player
+            return utility_of_win
 
-        # vertical
+        # check vertical win
         m = pieces & pieces >> 1
         if m & m >> 2 > 0:
-            return previous_player
+            return utility_of_win
 
-        # diagonal
+        # check diagonal win
         shift = self.height
         m = pieces & pieces >> shift
         if m & m >> 2 * shift > 0:
-            return previous_player
+            return utility_of_win
 
-        # antidiagonal
+        # check antidiagonal win
         shift = self.height + 2
         m = pieces & pieces >> shift
         if m & m >> 2 * shift > 0:
-            return previous_player
+            return utility_of_win
 
+        # if no win is detected
         return 0.5
 
-    def is_terminal(self):
+    def is_terminal(self) -> bool:
+        """
+        Return True in terminal states, false otherwise.
+        A state is terminal if there is a winner, or there are no applicable actions.
+        """
         return not self.applicable_actions or self.utility() != 0.5
 
     def copy(self) -> 'ConnectFourState':
+        """
+        Return a copy of the state.
+        """
         new = ConnectFourState(self.width, self.height)
         new.piece_mask = self.piece_mask
         new.player_mask = self.player_mask
@@ -137,50 +172,56 @@ class ConnectFourState:
         plt.show()
 
 
-class ConnectFour:
-    @staticmethod
-    def initial_state(width=7, height=6):
-        return ConnectFourState(width, height)
+def result(state: ConnectFourState, action: int) -> ConnectFourState:
+    """
+    Modifies the state object to contain the result of taking
+    the given action. Also returns state for convenience.
+    """
+    state.player_mask ^= state.piece_mask
+    state.piece_mask |= state.piece_mask + \
+        (1 << action * (state.height + 1))
 
-    @staticmethod
-    def result(state: ConnectFourState, action: int) -> ConnectFourState:
-        state.player_mask ^= state.piece_mask
-        state.piece_mask |= state.piece_mask + \
-            (1 << action * (state.height + 1))
+    state.moves += 1
 
-        state.moves += 1
+    return state
 
-        return state
 
-    @staticmethod
-    def reverse(state: ConnectFourState, action: int) -> ConnectFourState:
-        col_mask = 2**(state.height + 1) - 1 << action * (state.height + 1)
+def reverse(state: ConnectFourState, action: int) -> ConnectFourState:
+    """
+    Modifies the state object to contain the result of un-making
+    the given action. Also returns state for convenience.
+    """
+    col_mask = 2**(state.height + 1) - 1 << action * (state.height + 1)
 
-        # remove most significant bit in column
-        state.piece_mask &= ~col_mask | (
-            state.piece_mask & state.piece_mask >> 1)
+    # remove most significant bit in column
+    state.piece_mask &= ~col_mask | (
+        state.piece_mask & state.piece_mask >> 1)
 
-        state.player_mask ^= state.piece_mask
-        state.moves -= 1
+    state.player_mask ^= state.piece_mask
+    state.moves -= 1
 
-        return state
+    return state
 
-    def apply_many(self, state: ConnectFourState, action_string: str) -> ConnectFourState:
-        for char in action_string:
-            action = int(char)
-            self.result(state, action)
-        return state
+
+def apply_many(state: ConnectFourState, action_string: str) -> ConnectFourState:
+    """
+    Applies the result function for each action in action_string.
+    Useful for generating positions.
+    """
+    for char in action_string:
+        action = int(char)
+        result(state, action)
+    return state
 
 
 if __name__ == "__main__":
-    c4 = ConnectFour()
 
-    state = c4.initial_state(7, 6)
+    state = ConnectFourState(7, 6)
 
     print(state)
 
     while not state.is_terminal():
         action = int(input("Enter move: ")) - 1
-        c4.result(state, action)
+        result(state, action)
 
         print(state)
