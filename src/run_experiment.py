@@ -3,7 +3,7 @@ import logging
 import json
 from tqdm import tqdm
 
-from src.connectfour import ConnectFour
+from src.connectfour import ConnectFourState, result
 from src.treesearch import random_agent, mcts_agent, minimax_agent
 
 
@@ -34,7 +34,6 @@ agent_dict = {
     "minimax": minimax_agent
 }
 
-c4 = ConnectFour()
 
 agents = [agent_dict[args.agent0](), agent_dict[args.agent1]()]
 agent0_wins = 0
@@ -50,9 +49,7 @@ for i in pbar:
 
     logging.info(f"STARTING GAME {i}")
 
-    state = c4.initial_state(5, 4)
-
-    c4.apply_many(state, "40011220")
+    state = ConnectFourState(7, 6)
 
     logging.info(state)
 
@@ -61,7 +58,7 @@ for i in pbar:
     while not state.is_terminal():
         agent_idx = state.moves % 2
         action, root = agents[agent_idx].search(state)
-        c4.result(state, action)
+        result(state, action)
         actions.append(str(action))
         logging.info(f"Root: {root}")
         logging.info("Children:")

@@ -27,7 +27,7 @@ class ConnectFourState:
     this state also keeps a separate move count.
     """
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, piece_mask=0, player_mask=0, moves=0):
         self.width = width
         self.height = height
 
@@ -35,6 +35,10 @@ class ConnectFourState:
         self.player_mask = 0
 
         self.moves = 0
+
+        self.applicable_actions = self._init_applicable_actions()
+        self.utility = self._init_utility()
+        self.is_terminal = self._init_is_terminal()
 
     def __repr__(self):
         board = "Board:\n"
@@ -65,17 +69,13 @@ class ConnectFourState:
         board += f"Winner     : {self.utility()}"
         return board
 
-    @property
-    def applicable_actions(self) -> List[int]:
+    def _init_applicable_actions(self) -> List[int]:
         """
         Returns the actions that are applicable in the current
         state, ie. the actions corresponding to non-full rows.
         """
-        a = self.height - 1
-        b = self.height + 1
-        return [i for i in range(self.width) if not self.piece_mask & (1 << a + i * b)]
 
-    def utility(self) -> int:
+    def _init_utility(self) -> int:
         """
         Returns the utility of terminal states according to the
         following cases:
@@ -119,23 +119,23 @@ class ConnectFourState:
         # if no win is detected
         return 0.5
 
-    def is_terminal(self) -> bool:
+    def _init_is_terminal(self) -> bool:
         """
         Return True in terminal states, false otherwise.
         A state is terminal if there is a winner, or there are no applicable actions.
         """
         return not self.applicable_actions or self.utility() != 0.5
 
-    def copy(self) -> 'ConnectFourState':
-        """
-        Return a copy of the state.
-        """
-        new = ConnectFourState(self.width, self.height)
-        new.piece_mask = self.piece_mask
-        new.player_mask = self.player_mask
-        new.moves = self.moves
-
-        return new
+#    def copy(self) -> 'ConnectFourState':
+#        """
+#        Return a copy of the state.
+#        """
+#        new = ConnectFourState(self.width, self.height)
+#        new.piece_mask = self.piece_mask
+#        new.player_mask = self.player_mask
+#        new.moves = self.moves
+#
+#        return new
 
     def visualize(self, savepath=None):
         plt.axis([0, 10 * self.width, 0, 10 * self.height])
@@ -174,16 +174,15 @@ class ConnectFourState:
 
 def result(state: ConnectFourState, action: int) -> ConnectFourState:
     """
-    Modifies the state object to contain the result of taking
-    the given action. Also returns state for convenience.
+
     """
-    state.player_mask ^= state.piece_mask
-    state.piece_mask |= state.piece_mask + \
+    player_mask = state.player_mask ^ state.piece_mask
+    piece_mask = state.piece_mask | state.piece_mask + \
         (1 << action * (state.height + 1))
 
     state.moves += 1
 
-    return state
+    return ConnectFourState(state.width, state.height, piece_mask, player_mask, moves + 1)
 
 
 def reverse(state: ConnectFourState, action: int) -> ConnectFourState:
@@ -210,7 +209,7 @@ def apply_many(state: ConnectFourState, action_string: str) -> ConnectFourState:
     """
     for char in action_string:
         action = int(char)
-        result(state, action)
+        state = result(state, action)
     return state
 
 

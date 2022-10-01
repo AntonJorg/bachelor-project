@@ -2,12 +2,11 @@ import random
 import time
 from math import sqrt, log
 
-from src.connectfour import ConnectFour, ConnectFourState
+from src.connectfour import ConnectFourState, result, reverse
 
 
 class TreeSearchAgent:
     def __init__(self,
-                 game: ConnectFour,
                  select: callable,
                  expand: callable,
                  evaluate: callable,
@@ -15,9 +14,6 @@ class TreeSearchAgent:
                  should_backpropagate: callable,
                  should_terminate: callable,
                  get_best_move: callable):
-
-        # environment dynamics
-        self.game = game
 
         # control functions
 
@@ -111,7 +107,7 @@ def uct_select(agent, root):
 
     best_child = sorted(root.children, key=uct)[-1]
 
-    agent.game.result(agent.state, best_child.generating_action)
+    result(agent.state, best_child.generating_action)
 
     return uct_select(agent, best_child)
 
@@ -121,7 +117,7 @@ def expand_next(agent, node):
         return node
 
     action = node.unexpanded_actions.pop()
-    agent.game.result(agent.state, action)
+    result(agent.state, action)
 
     leaf = TreeSearchNode(node, action, agent.state)
 
@@ -135,7 +131,7 @@ def simulate(agent, node):
 
     while not s.is_terminal():
         action = random.choice(s.applicable_actions)
-        agent.game.result(s, action)
+        result(s, action)
 
     return s.utility()
 
@@ -166,7 +162,7 @@ def dfs_select(agent, root):
 
     child = unevaluated_children[0]
 
-    agent.game.result(agent.state, child.generating_action)
+    result(agent.state, child.generating_action)
 
     return dfs_select(agent, child)
 
@@ -185,7 +181,7 @@ def backpropagate_minimax(agent, node, value):
             node.evaluated = True
 
             if node.parent:
-                agent.game.reverse(agent.state, node.generating_action)
+                reverse(agent.state, node.generating_action)
                 bp(node.parent)
 
     bp(node.parent)
@@ -214,7 +210,6 @@ def get_minimax_move(agent, root):
 
 
 def random_agent(): return TreeSearchAgent(
-    game=ConnectFour(),
     select=no_op,
     expand=no_op,
     evaluate=no_op,
@@ -226,7 +221,6 @@ def random_agent(): return TreeSearchAgent(
 
 
 def mcts_agent(): return TreeSearchAgent(
-    game=ConnectFour(),
     select=uct_select,
     expand=expand_next,
     evaluate=simulate,
@@ -238,7 +232,6 @@ def mcts_agent(): return TreeSearchAgent(
 
 
 def minimax_agent(): return TreeSearchAgent(
-    game=ConnectFour(),
     select=dfs_select,
     expand=expand_next,
     evaluate=utility,
