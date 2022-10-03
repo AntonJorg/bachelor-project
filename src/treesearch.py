@@ -25,34 +25,30 @@ class TreeSearchAgent:
         self.should_terminate = should_terminate
         self.get_best_move = get_best_move
 
-        # additional variables
-
-        self.start_time = None
-        self.search_time_allowed = 2
-        self.state = None
-        self.initial_state = None
-
     def search(self, state):
-        self.state = state.copy()
-        self.initial_state = state.copy()
-        self.start_time = time.time()
+        self.reset()
 
-        root = TreeSearchNode(None, None, self.state)
+        root = TreeSearchNode(state, None, None)
 
-        while not self.should_terminate(self, root):
-            self.state = self.initial_state.copy()
-            node = self.select(self, root)
-            leaf = self.expand(self, node)
+        while not self.should_terminate(root):
+            node = self.select(root)
+            leaf = self.expand(node)
             # include check here?
-            value = self.evaluate(self, leaf)
-            if self.should_backpropagate(self, leaf, value):
-                self.backpropagate(self, leaf, value)
+            value = self.evaluate(leaf)
+            if self.should_backpropagate(leaf, value):
+                self.backpropagate(leaf, value)
 
-        return self.get_best_move(self, root), root
+        return self.get_best_move(root), root
+
+    def reset(self):
+        for v in self.__dict__.values():
+            if hasattr(v, "reset"):
+                v.reset()
 
 
 class TreeSearchNode:
-    def __init__(self, parent, generating_action, state):
+    def __init__(self, state, parent, generating_action):
+        self.state = state
         self.parent = parent
         self.generating_action = generating_action
         self.unexpanded_actions = state.applicable_actions
@@ -60,7 +56,6 @@ class TreeSearchNode:
 
         self.utility = 0
         self.count = 0
-        self.c = sqrt(2)
         self.evaluated = False
 
     def __repr__(self):
@@ -88,18 +83,17 @@ def random_move(agent, root):
     return random.choice(agent.initial_state.applicable_actions)
 
 
-# mcts components
+# select functions
 
-def uct_select(agent, root):
-    if root.unexpanded_actions or agent.state.is_terminal():
+def uct_select(root):
+    if root.unexpanded_actions or root.state.is_terminal:
         return root
 
     def uct(node):
-        if agent.state.moves % 2:
-            exploit = (node.count - node.utility) / node.count
-
-        else:
+        if node.state.moves % 2:
             exploit = node.utility / node.count
+        else:
+            exploit = (node.count - node.utility) / node.count
 
         explore = sqrt(2) * sqrt(log(root.count) / node.count)
 
@@ -107,50 +101,7 @@ def uct_select(agent, root):
 
     best_child = sorted(root.children, key=uct)[-1]
 
-    result(agent.state, best_child.generating_action)
-
-    return uct_select(agent, best_child)
-
-
-def expand_next(agent, node):
-    if agent.state.is_terminal():
-        return node
-
-    action = node.unexpanded_actions.pop()
-    result(agent.state, action)
-
-    leaf = TreeSearchNode(node, action, agent.state)
-
-    node.children.append(leaf)
-
-    return leaf
-
-
-def simulate(agent, node):
-    s = agent.state.copy()
-
-    while not s.is_terminal():
-        action = random.choice(s.applicable_actions)
-        result(s, action)
-
-    return s.utility()
-
-
-def most_robust_child(agent, node: TreeSearchNode):
-    return sorted(node.children, key=lambda c: c.count)[-1].generating_action
-
-
-def timed_termination(agent: TreeSearchAgent, root):
-    return time.time() - agent.start_time > agent.search_time_allowed
-
-
-def backpropagate_sum(agent, node, value):
-    if node is not None:
-        node.utility += value
-        node.count += 1
-        backpropagate_sum(agent, node.parent, value)
-
-# minimax components
+    return uct_select(best_child)
 
 
 def dfs_select(agent, root):
@@ -167,13 +118,56 @@ def dfs_select(agent, root):
     return dfs_select(agent, child)
 
 
-def backpropagate_minimax(agent, node, value):
-    node.utility = agent.state.utility()
+# expand functions
+
+def expand_next(node):
+    if node.state.is_terminal:
+        return node
+
+    action = node.unexpanded_actions.pop()
+    state = result(node.state, action)
+
+    leaf = TreeSearchNode(state, node, action)
+    node.children.append(leaf)
+
+    return leaf
+
+
+# evaluate functions
+
+def utility(node):
+    if node.state.is_terminal:
+        return agent.state.utility
+    else:
+        return None
+
+
+def simulate(node):
+    state = node.state
+
+    while not state.is_terminal:
+        action = random.choice(state.applicable_actions)
+        state = result(state, action)
+
+    return state.utility
+
+# backpropagate functions
+
+
+def backpropagate_sum(node, value):
+    if node is not None:
+        node.utility += value
+        node.count += 1
+        backpropagate_sum(node.parent, value)
+
+
+def backpropagate_minimax(node, value):
+    node.utility = state.utility
     node.evaluated = True
 
     def bp(node):
         if all(c.evaluated for c in node.children) and not node.unexpanded_actions:
-            if agent.state.moves % 2:  # current player = min, last player = max
+            if node.state.moves % 2:  # current player = min, last player = max
                 node.utility = max(c.utility for c in node.children)
             else:
                 node.utility = min(c.utility for c in node.children)
@@ -181,35 +175,49 @@ def backpropagate_minimax(agent, node, value):
             node.evaluated = True
 
             if node.parent:
-                reverse(agent.state, node.generating_action)
                 bp(node.parent)
 
     bp(node.parent)
 
 
-def when_terminal(agent, node, value):
-    return agent.state.is_terminal()
+# should_backpropagate functions
+
+def when_terminal(node, value):
+    return node.state.is_terminal()
 
 
-def utility(agent, node):
-    if agent.state.is_terminal():
-        return agent.state.utility()
-    else:
-        return None
+# should_terminate functions
+
+class timed_termination:
+    def __init__(self, search_time):
+        self.start_time = None
+        self.search_time = search_time
+
+    def __call__(self, *args):
+        return time.time() - self.start_time > self.search_time
+
+    def reset(self):
+        self.start_time = time.time()
 
 
 def when_fully_evaluated(agent, root):
     return root.evaluated
 
 
-def get_minimax_move(agent, root):
-    if agent.initial_state.moves % 2:
+# get_best_move functions
+
+def get_minimax_move(root: TreeSearchNode) -> int:
+    if root.state.moves % 2:
         return sorted(root.children, key=lambda c: c.utility)[0].generating_action
     else:
         return sorted(root.children, key=lambda c: c.utility)[-1].generating_action
 
 
-def random_agent(): return TreeSearchAgent(
+def most_robust_child(root: TreeSearchNode) -> int:
+    return sorted(root.children, key=lambda c: c.count)[-1].generating_action
+
+
+def random_agent(t): return TreeSearchAgent(
     select=no_op,
     expand=no_op,
     evaluate=no_op,
@@ -220,18 +228,18 @@ def random_agent(): return TreeSearchAgent(
 )
 
 
-def mcts_agent(): return TreeSearchAgent(
+def mcts_agent(t): return TreeSearchAgent(
     select=uct_select,
     expand=expand_next,
     evaluate=simulate,
     backpropagate=backpropagate_sum,
     should_backpropagate=always,
-    should_terminate=timed_termination,
+    should_terminate=timed_termination(t),
     get_best_move=most_robust_child
 )
 
 
-def minimax_agent(): return TreeSearchAgent(
+def minimax_agent(t): return TreeSearchAgent(
     select=dfs_select,
     expand=expand_next,
     evaluate=utility,
@@ -240,3 +248,7 @@ def minimax_agent(): return TreeSearchAgent(
     should_terminate=when_fully_evaluated,
     get_best_move=get_minimax_move
 )
+
+
+if __name__ == "__main__":
+    agent = mcts_agent(1)

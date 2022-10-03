@@ -31,10 +31,10 @@ class ConnectFourState:
         self.width = width
         self.height = height
 
-        self.piece_mask = 0
-        self.player_mask = 0
+        self.piece_mask = piece_mask
+        self.player_mask = player_mask
 
-        self.moves = 0
+        self.moves = moves
 
         self.applicable_actions = self._init_applicable_actions()
         self.utility = self._init_utility()
@@ -66,7 +66,7 @@ class ConnectFourState:
         board += f"Piece mask : {bin(self.piece_mask)}\n"
         board += f"Player mask: {bin(self.player_mask)}\n"
         board += f"Moves made : {str(self.moves)}\n"
-        board += f"Winner     : {self.utility()}"
+        board += f"Winner     : {self.utility}"
         return board
 
     def _init_applicable_actions(self) -> List[int]:
@@ -74,6 +74,9 @@ class ConnectFourState:
         Returns the actions that are applicable in the current
         state, ie. the actions corresponding to non-full rows.
         """
+        a = self.height - 1
+        b = self.height + 1
+        return [i for i in range(self.width) if not self.piece_mask & (1 << a + i * b)]
 
     def _init_utility(self) -> int:
         """
@@ -124,7 +127,7 @@ class ConnectFourState:
         Return True in terminal states, false otherwise.
         A state is terminal if there is a winner, or there are no applicable actions.
         """
-        return not self.applicable_actions or self.utility() != 0.5
+        return not self.applicable_actions or self.utility != 0.5
 
 #    def copy(self) -> 'ConnectFourState':
 #        """
@@ -180,9 +183,7 @@ def result(state: ConnectFourState, action: int) -> ConnectFourState:
     piece_mask = state.piece_mask | state.piece_mask + \
         (1 << action * (state.height + 1))
 
-    state.moves += 1
-
-    return ConnectFourState(state.width, state.height, piece_mask, player_mask, moves + 1)
+    return ConnectFourState(state.width, state.height, piece_mask, player_mask, state.moves + 1)
 
 
 def reverse(state: ConnectFourState, action: int) -> ConnectFourState:

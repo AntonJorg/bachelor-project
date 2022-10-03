@@ -1,6 +1,8 @@
+import os
 import argparse
 import logging
 import json
+from datetime import datetime
 from tqdm import tqdm
 
 from src.connectfour import ConnectFourState, result
@@ -20,13 +22,26 @@ parser.add_argument(
 
 args = parser.parse_args()
 
+
+time_string = datetime.now().strftime("%y%m%d-%H%M%S")
+base_filename = os.path.join("logs", time_string)
+
+
 logging.basicConfig(
-    filename='example.log',
+    filename=f'{base_filename}.log',
     encoding='utf-8',
     filemode="w",
     level=logging.DEBUG,
     format='%(asctime)s %(levelname)s: %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 
+
+print("STARTING EXPERIMENT...")
+print("Configuration:")
+print(args)
+print("Logs will be stored in:")
+print(f"{base_filename}.log")
+print(f"{base_filename}.json")
+print("Progress:")
 
 agent_dict = {
     "random": random_agent,
@@ -35,7 +50,7 @@ agent_dict = {
 }
 
 
-agents = [agent_dict[args.agent0](), agent_dict[args.agent1]()]
+agents = [agent_dict[args.agent0](args.t), agent_dict[args.agent1](args.t)]
 agent0_wins = 0
 agent1_wins = 0
 draws = 0
@@ -55,10 +70,10 @@ for i in pbar:
 
     actions = []
 
-    while not state.is_terminal():
+    while not state.is_terminal:
         agent_idx = state.moves % 2
         action, root = agents[agent_idx].search(state)
-        result(state, action)
+        state = result(state, action)
         actions.append(str(action))
         logging.info(f"Root: {root}")
         logging.info("Children:")
@@ -69,9 +84,9 @@ for i in pbar:
 
     games.append("".join(actions))
 
-    if state.utility() == 1:
+    if state.utility == 1:
         agent0_wins += 1
-    elif state.utility() == 0:
+    elif state.utility == 0:
         agent1_wins += 1
     else:
         draws += 1
@@ -83,7 +98,7 @@ logging.info(
     f"Player 2: {agent1_wins / args.iterations * 100:.2f}% ({agent1_wins} wins)")
 logging.info(f"Draws   : {draws / args.iterations * 100:.2f}% ({draws} games)")
 
-with open('example.json', 'w') as json_file:
+with open(f'{base_filename}.json', 'w') as json_file:
     json.dump(
         {
             "p1_wins": agent0_wins,
