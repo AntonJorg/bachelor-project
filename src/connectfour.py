@@ -17,7 +17,8 @@ class ConnectFourState:
     0  7 14 21 28 35 42 
 
     Bitboard representation for a 7x6 board. The bits marked by dots
-    are used for denoting a full row.
+    are left blank to prevent a four in a row from the top of one row
+    to the bottom of the next.
 
     The piece mask describes which fields contain a piece, and the
     player mask describes which of those pieces belong to the current
@@ -63,14 +64,16 @@ class ConnectFourState:
                     board += ". "
             board += "\n"
         board += f"Applicable actions: {self.applicable_actions}\n"
-        board += f"Piece mask : {bin(self.piece_mask)}\n"
-        board += f"Player mask: {bin(self.player_mask)}\n"
+        board += f"Piece mask : {self.piece_mask:0{(self.height + 1) * self.width}b}\n"
+        board += f"Player mask: {self.player_mask:0{(self.height + 1) * self.width}b}\n"
         board += f"Moves made : {str(self.moves)}\n"
-        board += f"Winner     : {self.utility}"
+        board += f"Winner     : {None if self.utility == 0.5 else (1 if self.utility else 2)}"
         return board
 
     def _init_applicable_actions(self) -> List[int]:
         """
+        The set A(s).
+
         Returns the actions that are applicable in the current
         state, ie. the actions corresponding to non-full rows.
         """
@@ -80,6 +83,8 @@ class ConnectFourState:
 
     def _init_utility(self) -> int:
         """
+        The utility function U: S^o -> R.
+
         Returns the utility of terminal states according to the
         following cases:
 
@@ -96,88 +101,31 @@ class ConnectFourState:
         pieces = self.player_mask ^ self.piece_mask
         utility_of_win = self.moves % 2
 
-        # check horizontal win
-        shift = self.height + 1
-        m = pieces & pieces >> shift
-        if m & m >> 2 * shift > 0:
-            return utility_of_win
+        # size of bit shift needed to check consecutive pieces in
+        # the vertical, horizontal, diagonal, and anti-diagonal direction
+        shifts = [self.height + 1, 1, self.height, self.height + 2]
 
-        # check vertical win
-        m = pieces & pieces >> 1
-        if m & m >> 2 > 0:
-            return utility_of_win
-
-        # check diagonal win
-        shift = self.height
-        m = pieces & pieces >> shift
-        if m & m >> 2 * shift > 0:
-            return utility_of_win
-
-        # check antidiagonal win
-        shift = self.height + 2
-        m = pieces & pieces >> shift
-        if m & m >> 2 * shift > 0:
-            return utility_of_win
+        for shift in shifts:
+            m = pieces & pieces >> shift
+            if m & m >> 2 * shift > 0:
+                return utility_of_win
 
         # if no win is detected
         return 0.5
 
     def _init_is_terminal(self) -> bool:
         """
+        Whether s is a member of S^o
+
         Return True in terminal states, false otherwise.
         A state is terminal if there is a winner, or there are no applicable actions.
         """
         return not self.applicable_actions or self.utility != 0.5
 
-#    def copy(self) -> 'ConnectFourState':
-#        """
-#        Return a copy of the state.
-#        """
-#        new = ConnectFourState(self.width, self.height)
-#        new.piece_mask = self.piece_mask
-#        new.player_mask = self.player_mask
-#        new.moves = self.moves
-#
-#        return new
-
-    def visualize(self, savepath=None):
-        plt.axis([0, 10 * self.width, 0, 10 * self.height])
-        plt.axis("off")
-        plt.gca().set_aspect('equal', adjustable='box')
-
-        r = plt.Rectangle((0, 0), 10 * self.width, 10 *
-                          self.height, color="grey")
-        plt.gca().add_artist(r)
-
-        for i in range(self.height - 1, -1, -1):
-            for j in range(self.width):
-                idx = i + j * (self.height + 1)
-                if self.piece_mask & 1 << idx:
-
-                    # TODO: REFACTOR
-
-                    if (self.player_mask & 1 << idx):
-                        if self.moves % 2:
-                            c = "r"
-                        else:
-                            c = "b"
-                    else:
-                        if self.moves % 2:
-                            c = "b"
-                        else:
-                            c = "r"
-                else:
-                    c = "w"
-
-                c = plt.Circle((5 + 10 * j, 5 + 10 * i), radius=4, color=c)
-                plt.gca().add_artist(c)
-
-        plt.show()
-
 
 def result(state: ConnectFourState, action: int) -> ConnectFourState:
     """
-
+    The result function R: S x A -> S
     """
     player_mask = state.player_mask ^ state.piece_mask
     piece_mask = state.piece_mask | state.piece_mask + \
@@ -220,8 +168,8 @@ if __name__ == "__main__":
 
     print(state)
 
-    while not state.is_terminal():
+    while not state.is_terminal:
         action = int(input("Enter move: ")) - 1
-        result(state, action)
+        state = result(state, action)
 
         print(state)

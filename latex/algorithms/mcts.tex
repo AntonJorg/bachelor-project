@@ -1,0 +1,73 @@
+
+\begin{algorithm}[H]
+    \caption{Monte Carlo Tree Search}
+    \label{alg:mcts}
+    \begin{algorithmic}[1]
+    
+    \Procedure{MCTS}{$s$}
+        \State Root = MCTSTreeNode($s$)
+        \While{\textbf{not} ShouldTerminate()}
+            \State Node = Select(Root)
+            \State Leaf = Expand(Node)
+            \State Value = Simulate(Leaf)
+            \State Backpropagate(Value, Leaf)
+        \EndWhile
+        \State \Return MostRobustChild(Root)
+    \EndProcedure
+    \end{algorithmic}
+
+    \begin{algorithmic}[1]
+
+    \Procedure{Select}{Node}
+        \If{$\text{Node.State} \in S^\circ$ \textbf{or} 
+        $\text{Node.UnexpandedActions}$}
+            \State \Return Node
+        \EndIf
+        
+        \State Child = 
+        $\text{arg}\max \{ \text{UCB1}(c) \;|\; c \in \text{Node.Children} \}$ 
+
+        \State \Return Select(Child)
+    \EndProcedure
+    
+    \end{algorithmic}
+        
+    \begin{algorithmic}[1]
+
+    \Procedure{Expand}{Node}
+        \If{$\text{Node.State} \in S^\circ$ \textbf{or not} 
+        $\text{Node.UnexpandedActions}$}        
+            \State \Return Node
+        \EndIf
+        \State Action = Node.UnexpandedActions.Pop()
+        \State Leaf = MCTSTreeNode(Result(Node.State, Action))
+        \State Node.Children.Append(Leaf)
+        \State \Return Leaf
+    \EndProcedure
+    \end{algorithmic}
+
+    \begin{algorithmic}[1]
+    \Procedure{Simulate}{Node}
+        \State State = Node.State
+        \While{\textbf{not} State $\in S^\circ$}
+            \State Action = ChooseRandom(A(State))
+            \State State = Result(State, Action)
+        \EndWhile
+        \State \Return U(State)
+    \EndProcedure
+    \end{algorithmic}
+
+    \begin{algorithmic}[1]
+
+    \Procedure{Expand}{Node}
+        \If{$\text{Node.State} \in S^\circ$ \textbf{or not} 
+        $\text{Node.UnexpandedActions}$}        
+            \State \Return Node
+        \EndIf
+        \State Action = Node.UnexpandedActions.Pop()
+        \State Leaf = MCTSTreeNode(Result(Node.State, Action))
+        \State Node.Children.Append(Leaf)
+        \State \Return Leaf
+    \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

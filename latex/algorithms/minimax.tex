@@ -1,0 +1,40 @@
+\begin{algorithm}[H]
+    \caption{Pure MiniMax search}
+    \label{alg:minimax}
+    \begin{algorithmic}[1]
+    
+    \Procedure{MiniMax}{$s$}
+        \State \Return $\arg\max_{a \in A(s)}$ Min-Value(R(s, a))
+    \EndProcedure
+    \end{algorithmic}
+
+    \begin{algorithmic}[1]
+
+    \Procedure{MaxValue}{$s$}
+        \If{$s \in S^\circ$}
+            \Return $U(s)$
+        \EndIf
+        \State $v \leftarrow -\infty$
+        \For{$a \in A(s)$}
+            \State $v \leftarrow \max(v, MinValue(R(s, a)))$
+        \EndFor
+        \State \Return $v$
+    \EndProcedure
+    
+    \end{algorithmic}
+        
+    \begin{algorithmic}[1]
+
+    \Procedure{MinValue}{$s$}
+        \If{$s \in S^\circ$}
+            \Return $U(s)$
+        \EndIf
+        \State $v \leftarrow \infty$
+        \For{$a \in A(s)$}
+            \State $v \leftarrow \min(v, MaxValue(R(s, a)))$
+        \EndFor
+        \State \Return $v$
+    \EndProcedure
+
+    \end{algorithmic}
+\end{algorithm}

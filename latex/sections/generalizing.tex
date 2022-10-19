@@ -11,15 +11,67 @@
     \item A termination condition
 \end{itemize}
 
+
+\input{tikz/generalloop}
+
+
 \begin{lstlisting}
 function TreeSearch(Root)
     while not ShouldTerminate():
         Node = Select(Root)
         Leaf = Expand(Node)
-        Value = Evaluate(Leaf)
-        if ShouldBackpropagate(Leaf, Value):
+        if ShouldEvaluate(Leaf):
+            Value = Evaluate(Leaf)
             Backpropagate(Leaf, Value)
 
     return GetBestMove(Root)
 \end{lstlisting}
 
+\begin{lstlisting}
+    function TreeSearch(Root)
+        while not ShouldTerminate():
+            Node = Select(Root)
+            Leaf = Expand(Node)
+            if ShouldEvaluate(Leaf):
+                Value = Evaluate(Leaf)
+                if ShouldBackpropagate(Leaf, Value):
+                    Backpropagate(Leaf, Value)
+    
+        return GetBestMove(Root)
+\end{lstlisting}
+
+\begin{lstlisting}
+    function TreeSearch(Root)
+        while not ShouldTerminate():
+            Node = Select(Root)
+            Leaf = Expand(Node)
+            if ShouldEvaluate(Leaf):
+                Value = Evaluate(Leaf)
+                if ShouldBackpropagate(Leaf, Value):
+                    Backpropagate(Leaf, Value)
+            Reflect(Root)
+
+        return GetBestMove(Root)
+\end{lstlisting}
+    
+
+
+\subsection{Selection and expansion}
+
+Select function cannot have any side effects.
+
+Expand can only modify the input node (and queues / stacks).
+
+
+\subsection{Evaluation and backpropagation}
+Evaluation is a pure function.
+
+Backpropagation must only change internal values of nodes, not
+tree structure.
+
+\subsection{Reflection}
+
+
+\subsection{Conditionals}
+
+\subsection{Move selection}

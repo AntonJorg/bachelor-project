@@ -25,53 +25,7 @@ $n.children = \{ T(n.state, a) \; | \; a \in A(n.state) \}$, that
 is exactly one node for each state reachable from $n.state$ by 
 an applicable action.
 
-% Node styles
-\begin{figure}[H]
-    \centering
-    
-    \tikzset{
-    max node/.style={circle,draw,inner sep=5},
-    min node/.style={circle,draw,inner sep=5, fill=gray}
-    }
-    \begin{tikzpicture}[scale=12]
-    % Specify spacing for each level of the tree
-    \tikzstyle{level 1}=[level distance=1.7mm,sibling distance=4mm]
-    \tikzstyle{level 2}=[level distance=1.7mm,sibling distance=2mm]
-    % The Tree
-    \node(0)[max node]{$s_0$}
-    child{node(1)[min node]{$s_1$}
-        child{node[max node, label=below:{$U(s_3)=1$}]{$s_3$}
-            edge from parent node[left]{$a_0$}
-        }
-        child{node[max node, label=below:{$U(s_4)=-1$}]{$s_4$}
-            edge from parent node[right]{$a_1$}
-        }
-        edge from parent node[left]{$a_0$}
-    }
-    child{node(2)[min node]{$s_2$}
-        child{node[max node]{$s_5$}
-            child{node[min node, label=below:{$U(s_6)=0$}]{$s_6$}
-                edge from parent node[left]{$a_0$}
-            }
-            child{node[min node, label=below:{$U(s_4)=-1$}]{$s_4$}
-                edge from parent node[right]{$a_1$}
-            } 
-            edge from parent node[right]{$a_0$}
-        }
-        edge from parent node[right]{$a_1$}
-    };
-
-    \end{tikzpicture}
-
-    \caption{A simple game tree where white nodes correspond to the
-    Max player's turn, and grey nodes to the Min player's. Notice how
-    not all actions are applicable in all states, terminal states do
-    not have to be on the same depth, and a given terminal state will have
-    the same utility regardless of the path leading to it.}
-    \label{fig:game_tree}
-
-\end{figure}
-
+\input{tikz/gametree.tex}
 
 In the game from figure \ref{fig:game_tree}, it is easy to see that in
 order to maximize the utility function, the Max player should take action
@@ -118,46 +72,7 @@ the action which leads to the state with the highest minimax value, and
 vice versa for the Min player. The pseudocode for implementing minimax
 is as follows:
 
-\begin{algorithm}[H]
-    \caption{Pure MiniMax search}
-    \label{alg:minimax}
-    \begin{algorithmic}[1]
-    
-    \Procedure{MiniMax}{$s$}
-        \State \Return $\arg\max_{a \in A(s)}$ Min-Value(R(s, a))
-    \EndProcedure
-    \end{algorithmic}
-
-    \begin{algorithmic}[1]
-
-    \Procedure{MaxValue}{$s$}
-        \If{$s \in S^\circ$}
-            \Return $U(s)$
-        \EndIf
-        \State $v \leftarrow -\infty$
-        \For{$a \in A(s)$}
-            \State $v \leftarrow \max(v, MinValue(R(s, a)))$
-        \EndFor
-        \State \Return $v$
-    \EndProcedure
-    
-    \end{algorithmic}
-        
-    \begin{algorithmic}[1]
-
-    \Procedure{MinValue}{$s$}
-        \If{$s \in S^\circ$}
-            \Return $U(s)$
-        \EndIf
-        \State $v \leftarrow \infty$
-        \For{$a \in A(s)$}
-            \State $v \leftarrow \min(v, MaxValue(R(s, a)))$
-        \EndFor
-        \State \Return $v$
-    \EndProcedure
-
-    \end{algorithmic}
-    \end{algorithm}
+\input{algorithms/minimax}
 
 Since minimax is essentially a depth first
 search (DFS) with added backup of the minimax values, it has a time complexity
@@ -184,7 +99,119 @@ estimate of the true minimax value of the position \revise.
 This evaluation function can be based on domain knowledge e.g.
 piece values and positioning principles in chess, it can be
 learned using neural networks, or it can be a combination of both.
+Since the algorithm no longer searches the entire game tree and
+uses an approximation for the minimax value, it is no longer
+guaranteed optimal, but can still produce strong play with a good
+evaluation function.
 
+$\alpha\beta$-pruning can be thought of as a simplification of
+the minimax formula that is applicable in certain cases, and
+as such it still guarantees optimality. Consider the following
+example:
+\begin{align*}
+    Minimax(s) &= \max(MiniMax(R(s, a_0)), MiniMax(R(s, a_1)), 
+    MiniMax(R(s, a_2))) \\
+    &= \max(\min(5, 12, 8), \min(x_0, 1, x_1), \min(12, x_2, 4)) \\
+    &= \max(5, y_0, y_1), \;\; y_0 \leq 1, \; y_1 \leq 4 \\
+    &= 5
+\end{align*}
+On the second line some values are missing, but the values that are present
+can be used to set an upper bound for their corresponding $\min$ statements,
+which in turn can be used to determine the value of the $\max$ statement.
+This method can be used all throughout the minimax algorithm, potentially
+cutting off huge subtrees from the search space, allowing it to search much
+deeper. Since the example is very shallow, it does not illustrate this 
+to full effect, but if the actions are expanded in the optimal order, 
+$\alpha\beta$-pruning has a time complexity of $\mathcal{O}(b^{m/2})$, which
+compared to minimax's $\mathcal{O}(b^{m})$ lets $\alpha\beta$-pruning search
+twice as deep in the same time. In practice the actions cannot be expanded
+in the optimal order since an optimal ordering could be used to play the
+game optimally, but existing methods can get quite close to the theoretical
+limit \needcit.
 
+\input{algorithms/alphabeta}
 
-\subsection{MCTS}
+\subsection{Monte Carlo Tree Search}
+
+Monte Carlo methods in AI rely on information from many simulated games 
+played with randomly selected actions to guide decision making in the 
+current state. In its most basic form, Monte Carlo sampling generates
+all successors $\{ Result(s, a) \;|\; a \in A(s) \}$ of the current
+state, and simulates multiple games starting from each successor state
+until the budget runs out. These simulated games are called rollouts,
+and the budget can either be a fixed number of rollouts, or a time
+limit. When the budget runs out, the action leading to the successor
+state with the highest average utility is chosen as the next action.
+
+\input{tikz/montecarlosampling}
+
+Monte Carlo Tree Search (MCTS) expands the classical idea of Monte Carlo
+sampling by expanding a partial game tree containing the results of
+the simulations, and using these results to guide further simulations.
+Nodes in the game tree store the following information:
+
+\begin{lstlisting}
+class MCTSTreeNode:
+    State: GameState
+    Count: Number
+    Utility: Number
+    Children: MCTSTreeNode[]
+    UnexpandedActions: GameAction[]
+\end{lstlisting}
+
+At creation, each nodes \lstinline|UnexpandedActions| list is initialized
+with the applicable actions from its \lstinline|State|. To build up the 
+game tree, a root \lstinline|MCTSTreeNode| is created containing the 
+current game state, and then each iteration of the algorithm goes through 
+the following steps:
+
+\begin{enumerate}
+    \item Select
+    \item Expand
+    \item Simulate
+    \item Backpropagate
+\end{enumerate}
+
+\textbf{Select:} The selection step starts in the root of the tree,
+and progresses recursively down through the tree using the following
+rules: If the node contains a terminal state, or the node still has
+unexpanded actions, return the node. Otherwise, run the selection
+step again on the child with the highest $UCB1$ value:
+
+\begin{equation}
+    \text{UCB1}(Node) = \frac{Utility}{Count} + 
+    c\sqrt{\frac{\log{Parent.Count}}{Count}}
+\end{equation}
+
+The first term in UCB1 is called the exploitation term, and represents
+an estimate of the utility of the node. This makes sure that the algorithm
+gravitates toward states with a high utility. The second term is the
+exploration term, which increases the value of nodes that have not been
+picked much compared to their parents. This prevents the algorithm from
+getting stuck on suboptimal nodes in case the initial few rollouts from
+the parent are a bad estimation of their true utility. The application
+of UCB1 on trees is usually called UCT, or Upper Confidence bounds on Trees.
+
+\textbf{Expand:} In the expansion step, the selected node is expanded by 
+popping an action from \lstinline|UnexpandedActions|, and adding a child 
+node containing the successor state corresponding to that action. This
+child node is then also returned. If the selected node contains a terminal 
+state or has no unexpanded actions, the selected node is returned instead.
+
+\textbf{Simulate:} Starting from the state in the expanded node, a rollout
+is performed. As previously noted, a rollout consists of taking random
+actions until a terminal state is reached, and then returning the utility
+of that state.
+
+\textbf{Backpropagate:} Starting at the expanded node, \lstinline|Count| is 
+incremented by $1$. If it is the Max players turn to move in 
+\lstinline|State|, \lstinline|Utility| is incremented by the utility
+returned in the simulation step, otherwise it is incremented by $1$ minus
+that utility. This is to keep the UCT algorithm from having to switch
+signs for the different players.
+
+\input{tikz/mcts}
+
+An implementation of the MCTS algorithm can look like this:
+
+\input{algorithms/mcts}
