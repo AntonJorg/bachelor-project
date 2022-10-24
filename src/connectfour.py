@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List
 import matplotlib.pyplot as plt
 
@@ -28,7 +29,7 @@ class ConnectFourState:
     this state also keeps a separate move count.
     """
 
-    def __init__(self, width, height, piece_mask=0, player_mask=0, moves=0):
+    def __init__(self, width, height, piece_mask=0, player_mask=0, moves=0, action_sequence=""):
         self.width = width
         self.height = height
 
@@ -36,6 +37,7 @@ class ConnectFourState:
         self.player_mask = player_mask
 
         self.moves = moves
+        self.action_sequence = action_sequence
 
         self.applicable_actions = self._init_applicable_actions()
         self.utility = self._init_utility()
@@ -67,6 +69,7 @@ class ConnectFourState:
         board += f"Piece mask : {self.piece_mask:0{(self.height + 1) * self.width}b}\n"
         board += f"Player mask: {self.player_mask:0{(self.height + 1) * self.width}b}\n"
         board += f"Moves made : {str(self.moves)}\n"
+        board += f"Move string: {self.action_sequence}\n"
         board += f"Winner     : {None if self.utility == 0.5 else (1 if self.utility else 2)}"
         return board
 
@@ -76,10 +79,16 @@ class ConnectFourState:
 
         Returns the actions that are applicable in the current
         state, ie. the actions corresponding to non-full rows.
+        Sorted from the middle out, examples:
+        
+        Unsorted:          Return value
+        [0, 1, 2, 3, 4] -> [0, 4, 1, 3, 2]
+        [0, 1, 2, 3]    -> [0, 3, 1, 2]
         """
         a = self.height - 1
         b = self.height + 1
-        return [i for i in range(self.width) if not self.piece_mask & (1 << a + i * b)]
+        moves = (i for i in range(self.width) if not self.piece_mask & (1 << a + i * b))
+        return sorted(moves, key=lambda x: -abs(x - self.width//2 + .1))
 
     def _init_utility(self) -> int:
         """
@@ -94,7 +103,7 @@ class ConnectFourState:
 
         Even though the utility function is theoretically
         only defined on terminal states, this implementation does not
-        check if that is the case, but will simply return 0.5 for
+        check if that is the case, but will return 0.5 for
         non-terminal states, as there is no winner.
         """
         # the winner can only be the previous player to move
@@ -131,7 +140,7 @@ def result(state: ConnectFourState, action: int) -> ConnectFourState:
     piece_mask = state.piece_mask | state.piece_mask + \
         (1 << action * (state.height + 1))
 
-    return ConnectFourState(state.width, state.height, piece_mask, player_mask, state.moves + 1)
+    return ConnectFourState(state.width, state.height, piece_mask, player_mask, state.moves + 1, state.action_sequence + str(action))
 
 
 def reverse(state: ConnectFourState, action: int) -> ConnectFourState:
