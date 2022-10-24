@@ -9,16 +9,15 @@ from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map
 
 from src.connectfour import ConnectFourState, result
-from src.treesearch import random_agent, mcts_agent, minimax_agent
+from src.agents import agents
 
+agent_dict = {agent.__name__: agent for agent in agents}
 
 # define command line arguments
 parser = argparse.ArgumentParser(description='Run a number of Connect Four games for \
                                             two agents, saving the results.')
-parser.add_argument('agent0', help="The first agent to make a move.", choices=[
-                    "random", "mcts", "minimax"])
-parser.add_argument('agent1', help="The second agent to make a move.", choices=[
-                    "random", "mcts", "minimax"])
+parser.add_argument('agent0', help="The first agent to make a move.", choices=agent_dict.keys())
+parser.add_argument('agent1', help="The second agent to make a move.", choices=agent_dict.keys())
 parser.add_argument(
     'iterations', help="The number of games to play.", type=int)
 parser.add_argument(
@@ -49,13 +48,6 @@ logging.basicConfig(
 
 
 # define function for running one game
-agent_dict = {
-    "random": random_agent,
-    "mcts": mcts_agent,
-    "minimax": minimax_agent
-}
-
-
 def run_game(i, agent0, agent1, t):
     # make sure that a given game with given agents and time will be identical
     random.seed(i)
@@ -68,6 +60,8 @@ def run_game(i, agent0, agent1, t):
     logger.addHandler(fh)
 
     logger.info(f"STARTING GAME {i}")
+    logger.info(f"Agent 0: {agent0}")
+    logger.info(f"Agent 1: {agent1}")
 
     agents = [agent_dict[agent0](t), agent_dict[agent1](t)]
 
@@ -79,12 +73,18 @@ def run_game(i, agent0, agent1, t):
 
     while not state.is_terminal:
         agent_idx = state.moves % 2
-        action, root = agents[agent_idx].search(state)
+        agent = agents[agent_idx]
+        action = agent.search(state)
+        if action is None:
+            print(state)
+            print(agent.root)
+            print(agent.root.children)
+            print(agent.root.unexpanded_actions)
         state = result(state, action)
         actions.append(str(action))
-        logger.info(f"Root: {root}")
+        logger.info(f"Root: {agent.root}")
         logger.info("Children:")
-        for c in root.children:
+        for c in agent.root.children:
             logger.info(c)
         logger.info(f"Agent {agent_idx} took action {action}")
         logger.info(state)
