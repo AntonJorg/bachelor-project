@@ -66,20 +66,19 @@ def run_game(i, agent0, agent1, t):
     agents = [agent_dict[agent0](t), agent_dict[agent1](t)]
 
     state = ConnectFourState(7, 6)
+    state = result(state, random.choice(list(range(7))))
+    state = result(state, random.choice(list(range(7))))
 
     logger.info(state)
 
     actions = []
+    search_info = {}
 
     while not state.is_terminal:
         agent_idx = state.moves % 2
         agent = agents[agent_idx]
-        action = agent.search(state)
-        if action is None:
-            print(state)
-            print(agent.root)
-            print(agent.root.children)
-            print(agent.root.unexpanded_actions)
+        action, single_search_info = agent.search(state)
+        search_info[state.moves] = single_search_info
         state = result(state, action)
         actions.append(str(action))
         logger.info(f"Root: {agent.root}")
@@ -89,9 +88,9 @@ def run_game(i, agent0, agent1, t):
         logger.info(f"Agent {agent_idx} took action {action}")
         logger.info(state)
 
-    game = "".join(actions)
+    action_string = "".join(actions)
 
-    return i, state.utility, game
+    return i, state.utility, action_string, search_info
 
 
 # insert all the constant arguments
@@ -107,8 +106,9 @@ agent0_wins = 0
 agent1_wins = 0
 draws = 0
 games = {}
+search_info = {}
 
-for i, utility, game in results:
+for i, utility, game, game_search_info in results:
     if utility == 1:
         agent0_wins += 1
     elif utility == 0:
@@ -117,7 +117,7 @@ for i, utility, game in results:
         draws += 1
 
     games[i] = game
-
+    search_info[i] = game_search_info
 
 # save results
 with open(os.path.join(folder, "data.json"), 'w') as json_file:
@@ -127,6 +127,7 @@ with open(os.path.join(folder, "data.json"), 'w') as json_file:
             "p2_wins": agent1_wins,
             "draws": draws,
             "iterations": args.iterations,
-            "games": games
+            "games": games,
+            "search_info": search_info
         },
         json_file)
