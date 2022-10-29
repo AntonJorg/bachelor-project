@@ -1,6 +1,6 @@
 import time
 from abc import ABC, abstractmethod
-from collections import deque
+from collections import deque, defaultdict
 
 from src.tree import TreeSearchNode
 from src.connectfour import ConnectFourState
@@ -10,7 +10,8 @@ from src.agents.components import components
 class TreeSearchAgent(ABC, *components):
     """
     The TreeSearchAgent implements the General Tree Search Algorithm
-    in self.search. 
+    in self.search, and also defines all methods called in self.search
+    as abstract methods to be implemented in subclasses.
     """
     def __init__(self):
         self.root = None
@@ -21,6 +22,8 @@ class TreeSearchAgent(ABC, *components):
 
         self.depth = None
 
+        self.search_info = defaultdict(float)
+
     def search(self, state):
         """
         General Tree Search Algorithm
@@ -29,12 +32,14 @@ class TreeSearchAgent(ABC, *components):
         if state.is_terminal:
             raise ValueError("Cannot search terminal states!")
 
+        self.search_info.clear()
+
         self.frontier.clear()
         self.root = TreeSearchNode(state, None, None)
         self.frontier.append(self.root)
 
         self.start_time = time.time()
-        
+
         while not self.should_terminate():
             node = self.select()
             
@@ -49,19 +54,23 @@ class TreeSearchAgent(ABC, *components):
      
             self.reflect()
 
-        return self.get_best_move()
+        return self.get_best_move(), self.search_info
 
     @abstractmethod 
     def should_terminate(self) -> bool:
         """
-        Determines when the search algorithm terminates.
+        Determines when the search algorithm terminates. This should
+        not happen before the search has progressed to a point where
+        self.get_best_move has a valid answer, i.e. can return an
+        applicable action.
         """
         pass
 
     @abstractmethod
     def select(self) -> TreeSearchNode:
         """
-        
+        Selects where in the search tree the search should continue.
+        This can either be based on the search tree itself, or the frontier.
         """
         pass
 
@@ -77,7 +86,7 @@ class TreeSearchAgent(ABC, *components):
     @abstractmethod 
     def should_evaluate(self, node: TreeSearchNode) -> bool:
         """
-        
+        Whether or not to call self.evaluate on node.
         """
         pass
 
@@ -118,7 +127,8 @@ class TreeSearchAgent(ABC, *components):
     @abstractmethod 
     def get_best_move(self) -> int:
         """
-        
+        Using information from the search tree, the frontier, or other available sources,
+        return the action that the agent should take.
         """
         pass
  

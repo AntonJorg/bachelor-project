@@ -6,7 +6,25 @@ from src.connectfour import ConnectFourState, apply_many
 
 
 class Control:
-    # checks
+    """
+    Defines methods for implementing the TreeSearchAgent methods
+    should_terminate, should_evaluate, and should_backpropagate,
+    along with utility methods.
+
+    The methods intended for should_evaluate and should_backpropagate should:
+        - Take a node and an optional value
+    
+    The methods intended for should_terminate should:
+        - Take no arguments
+
+    All the above methods should:
+        - Return a boolean
+        - Have no side effects 
+    
+    Utility methods can vary in signature as needed.
+    """
+
+    # should_evaluate and should_backpropagate methods
     def if_depth_reached(self, node: TreeSearchNode, value: float = 0) -> bool:
         return node.depth == self.depth or node.state.is_terminal
 
@@ -16,7 +34,7 @@ class Control:
     def when_terminal(self, node, value=0):
         return node.state.is_terminal
 
-    # should_terminate functions
+    # should_terminate methods
     def timed_termination(self):
         if self.search_time is None:
             raise AttributeError("Subclass must set self.search_time to use self.timed_termination")
@@ -26,8 +44,7 @@ class Control:
     def when_fully_evaluated(self):
         return self.root.evaluated
 
-
-    # filter functions
+    # utility methods
     def filter_unexpanded_actions(self, node: TreeSearchNode):
         # root case
         if not node.state.piece_mask:

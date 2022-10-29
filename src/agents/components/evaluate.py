@@ -5,6 +5,16 @@ from src.connectfour import ConnectFourState, result, apply_many
 
 
 class Evaluate:
+    """
+    Defines methods for implementing TreeSearchAgent.evaluate.
+
+    These methods should:
+        - Take a ConnectFourState
+        - Return an estimate of the utility of the state, as a float
+        - Not have any side effects
+        - Not have to be deterministic
+    """
+    
     def evaluate_utility(self, state):
         if state.is_terminal:
             return state.utility

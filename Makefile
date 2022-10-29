@@ -43,6 +43,11 @@ lint:
 test_environment:
 	$(PYTHON_INTERPRETER) test_environment.py
 
+## Data
+data: requirements
+	$(PYTHON_INTERPRETER) src/data/get_dataset.py
+	$(PYTHON_INTERPRETER) src/data/process_dataset.py
+
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
