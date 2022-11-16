@@ -1,4 +1,44 @@
 \section{Experiments}
-
-
 \subsection{Agents}
+\subsubsection{MiniMax Based}
+\begin{itemize}
+    \item Iterative Deepening : ID
+    \item Iterative Deepening w/ $\alpha\beta$-pruning: ID-AB
+    \item Iterative Deepening w/ Simulation : ID-Sim
+    \item Beam Search Agent: BS
+    \item Best First MiniMax: BFMM
+    \item MiniMax From MCTS Tree: MM-MCTS-T
+\end{itemize}
+
+\subsubsection{MCTS Based}
+\begin{itemize}
+    \item Monte Carlo Tree Search: MCTS
+    \item MCTS Static Rollout: MCTS-SR
+    \item Partial Expansion: MCTS-PE
+    \item Static Weighted MCTS: MCTS-SW
+    \item MiniMax Weighted MCTS: MCTS-MMW
+    \item Progressive Pruning MCTS: PP-MCTS
+\end{itemize}
+
+\subsection{Environment: Connect Four}
+Connect Four has been chosen for the following reasons:
+It is simple to implement
+Utility can be calculated quickly
+It is a solved game, which makes it possible
+to compare agent behavior to optimal play.
+
+
+\subsection{Comparison}
+
+Firstly, the agents within each group will play against each other
+such that each agent type plays against all other agent types, as well
+as against itself. Since both groups are of size 6, this will result
+in $2n \cdot 6^2 = 72n$ games, where $n$ is the number of games in
+each matchup.
+
+From each group, the agents that significantly outperform all others
+will be picked out, and another round of games will be run.
+
+Finally, the top performing agents will be pitted against a recursive
+NegaMax based agent, to demonstrate the performance loss MiniMax suffers
+from being converted to an iterative function.

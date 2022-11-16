@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from src.connectfour import ConnectFourState, apply_many
-from src.treesearch import mcts_agent
+from src.agents.mcts_agents import MCTSAgent
+from src.agents.minimax_agents import BestFirstMiniMaxAgent, IterativeDeepeningAlphaBetaAgent
 
 def draw_state(state, savepath=None):
     plt.axis([0, 10 * state.width, 0, 10 * state.height])
@@ -39,15 +40,21 @@ def draw_state(state, savepath=None):
     plt.show()
 
 def action_values(state, agent):
-    best_action, root = agent.search(state)
+    best_action, _ = agent.search(state)
 
     values = np.zeros(state.width)
 
+    if hasattr(agent, "last_iter_root"):
+        root = agent.last_iter_root
+    else:
+        root = agent.root
+
     for c in root.children:
-        value = c.utility / c.count if c.count else c.utility
+        value = c.cumulative_utility / c.count if c.count else c.eval
         values[c.generating_action] = value
 
     plt.bar(range(state.width), values)
+    plt.ylim(0, 1)
     plt.show()
 
 
@@ -55,10 +62,10 @@ def action_values(state, agent):
 if __name__ == "__main__":
     state = ConnectFourState(7, 6)
 
-    state = apply_many(state, "3342443533422243")
+    state = apply_many(state, "0022335")
 
     draw_state(state)
 
-    agent = mcts_agent(10)
+    agent = MCTSAgent(2)
 
     action_values(state, agent)

@@ -3,13 +3,13 @@ from abc import ABC, abstractmethod
 from collections import deque, defaultdict
 
 from src.tree import TreeSearchNode
-from src.connectfour import ConnectFourState
+from src.games import GameState
 from src.agents.components import components
 
 
 class TreeSearchAgent(ABC, *components):
     """
-    The TreeSearchAgent implements the General Tree Search Algorithm
+    The TreeSearchAgent implements the Extended General Tree Search Algorithm
     in self.search, and also defines all methods called in self.search
     as abstract methods to be implemented in subclasses.
     """
@@ -24,9 +24,9 @@ class TreeSearchAgent(ABC, *components):
 
         self.search_info = defaultdict(float)
 
-    def search(self, state):
+    def search(self, state: GameState):
         """
-        General Tree Search Algorithm
+        Implements Extended General Tree Search (EGTS).
         """
 
         if state.is_terminal:
@@ -38,9 +38,10 @@ class TreeSearchAgent(ABC, *components):
         self.root = TreeSearchNode(state, None, None)
         self.frontier.append(self.root)
 
-        self.start_time = time.time()
+        self.start_time = time.process_time_ns()
 
         while not self.should_terminate():
+
             node = self.select()
             
             leaf = self.expand(node)
@@ -51,10 +52,13 @@ class TreeSearchAgent(ABC, *components):
 
             if self.should_backpropagate(leaf, value):
                 self.backpropagate(leaf, value)
-     
+    
             self.reflect()
 
         return self.get_best_move(), self.search_info
+
+    def __repr__(self):
+        return type(self).__name__
 
     @abstractmethod 
     def should_terminate(self) -> bool:
@@ -91,7 +95,7 @@ class TreeSearchAgent(ABC, *components):
         pass
 
     @abstractmethod 
-    def evaluate(self, state: ConnectFourState) -> float:
+    def evaluate(self, state: GameState) -> float:
         """
         Returns an estimate of the value of state. The estimate
         can be deterministic or stochastic, but should be a float.

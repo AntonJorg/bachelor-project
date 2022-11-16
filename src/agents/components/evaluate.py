@@ -1,15 +1,14 @@
 import random
 from math import exp, ceil
 
-from src.connectfour import ConnectFourState, result, apply_many
-
+from src.games import GameState, ConnectFourState, NimState
 
 class Evaluate:
     """
     Defines methods for implementing TreeSearchAgent.evaluate.
 
     These methods should:
-        - Take a ConnectFourState
+        - Take a GameState
         - Return an estimate of the utility of the state, as a float
         - Not have any side effects
         - Not have to be deterministic
@@ -24,7 +23,7 @@ class Evaluate:
     def simulate(self, state):
         while not state.is_terminal:
             action = random.choice(state.applicable_actions)
-            state = result(state, action)
+            state = state.result(action)
 
         return state.utility
 
@@ -32,7 +31,16 @@ class Evaluate:
         values = (self.simulate(state) for _ in range(self.num_simulations))
         return sum(values) / self.num_simulations
 
-    def count_consecutives(self, state):
+    def static_evaluation(self, state):
+        match state:
+            case ConnectFourState():
+                return self._static_eval_connectfour(state)
+            case NimState():
+                return self._static_eval_nim(state)
+            case _:
+                raise ValueError(f"Unknown state type: {type(state)}")
+
+    def _static_eval_connectfour(self, state):
         if state.is_terminal:
             return state.utility
 
@@ -76,6 +84,23 @@ class Evaluate:
 
         return 1 / (1 + exp(-score))
 
+    def _static_eval_nim(self, state):
+        if state.is_terminal:
+            return state.utility
+
+        result = 0
+        for val in state.array:
+            result ^= val
+
+        if state.moves % 2:
+            return int(not bool(result))
+        else:
+            return int(bool(result))
+
+        
+    def evaluate_and_simulate(self, state):
+        return self.static_evaluation(state), self.simulate(state)
+
 
 if __name__ == "__main__":
     ev = Evaluate()
@@ -84,4 +109,4 @@ if __name__ == "__main__":
         state = ConnectFourState(7, 6)
         state = result(state, action)
         print(state)
-        print(ev.count_consecutives(state))
+        print(ev.static_evaluation(state))

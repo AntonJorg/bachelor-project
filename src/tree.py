@@ -1,11 +1,11 @@
 from __future__ import annotations
-from src.connectfour import ConnectFourState
+from src.games import GameState
 
 class TreeSearchNode:
     """
     Generic doubly linked tree data structure.
     """
-    def __init__(self, state: ConnectFourState, parent: 'TreeSearchNode', generating_action: int, depth: int =0, alpha=None, beta=None):
+    def __init__(self, state: GameState, parent: 'TreeSearchNode', generating_action: int, depth: int =0, alpha=None, beta=None):
         # data structure
         self.parent = parent
         self.children = []
@@ -15,9 +15,11 @@ class TreeSearchNode:
         self.state = state
         self.generating_action = generating_action
         self.unexpanded_actions = state.applicable_actions.copy()
+        self.branching_factor = len(self.unexpanded_actions)
 
-        # search related information        
-        self.utility = 0
+        # search related information
+        self.eval = None
+        self.cumulative_utility = 0
         self.count = 0
         self.evaluated = False
         self.alpha = -float('inf') if alpha is None else alpha
@@ -25,7 +27,7 @@ class TreeSearchNode:
         self.is_max_node = not state.moves % 2
 
     def __repr__(self):
-        return f"Node(action={self.generating_action}, utility={self.utility}, count={self.count}, evaluated={self.evaluated}, depth={self.depth})"
+        return f"Node(action={self.generating_action}, utility={self.cumulative_utility}, count={self.count}, evaluation={self.eval}, depth={self.depth})"
 
     def print_tree(self, max_depth: int = None, depth: int = 0):
         print(depth * "--", self)
@@ -33,7 +35,7 @@ class TreeSearchNode:
             for c in self.children:
                 c.print_tree(max_depth, depth + 1)
 
-    def add_child(self, state: ConnectFourState, generating_action: int) -> 'TreeSearchNode':
+    def add_child(self, state: GameState, generating_action: int) -> 'TreeSearchNode':
         """
         
         """

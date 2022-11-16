@@ -1,0 +1,26 @@
+\begin{algorithm}[H]
+    \caption{Iterative MiniMax search}
+    \label{alg:iterative_minimax}
+    \begin{algorithmic}[1]
+    
+    \Procedure{MiniMax}{$s$}
+        \State Frontier $\leftarrow$ LIFO Queue
+        \State Root $\leftarrow$ TreeNode($s$)
+        \State Frontier.Push(Root)
+        \While{Frontier \textbf{not} empty}
+            \State Node $\leftarrow$ Frontier.Pop() \Comment{Select node}
+            \For{$a \in$ Node.State.ApplicableActions} \Comment{Expand node}
+                \State Leaf $\leftarrow$ Node.AddChild(Result(Node.State, $a$))
+            \EndFor
+            \If{Leaf \textbf{is} None}
+                Leaf $\leftarrow$ Node
+            \EndIf
+            \If{Leaf.State $\in S^\circ$}
+                \State Value $\leftarrow U(\text{Leaf.State})$ \Comment{Evaluate node}
+                \State Backpropagate(Node, Value) \Comment{Backpropagate}
+            \EndIf
+        \EndWhile
+        \State \Return $\arg\max_{\text{C} \in \text{Root.Children}}$ C.Utility
+    \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

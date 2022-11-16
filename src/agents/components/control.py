@@ -2,7 +2,7 @@ import time
 from math import exp
 
 from src.tree import TreeSearchNode
-from src.connectfour import ConnectFourState, apply_many
+from src.games import ConnectFourState, NimState
 
 
 class Control:
@@ -31,7 +31,11 @@ class Control:
     def if_depth_reached_or_fully_expanded(self, node: TreeSearchNode, value: float = 0) -> bool:
         return node.depth == self.depth or node.state.is_terminal or not node.unexpanded_actions
 
+    def if_parent_fully_expanded(self, node, value=0):
+        return bool(node.parent.unexpanded_actions)
+
     def when_terminal(self, node, value=0):
+        # TODO: rename to if
         return node.state.is_terminal
 
     # should_terminate methods
@@ -39,13 +43,22 @@ class Control:
         if self.search_time is None:
             raise AttributeError("Subclass must set self.search_time to use self.timed_termination")
         
-        return time.time() - self.start_time > self.search_time
+        return time.process_time_ns() - self.start_time > self.search_time * 1_000_000_000
     
     def when_fully_evaluated(self):
         return self.root.evaluated
 
     # utility methods
     def filter_unexpanded_actions(self, node: TreeSearchNode):
+        match node.state:
+            case ConnectFourState():
+                return self._connectfour_filter_unexpanded_actions(node)
+            case NimState():
+                return self._nim_filter_unexpanded_actions(node)
+            case _:
+                raise ValueError(f"Unknown state type: {type(state)}")    
+
+    def _connectfour_filter_unexpanded_actions(self, node: TreeSearchNode):
         # root case
         if not node.state.piece_mask:
             middle = node.state.width // 2
@@ -63,6 +76,8 @@ class Control:
 
         return sorted(beam, key=lambda x: -abs(x - node.state.width//2 + .1))
 
+    def _nim_filter_unexpanded_actions(self, node: TreeSearchNode):
+        return node.unexpanded_actions
 
 if __name__ == "__main__":
     state = ConnectFourState(7, 6)

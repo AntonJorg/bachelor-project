@@ -29,7 +29,7 @@ class ConnectFourState:
     this state also keeps a separate move count.
     """
 
-    def __init__(self, width, height, piece_mask=0, player_mask=0, moves=0, action_sequence=""):
+    def __init__(self, width=7, height=6, piece_mask=0, player_mask=0, moves=0, action_sequence=""):
         self.width = width
         self.height = height
 
@@ -132,43 +132,25 @@ class ConnectFourState:
         return not self.applicable_actions or self.utility != 0.5
 
 
-def result(state: ConnectFourState, action: int) -> ConnectFourState:
-    """
-    The result function R: S x A -> S
-    """
-    player_mask = state.player_mask ^ state.piece_mask
-    piece_mask = state.piece_mask | state.piece_mask + \
-        (1 << action * (state.height + 1))
+    def result(self, action: int) -> ConnectFourState:
+        """
+        The result function R: S x A -> S
+        """
+        player_mask = self.player_mask ^ self.piece_mask
+        piece_mask = self.piece_mask | self.piece_mask + \
+            (1 << action * (self.height + 1))
 
-    return ConnectFourState(state.width, state.height, piece_mask, player_mask, state.moves + 1, state.action_sequence + str(action))
-
-
-def reverse(state: ConnectFourState, action: int) -> ConnectFourState:
-    """
-    Modifies the state object to contain the result of un-making
-    the given action. Also returns state for convenience.
-    """
-    col_mask = 2**(state.height + 1) - 1 << action * (state.height + 1)
-
-    # remove most significant bit in column
-    state.piece_mask &= ~col_mask | (
-        state.piece_mask & state.piece_mask >> 1)
-
-    state.player_mask ^= state.piece_mask
-    state.moves -= 1
-
-    return state
+        return ConnectFourState(self.width, self.height, piece_mask, player_mask, self.moves + 1, self.action_sequence + str(action))
 
 
-def apply_many(state: ConnectFourState, action_string: str) -> ConnectFourState:
-    """
-    Applies the result function for each action in action_string.
-    Useful for generating positions.
-    """
-    for char in action_string:
-        action = int(char)
-        state = result(state, action)
-    return state
+    def apply_many(self, action_string: str) -> ConnectFourState:
+        """
+        Applies the result function for each action in action_string.
+        Useful for generating positions.
+        """
+        for char in action_string:
+            state = self.result(int(char))
+        return state
 
 
 if __name__ == "__main__":
@@ -179,6 +161,6 @@ if __name__ == "__main__":
 
     while not state.is_terminal:
         action = int(input("Enter move: ")) - 1
-        state = result(state, action)
+        state = state.result(action)
 
         print(state)

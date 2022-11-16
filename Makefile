@@ -9,6 +9,14 @@ BUCKET = ""
 PROFILE = ""
 PROJECT_NAME = ""
 PYTHON_INTERPRETER = python3
+MINIMAX_AGENTS = IterativeDeepeningAgent IterativeDeepeningAlphaBetaAgent IterativeDeepeningSimulationAgent BeamSearchAgent BestFirstMiniMaxAgent MCTSTreeMiniMaxAgent
+MCTS_AGENTS = MCTSAgent MCTSEvaluationAgent PartialExpansionAgent StaticWeightedMCTSAgent MiniMaxWeightedMCTSAgent ProgressivePruningMCTSAgent
+
+N_COMPARISON = 250
+N_TUNING = 200
+
+PP_ARGS := $(shell seq 1 .3333 15)
+SIM_ARGS := $(shell seq 2 2 50) $(shell seq 54 4 150)
 
 ifeq (,$(shell which conda))
 HAS_CONDA=False
@@ -23,6 +31,38 @@ endif
 ## Main entrypoint
 run: requirements
 	$(PYTHON_INTERPRETER) src/main.py
+
+# Experiments
+# Parameter Selection
+progressive_pruning_parameter_selection: requirements
+	for i in $(PP_ARGS) ; do \
+		$(PYTHON_INTERPRETER) src/run_experiment.py MCTSAgent ProgressivePruningMCTSAgent $(N_TUNING) -loc pp_tuning -swap -arg2agent1 $$i ; \
+	done
+
+id_simulation_parameter_selection: requirements
+	for i in $(SIM_ARGS) ; do \
+		$(PYTHON_INTERPRETER) src/run_experiment.py IterativeDeepeningAgent IterativeDeepeningSimulationAgent $(N_TUNING) -loc sim_tuning -swap -arg2agent1 $$i ; \
+	done
+
+# Main Comparisons
+minimax_connectfour: requirements
+	for agent0 in $(MINIMAX_AGENTS) ; do \
+		for agent1 in $(MINIMAX_AGENTS) ; do \
+			$(PYTHON_INTERPRETER) src/run_experiment.py ConnectFour $$agent0 $$agent1 $(N_COMPARISON) -loc c4_minimax_agents; \
+		done \
+	done
+
+mcts_connectfour: requirements
+	for agent0 in $(MCTS_AGENTS) ; do \
+		for agent1 in $(MCTS_AGENTS) ; do \
+			$(PYTHON_INTERPRETER) src/run_experiment.py ConnectFour $$agent0 $$agent1 $(N_COMPARISON) -loc c4_mcts_agents; \
+		done \
+	done
+
+# Cleanup
+clear_logs:
+	rm -r logs
+	mkdir logs
 
 ## Install Python Dependencies
 requirements: test_environment

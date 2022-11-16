@@ -141,3 +141,5 @@ dmypy.json
 # logs
 /logs
 /data
+
+mn.txt

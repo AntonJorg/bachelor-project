@@ -1,4 +1,43 @@
 \section{Introduction}
 
 Ever since the infancy of the artificial intelligence field, search
-algorithms have been a key part of designing rational agents. 
+algorithms have been a key part of designing rational agents. By
+looking many moves ahead agents can review many lines of play, and
+compare evaluations of millions of future states deep into the search
+tree to make much better decisions than an agent that simply evaluates
+the immediate consequences of its actions.
+
+In his 1928 paper 'Zur Theorie der Gesellschaftsspiele' von Neumann
+proves the minimax theorem which shows that
+\begin{equation}
+    \max_{x\in X}\min_{y\in Y} f(x, y) = \min_{y\in Y}\max_{x\in X} f(x, y)   
+\end{equation}
+holds under certain conditions. These conditions notably apply in the
+case of simultaneous games, where the expexted value of a game can be
+calculated using $x^\intercal Ay$. With this he proves that every zero-sum two-player game has
+optimal mixed strategies, which he himself states as being a prerequisite
+for the entire field of game theory. 
+
+Alan Turing and David Champernowne developed the Turochamp chess program
+in 1948, which is one of the earliest examples of a minimax algorithm.
+Turochamp examines all of its own possible moves, and for each of those
+moves it examines every possible player response. If any 'notable' moves
+like checks, captures of undefended pieces, etc. are available, it
+examines these as well. All resulting positions are evaluated, and these
+evaluations were backpropagated using minimax. 
+
+During the famous Dartmouth workshop in 1956 the topic of minimax was
+on the agenda, and John McCarthy who arranged the workshop is said to 
+have suggested using alpha beta pruning to his students working on a 
+chess program in 1961.
+
+Even with the huge improvements from alpha beta pruning traditional
+tree search methods struggled with games with a high branching factor,
+of wich Go is the most popular one in AI research. This lack of
+performance led researchers to seek different methods, and in 2006 
+Rémi Coulom introduced Monte Carlo Tree Search, extending
+traditional Monte Carlo methods to tree search.
+
+Many mixed algoithms using both minimax and mcts 
+
+two different paradigms, many similarities.

@@ -1,5 +1,4 @@
 from src.tree import TreeSearchNode
-from src.connectfour import result
 
 class Expand:
     """
@@ -8,7 +7,7 @@ class Expand:
     These methods should:
         - Take a TreeSearchNode
         - Return a TreeSearchNode
-        - Modify tree structure and frontier
+        - Possibly modify tree structure and frontier
         - Not modify node data unrelated to tree structure
     """
 
@@ -21,7 +20,7 @@ class Expand:
             return node
 
         action = node.unexpanded_actions.pop()
-        state = result(node.state, action)
+        state = node.state.result(action)
 
         # add node to queue for further expansion if in dfs mode
         if dfs and node.unexpanded_actions:
@@ -29,6 +28,9 @@ class Expand:
 
         leaf = node.add_child(state, action)
         self.frontier.append(leaf)
+
+        # search info update
+        self.search_info["nodes_expanded"] += 1
 
         return leaf
 
@@ -50,9 +52,11 @@ class Expand:
         # uses strict inequalities to prevent suboptimal moves from having equal
         # utility to the optimal move
         if node.children:
-            if node.is_max_node and node.children[-1].utility > node.beta or \
-                not node.is_max_node and node.children[-1].utility < node.alpha:
+            if node.is_max_node and node.children[-1].eval > node.beta or \
+                not node.is_max_node and node.children[-1].eval < node.alpha:
                 
+                self.search_info["ab_prunes"] += 1
+
                 node.unexpanded_actions.clear()
                 return node
 
@@ -74,21 +78,30 @@ class Expand:
 
         return leaf
 
-    def expand_all_depth_limited(self, node: TreeSearchNode) -> TreeSearchNode:
+    def expand_all(self, node: TreeSearchNode) -> TreeSearchNode:
         """
         
         """
         if node.state.is_terminal:
             return node
 
-        if node.depth == self.depth:
-            return node
-        
+        # search info update
+        self.search_info["nodes_expanded"] += len(node.unexpanded_actions)
+
         while node.unexpanded_actions:
             action = node.unexpanded_actions.pop()
-            state = result(node.state, action)
+            state = node.state.result(action)
             leaf = node.add_child(state, action)
             self.frontier.append(leaf)
 
         # return last child for evaluate function
         return leaf
+
+    def expand_all_depth_limited(self, node: TreeSearchNode) -> TreeSearchNode:
+        """
+        
+        """
+        if node.depth == self.depth:
+            return node
+        
+        return self.expand_all(node)

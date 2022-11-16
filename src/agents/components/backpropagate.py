@@ -1,3 +1,5 @@
+from math import sqrt
+
 from src.tree import TreeSearchNode
 
 class Backpropagate:
@@ -11,28 +13,36 @@ class Backpropagate:
         - Not change the structure of the tree
     """
 
-    def backpropagate_sum(self, node: TreeSearchNode, value: float) -> None:
-        if node is not None:
-            node.utility += value
-            node.count += 1
+    def backpropagate_sum(self, node: TreeSearchNode, value: float) -> None:    
+        """
+        
+        """
+        node.cumulative_utility += value
+        node.count += 1
+    
+        if node.parent is not None:
             self.backpropagate_sum(node.parent, value)
 
     def backpropagate_minimax(self, node: TreeSearchNode, value: float) -> None:
+        """
         
+        """
+        # TODO: REWRITE REWRITE REWRITE
         def bp(node):
-            max_child_utility = max(c.utility for c in node.children) if node.children else None
-            min_child_utility = min(c.utility for c in node.children) if node.children else None
             
-            if node.parent is not None or True:
+            max_child_eval = max(c.eval for c in node.children if c.eval is not None)
+            min_child_eval = min(c.eval for c in node.children if c.eval is not None)
+            
+            if node.parent is not None or True: # temp hack
                 # TODO: Figure out if random play can be introduced while preserving cutoffs at highest level
                 if node.is_max_node:
-                    node.alpha = max(node.alpha, max_child_utility)
+                    node.alpha = max(node.alpha, max_child_eval)
                 else:
-                    node.beta = min(node.beta, min_child_utility)
+                    node.beta = min(node.beta, min_child_eval)
 
             if all(c.evaluated for c in node.children) and not node.unexpanded_actions:
         
-                node.utility = max_child_utility if node.is_max_node else min_child_utility
+                node.eval = max_child_eval if node.is_max_node else min_child_eval
                 
                 node.evaluated = True
 
@@ -43,8 +53,43 @@ class Backpropagate:
             # alpha beta cutoff happened
             bp(node)
         else:
-            node.utility = value
+            node.eval = value
             node.evaluated = True
 
             if node.parent is not None:
                 bp(node.parent)
+
+
+    def backpropagate_sum_and_minimax(self, node, value):
+        """
+        
+        """
+        evaluation, simulation_result = value
+
+        self.backpropagate_sum(node, simulation_result)
+
+        def bp(node):
+            child_evals = (c.eval for c in node.children)
+            pre_update_eval = node.eval
+            if node.is_max_node:
+                node.eval = max(child_evals)
+            else:
+                node.eval = min(child_evals)
+            
+            # ancestor values will not change if current value did not
+            if node.parent is not None and pre_update_eval != node.eval:
+                bp(node.parent)
+
+        node.eval = evaluation
+
+        bp(node.parent)
+    
+    def store_eval_and_backpropagate_sum(self, node, value):
+        """
+        
+        """
+        evaluation, simulation_result = value
+
+        node.eval = evaluation
+
+        self.backpropagate_sum(node, simulation_result)

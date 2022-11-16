@@ -1,0 +1,21 @@
+\begin{algorithm}[H]
+    \caption{General Tree Search (GTS)}
+    \label{alg:general_tree_search_1}
+    \begin{algorithmic}[1]
+    
+    \Procedure{TreeSearch}{$s$}
+        \State Frontier $\leftarrow$ Queue
+        \State Root $\leftarrow$ TreeNode($s$)
+        \State Frontier.Push(Root)
+        \While{\textbf{not} ShouldTerminate()}
+            \State Node $\leftarrow$ Select(Root, Frontier)
+            \State Leaf $\leftarrow$ Expand(Node)
+            \If{ShouldEvaluate(Leaf)}
+                \State Value $\leftarrow$ Evaluate(Leaf)
+                \State Backpropagate(Leaf, Value)
+            \EndIf
+        \EndWhile
+        \State \Return GetBestMove(Root)
+    \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

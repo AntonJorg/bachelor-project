@@ -1,0 +1,46 @@
+\begin{algorithm}[H]
+    \caption{Iterative Deepening Minimax}
+    \label{alg:iterativedeepening}
+    \begin{algorithmic}[1]
+    
+    \Procedure{Iterative-Deepening}{$s$}
+        \State $d \leftarrow 1$
+        \While{\textbf{not} SearchTimeExhausted()}
+            \State $Action \leftarrow \arg\max_{a \in A(s)}$ MinValue($R(s, a)$, $d - 1$)
+            \State $d \leftarrow d + 1$
+        \EndWhile
+        \State \Return $Action$
+    \EndProcedure
+    \end{algorithmic}
+
+    \begin{algorithmic}[1]
+
+    \Procedure{MaxValue}{$s$, $d$}
+        \If{$s \in S^\circ$ \textbf{or} $d=0$}
+            \Return $E(s)$
+        \EndIf
+        \State $v \leftarrow -\infty$
+        \For{$a \in A(s)$}
+            \State $v \leftarrow \max(v, \text{MinValue}(R(s, a), d-1))$
+        \EndFor
+        \State \Return $v$
+    \EndProcedure
+    
+    \end{algorithmic}
+        
+    \begin{algorithmic}[1]
+
+    \Procedure{MinValue}{$s$, $\alpha$, $\beta$, $d$}
+        \If{$s \in S^\circ$ \textbf{or} $d=0$}
+            \Return $E(s)$
+        \EndIf
+        \State $v \leftarrow \infty$
+        \For{$a \in A(s)$}
+            \State $v \leftarrow \min(v, \text{MaxValue}(R(s, a), d-1))$
+        \EndFor
+
+        \State \Return $v$
+    \EndProcedure
+
+    \end{algorithmic}
+\end{algorithm}

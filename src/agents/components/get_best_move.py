@@ -1,5 +1,5 @@
-import random
-
+from random import choice
+from math import sqrt
 
 class GetBestMove:
     """
@@ -16,14 +16,15 @@ class GetBestMove:
         """
         
         """
-        utils = (c.utility for c in self.root.children)
+        
+        utils = (c.eval for c in self.root.children)
 
-        m = min(utils) if self.root.state.moves % 2 else max(utils)
+        m = max(utils) if self.root.is_max_node else min(utils)
         
         # consider all moves that maximize/minimize utility
-        optimal_nodes = [c for c in self.root.children if c.utility == m]
+        optimal_nodes = [c for c in self.root.children if c.eval == m]
 
-        return random.choice(optimal_nodes).generating_action
+        return choice(optimal_nodes).generating_action
 
     def most_robust_child(self) -> int:
         """
@@ -35,10 +36,28 @@ class GetBestMove:
         """
         
         """
-        return random.choice(self.root.state.applicable_actions)
+        return choice(self.root.state.applicable_actions)
 
     def get_stored_best_move(self):
         """
         
         """
         return self.best_move
+
+    def weighted_eval_utility_move(self):
+        """
+        
+        """
+        def weight(child):
+            if child.is_max_node:
+                exploit = (child.count - child.cumulative_utility) / child.count
+                evaluation = child.eval
+            else:
+                exploit = child.cumulative_utility / child.count
+                evaluation = 1 - child.eval
+
+            q = 1 / sqrt(child.count)
+
+            return evaluation * q + exploit * (1 - q)
+
+        return sorted(self.root.children, key=weight)[-1].generating_action

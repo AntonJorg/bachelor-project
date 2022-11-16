@@ -23,9 +23,9 @@ class Select:
 
         def uct(child):
             if child.is_max_node:
-                exploit = (child.count - child.utility) / child.count
+                exploit = (child.count - child.cumulative_utility) / child.count
             else:
-                exploit = child.utility / child.count
+                exploit = child.cumulative_utility / child.count
 
             explore = sqrt(2) * sqrt(log(node.count) / child.count)
 
@@ -44,9 +44,9 @@ class Select:
 
         def uct(child):
             if child.is_max_node:
-                exploit = (child.count - child.utility) / child.count
+                exploit = (child.count - child.cumulative_utility) / child.count
             else:
-                exploit = child.utility / child.count
+                exploit = child.cumulative_utility / child.count
 
             explore = sqrt(2) * sqrt(log(node.count) / child.count)
 
@@ -56,18 +56,56 @@ class Select:
 
         ucts = (uct(c) for c in node.children)
         
-        if max(ucts) > ucb_child:
+        if node.unexpanded_actions and max(ucts) < ucb_child:            
+            return node
+        else:
+            self.search_info["partial_expansions"] += 1
             best_child = sorted(node.children, key=uct)[-1]
             return self.partial_expansion_select(best_child)
-        else:
+
+    def partial_expansion_weighted_select(self, node: TreeSearchNode = None) -> TreeSearchNode:
+        if node is None:
+            node = self.root
+
+        if not node.children or node.state.is_terminal:
             return node
+
+        def uct(child):
+            if child.is_max_node:
+                exploit = (child.count - child.cumulative_utility) / child.count
+                evaluation = child.eval
+            else:
+                exploit = child.cumulative_utility / child.count
+                evaluation = 1 - child.eval
+
+            explore = sqrt(2) * sqrt(log(node.count) / child.count)
+
+            q = 1 / sqrt(child.count)
+
+            return evaluation * q + exploit * (1 - q) + explore
+
+        ucb_child = 0.5 + sqrt(2) * sqrt(log(node.count) / (1 + len(node.children)))
+
+        ucts = (uct(c) for c in node.children)
+        
+        if node.unexpanded_actions and max(ucts) < ucb_child:            
+            return node
+        else:
+            self.search_info["partial_expansions"] += 1
+            best_child = sorted(node.children, key=uct)[-1]
+            return self.partial_expansion_select(best_child)
+
 
     def queue_select(self) -> TreeSearchNode:
         return self.frontier.pop()
 
-    def frontier_aided_uct_select(self) -> TreeSearchNode:
+    def principal_variation_select(self):
+        def recurse(node):
+            if node.unexpanded_actions or not node.children:
+                return node
 
-        if True:
-            return self.uct_select()
-        else:
-            return self.uct_select()
+            equal_children = [c for c in node.children if c.eval == node.eval]
+
+            return recurse(equal_children[0])
+
+        return recurse(self.root)

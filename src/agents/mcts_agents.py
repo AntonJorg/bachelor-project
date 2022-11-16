@@ -2,13 +2,17 @@ from bisect import insort
 from collections import deque
 
 from src.agents.treesearch_agent import TreeSearchAgent
-from src.connectfour import ConnectFourState, apply_many
+from src.games import ConnectFourState
 from src.tree import TreeSearchNode
+
 
 class MCTSAgent(TreeSearchAgent):
     def __init__(self, search_time):
         super().__init__()
         self.search_time = search_time
+
+    def __repr__(self):
+        return super().__repr__() + f"+st={self.search_time}"
 
     def select(self):
         return self.uct_select()
@@ -40,57 +44,79 @@ class MCTSAgent(TreeSearchAgent):
 
 class MCTSEvaluationAgent(MCTSAgent):
     def evaluate(self, state):
-        return self.count_consecutives(state)
+        return self.static_evaluation(state)
 
 
-class MCTSFrontierAgent(MCTSAgent):
+class PartialExpansionAgent(MCTSAgent):
+    def select(self):
+        return self.partial_expansion_select()
 
 
-    class EvaluationQueue:
-        def __init__(self, evaluate):
-            self._data = []
-            self.evaluate = evaluate
+class StaticWeightedMCTSAgent(MCTSAgent):
+    def select(self):
+        return self.partial_expansion_weighted_select()
 
-        def __repr__(self):
-            return f"EvaluationQueue(len={len(self)})"
+    def evaluate(self, state):
+        return self.evaluate_and_simulate(state)
 
-        def __len__(self):
-            return len(self._data)
+    def backpropagate(self, node, value):
+        self.store_eval_and_backpropagate_sum(node, value)
 
-        def append(self, item: TreeSearchNode):
-            x = (self.evaluate(item), item)
-            self._data.append(x)
+    def get_best_move(self):
+        return self.weighted_eval_utility_move()
 
-        def pop(self):
-            return self._data.pop()[1]
 
-        def clear(self):
-            self._data.clear()
+class MiniMaxWeightedMCTSAgent(MCTSAgent):
+    def select(self):
+        return self.partial_expansion_weighted_select()
 
-    pass
+    def evaluate(self, state):
+        return self.evaluate_and_simulate(state)
 
+    def backpropagate(self, node, value):
+        self.backpropagate_sum_and_minimax(node, value)
+
+    def get_best_move(self):
+        return self.weighted_eval_utility_move()
+
+
+class MCTSTreeMiniMaxAgent(MCTSAgent):
+    def evaluate(self, state):
+        return self.evaluate_and_simulate(state)
+
+    def backpropagate(self, node, value):
+        self.backpropagate_sum_and_minimax(node, value)
+
+    def get_best_move(self):
+        return self.get_minimax_move()
+
+
+class ProgressivePruningMCTSAgent(MCTSAgent):
+    def __init__(self, search_time, pruning_factor=6):
+        super().__init__(search_time)
+        self.pruning_factor = pruning_factor
+
+    def __repr__(self):
+        return super().__repr__() + f"+p={self.pruning_factor}"
+
+    def reflect(self):
+        self.fractional_pruning()
 
 
 if __name__ == "__main__":
-    agent = MCTSFrontierAgent(2)
-    frontier = MCTSFrontierAgent.PriorityEvaluationQueue(agent.count_consecutives)
+    agent = ProgressivePruningMCTSAgent(2, 1)
+
     state = ConnectFourState(7, 6)
 
-    frontier.append(state)
+    print(agent.search(state))
+    agent.root.print_tree(max_depth=2)
 
-    state = apply_many(state, "3")
-    frontier.append(state)
 
-    state = apply_many(state, "3")
-    frontier.append(state)
+    def f(node):
+        if node.children:
+            return max(f(c) for c in node.children)
+        else:
+            return node.depth
 
-    state = apply_many(state, "0")
-    frontier.append(state)
-
-    state = apply_many(state, "3")
-    frontier.append(state)
-
-    print(frontier)
-    print(frontier.pop())
-    print(frontier)
-
+    print(f(agent.root))
+    print(agent)
