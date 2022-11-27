@@ -26,7 +26,7 @@ parser.add_argument('agent1', help="The second agent to make a move.", choices=a
 parser.add_argument(
     'iterations', help="The number of games to play.", type=int)
 parser.add_argument(
-    '-t', help="The time available to the agents for taking an action.", type=float, default=1)
+    '-t', help="The time available to the agents for taking an action.", type=safe_float, default=1)
 
 parser.add_argument(
     '-loc', help="The folder to store logs and data in.", type=str, default="")
@@ -111,6 +111,11 @@ def run_game(i, agent0, agent1, agent0_args, agent1_args, swap):
         agent_idx = state.moves % 2
         agent = agents[agent_idx]
         action, single_search_info = agent.search(state)
+        if action is None:
+            state.is_terminal = True
+            state.utility = state.moves % 2
+            logger.error(f"AGENT {agent_idx} GENERATED NoneType ACTION, DISQUALIFIED")
+            break
         search_info[state.moves] = single_search_info.copy()
         state = state.result(action)
         actions.append(str(action))

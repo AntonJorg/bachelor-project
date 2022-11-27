@@ -12,6 +12,10 @@ PYTHON_INTERPRETER = python3
 MINIMAX_AGENTS = IterativeDeepeningAgent IterativeDeepeningAlphaBetaAgent IterativeDeepeningSimulationAgent BeamSearchAgent BestFirstMiniMaxAgent MCTSTreeMiniMaxAgent
 MCTS_AGENTS = MCTSAgent MCTSEvaluationAgent PartialExpansionAgent StaticWeightedMCTSAgent MiniMaxWeightedMCTSAgent ProgressivePruningMCTSAgent
 
+TOP_FOUR = IterativeDeepeningSimulationAgent BestFirstMiniMaxAgent MCTSAgent PartialExpansionAgent
+
+TIMES = 0.0625 0.125 0.25 0.5 1 2 4 8 16
+
 N_COMPARISON = 250
 N_TUNING = 200
 
@@ -58,6 +62,31 @@ mcts_connectfour: requirements
 			$(PYTHON_INTERPRETER) src/run_experiment.py ConnectFour $$agent0 $$agent1 $(N_COMPARISON) -loc c4_mcts_agents; \
 		done \
 	done
+
+top4_connectfour: requirements
+	for agent0 in $(TOP_FOUR) ; do \
+		for agent1 in $(TOP_FOUR) ; do \
+			$(PYTHON_INTERPRETER) src/run_experiment.py ConnectFour $$agent0 $$agent1 $(N_COMPARISON) -loc c4_top_four; \
+		done \
+	done
+
+top4_nim: requirements
+	for agent0 in $(TOP_FOUR) ; do \
+		for agent1 in $(TOP_FOUR) ; do \
+			$(PYTHON_INTERPRETER) src/run_experiment.py Nim $$agent0 $$agent1 $(N_COMPARISON) -loc nim_top_four; \
+		done \
+	done
+
+nim_time: requirements
+	for time in $(TIMES) ; do \
+			$(PYTHON_INTERPRETER) src/run_experiment.py Nim MCTSAgent PartialExpansionAgent $(N_COMPARISON) -loc nim_time -swap -t $$time; \
+	done
+
+c4_time: requirements
+	for time in $(TIMES) ; do \
+			$(PYTHON_INTERPRETER) src/run_experiment.py ConnectFour MCTSAgent PartialExpansionAgent $(N_COMPARISON) -loc c4_time -swap -t $$time; \
+	done
+
 
 # Cleanup
 clear_logs:

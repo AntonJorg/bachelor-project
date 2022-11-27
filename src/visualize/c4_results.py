@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sb
 import numpy as np
 
+out_folder = os.path.join("latex", "images")
 
 minimax_index = {
 	"IterativeDeepeningAgent": 0,
@@ -89,7 +90,8 @@ ax2.set_xlabel("Min Player")
 ax2.xaxis.set_label_position("top")
 
 #plt.tight_layout()
-plt.show()
+file = "connectfour_results.pdf"
+plt.savefig(os.path.join(out_folder, file))
 
 
 def fold(array):
@@ -138,8 +140,8 @@ ax2.set_xlabel("Min Player")
 ax2.xaxis.set_label_position("top")
 
 #plt.tight_layout()
-plt.show()
-
+file = "connectfour_results_folded.pdf"
+plt.savefig(os.path.join(out_folder, file))
 
 minimax = np.sum(minimax, axis=1) / 5
 mcts = np.sum(mcts, axis=1) / 5
@@ -173,5 +175,5 @@ ax2.bar_label(bar2, (f"{val:.2f}" for val in mcts))
 ax2.set_ylim(0, 1)
 
 #plt.tight_layout()
-plt.show()
-
+file = "connectfour_results_average.pdf"
+plt.savefig(os.path.join(out_folder, file))

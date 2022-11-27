@@ -9,7 +9,7 @@ class Reflect:
         - Return nothing
     """
 
-    def iterative_deepening_reflect(self):
+    def iterative_deepening_reflect(self, n=1):
         """
         
         """
@@ -19,13 +19,13 @@ class Reflect:
             else:
                 return node.depth
 
-        if self.root.evaluated:
+        if self.root.eval is not None:
             # log before increase to reflect last completed search
             self.search_info["depth"] = min(self.depth, deepest_node(self.root))
 
             action = self.get_minimax_move()
             self.best_move = action
-            self.depth += 1
+            self.depth += n
 
             # reset search tree
             self.last_iter_root = self.root.copy()

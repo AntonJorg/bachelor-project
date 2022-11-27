@@ -1,0 +1,42 @@
+\begin{algorithm}[H]
+    \caption{Data structures}
+    \label{alg:general_tree_search_data}
+    \begin{algorithmic}[1]
+            \Obj{Node}
+            \State \textbf{private} State: \textproc{GameState}
+            \State \textbf{private} Parent: \textproc{Node} \textbf{or} None
+            \State \textbf{private} Children: \textproc{Node}[ ]
+            \State \textbf{private} Values = \{\}
+            \Comment Mutable fields, stores e.g. evaluation, cumulative utility, count, etc.
+            \State \textbf{private} OnFrontier = True            
+            \Comment New nodes start on the frontier
+            \\
+            \State \textbf{public} getState()
+            \State \textbf{public} getValues()
+            \State \textbf{public} getParentValues()
+            \State \textbf{public} getChildrenValues()
+        \EndObj
+        \\
+        \State \textbf{function} \textproc{GetParent}(Node: \textproc{Node})
+        \State \textbf{function} \textproc{GetChildren}(Node: \textproc{Node})
+        \State \textbf{function} \textproc{AddChild}(Node: \textproc{Node}, Child: \textproc{Node})
+        \State \textbf{function} \textproc{DelChild}(Node: \textproc{Node}, Child: \textproc{Node})
+        \State \textbf{function} \textproc{SetValues}(Node: \textproc{Node})
+    \end{algorithmic}
+    \vspace{.25cm}
+    \begin{algorithmic}[1]
+        \Obj{Frontier}
+            \State \textbf{private} Nodes: \textproc{Node}[ ]
+            \Comment Ordered list, e.g. LIFO, FIFO or Prioity Queue
+            \State \textbf{public} popFrontier()
+            \Comment Remove and return last node in Nodes
+            \EndObj
+    \end{algorithmic}
+    \vspace{.25cm}
+    \begin{algorithmic}[1]
+        \Obj{Parameters}
+            \State \textbf{public} Data = \{ \}
+            \Comment Stores algorithm parameters, e.g. maximum expansion depth
+        \EndObj
+    \end{algorithmic}
+\end{algorithm}

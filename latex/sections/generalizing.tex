@@ -1,179 +1,153 @@
 \section{Generalizing search algorithms}
 
-It is clear from Section \ref{sec:theory} that MiniMax with its various
-enhancements along with MCTS are powerful decision making tools in an 
-adversarial setting. What is not clear is that the two algorithms are more
-similar than it initially seems. The goal of this section is to introduce 
-a more general framework in pseudocode that lets both algorithms be 
-implemented, while still describing the structure of the algorithms, eg.
-\lstinline|TreeSearch(state): return GoodMove| would be very general, but
-not terribly informative.
+It is clear from Section \ref{sec:theory} that both MiniMax and MCTS along with their respective improvements are powerful decision making tools in an adversarial setting. What is not clear is that the two algorithms are more similar than it initially seems. The goal of this section is to introduce a more general framework in pseudocode that lets both algorithms be  implemented, while still describing the structure of the algorithms, eg. \textproc{TreeSearch}(State): \textbf{return} \textproc{GetBestMove}() would be very general, but not terribly informative.
 
-Initially the focus will be on the standard MiniMax algorithm (Algorithm 
-\ref{alg:minimax}) and MCTS (Algorithm \ref{alg:mcts}), but later the 
-framework will be extended to handle all the improvements described in 
-Section \ref{sec:theory} as well, which will allow it to describe a much 
-broader class of tree search algorithms.
+Initially the focus will be on the standard MiniMax algorithm (Algorithm \ref{alg:minimax}) and MCTS (Algorithm \ref{alg:mcts}), but later the framework will be extended to handle all the improvements described in Section \ref{sec:theory} as well, which will allow it to describe a much broader class of tree search algorithms.
 
-The perhaps most glaring incompatibility between the two algorithms as
-presented, is that MiniMax is recursive while MCTS is iterative. To
-arrive at a common pseudocode one of them must therefore be converted
-to the others type. It is generally possible to convert any recursive
-computation to an iterative one, since the recursive computation is
-implemented using a call stack, which the program then iterates 
-over. Using a stack is common in many non-adversarial search algorithms
-to represent the frontier, so converting recursive minimax to a 
-frontier based algorithm is the choice made in this paper. 
-The recursive definition from 
-Algorithm \ref{alg:minimax} clearly searches nodes in a depth first
-manner; no state can be evaluated before all its successor states
-have. The tried and tested way to implement DFS
-iteratively is a Last In First Out (LIFO) queue as frontier, originally populated
-only with the root of the tree. Each iteration a node $n$ is popped from the
-frontier, and a child node is generated and pushed to the frontier for each
-successor state of $n.state$. If $n.state$ has no successors it must be
-a terminal state, and $U(n.state)$ can be computed. This utility value
-can then be backpropagated up through the tree by going to the parent node
-$p$, and assigning the min or max of its childrens utilities to itself, 
-depending on $Player(p.state)$. This backpropagation continues until
-a node is reached where one ore more of its children have not had a value
-assigned yet. When the utility of all leaf nodes have been computed the
-backpropagation reaches all the way to the root node, and the MiniMax move
-can be calculated.
+The perhaps most glaring incompatibility between the two algorithms as presented, is that MiniMax is recursive while MCTS is iterative. To arrive at a common framework one of them must therefore be converted to the others type. It is generally possible to convert any recursive computation to an iterative one using a stack data structure, since the recursive computation will almost always be represented at some level using a call stack, which the interpreter/compiler then iterates over. Using a stack is common in many non-adversarial search algorithms to represent the frontier, so converting recursive minimax to a frontier based algorithm seems to be a sensible choice. The recursive definition from Algorithm \ref{alg:minimax} clearly searches nodes in a depth first manner; no state can be evaluated before all its successor states have. The tried and tested way to implement DFS iteratively is a Last In First Out (LIFO) queue as frontier, originally populated only with the root of the tree. Each iteration a node $n$ is popped from the frontier, and a child node is generated and pushed to the frontier for each successor state of $n.state$. If $n.state$ has no successors it must be a terminal state, and $U(n.state)$ can be computed. This utility value can then be backpropagated up through the tree by going to the parent node $p$, and assigning the min or max of its childrens utilities to itself, depending on $Player(p.state)$. This backpropagation continues until a node is reached where one ore more of its children have not had a value assigned yet. When the utility of all leaf nodes have been computed the backpropagation reaches all the way to the root node, and the MiniMax move can be calculated.
 
 \input{algorithms/iterativeminimax.tex}
 
-When looking at the iterative MiniMax in Algorithm \ref{alg:iterative_minimax},
-the similarities with MCTS become more obivious. There is a selection step,
-an expansion step, and a backpropagation step. The only thing missing is 
-the simulation step, but if we think of simulation as evaluating the state
-via a non-deterministic function, all the steps are present. The MiniMax
-algorithm includes an if-statement on line 9 that controls whether evaluation
-and backpropagation happens, but that too can be abstracted into a
-\lstinline|ShouldEvaluate| function, which in the case of MCTS always
-returns true. Following these observations, a General Tree Search (GTS)
-algorithm that describes both MiniMax and MCTS is formulated:
+When looking at the iterative MiniMax in Algorithm \ref{alg:iterative_minimax}, the similarities with MCTS become more obivious. There is a selection step, an expansion step, and a backpropagation step. The only thing missing is the simulation step, but if we think of simulation as evaluating the state via a non-deterministic function, all the steps are present. The MiniMax algorithm includes an if-statement on line 9 that controls whether evaluation and backpropagation happens, but that too can be abstracted into a \textproc{ShouldEvaluate} function, which in the case of MCTS always returns true. 
 
-\input{algorithms/generaltreesearch_1.tex}
+Before the algorithm can be presented, it is necessary to define the types of objects that it will be acting on in such a way that it is clear what each part of the algorithm can read and write from the underlying data structures:
 
-Given the GTS framework from Algoritm \ref{alg:general_tree_search_1}, 
-MiniMax and MCTS can each be described simply by specifying the 7 
-\textit{component functions} that constitute the framework: 
-\textproc{Select}, \textproc{Expand}, \textproc{ShouldEvaluate}, 
-\textproc{Evaluate}, \textproc{Backpropagate}, and \textproc{GetBestMove}.
+\input{algorithms/generaltreesearch_node.tex}
+
+This definition means that a function that recieves a \textproc{Node} object can see its state, its values, and the values of its parent and children. It cannot see the actual parent node or the child nodes, making it impossible for the function to traverse the tree in any way. If the function is also passed the \textproc{GetParent} function, it has access to the nodes parent node, and the parents parent, and so on. This makes upwards tree traversal possible, but the function still cannot access any child nodes.
+
+Using these data structures, a General Tree Search (GTS) algorithm that describes both MiniMax and MCTS can be formulated:
+
+\input{algorithms/generaltreesearch.tex}
+
+Given the GTS framework from Algoritm \ref{alg:general_tree_search}, MiniMax and MCTS can each be described simply by specifying the 7 \textit{component functions} that constitute the framework: \textproc{Select}, \textproc{Expand}, \textproc{ShouldEvaluate}, \textproc{Evaluate}, \textproc{Backpropagate}, and \textproc{GetBestMove}:
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|r|}
         \hline
         \multicolumn{2}{|c|}{MiniMax} \\ \hline
-        ShouldTerminate & WhenRootHasValue \\ \hline
-        Select & DFSSelect \\ \hline
-        Expand & ExpandAll \\ \hline
-        ShouldEvaluate & IfStateIsTerminal \\ \hline
-        Evaluate & Utility \\ \hline
-        Backpropagate & BackpropagateMiniMax \\ \hline
-        GetBestMove & MiniMaxMove \\ \hline
+        \shterm & WhenRootHasValue \\ \hline
+        \select & DFSSelect \\ \hline
+        \expand & ExpandAll \\ \hline
+        \sheval & IfStateIsTerminal \\ \hline
+        \eval & Utility \\ \hline
+        \bp & BackpropagateMiniMax \\ \hline
+        \gbm & MiniMaxMove \\ \hline
     \end{tabular}
     \quad
     \begin{tabular}{|l|r|}
         \hline
         \multicolumn{2}{|c|}{MCTS} \\ \hline
-        ShouldTerminate & WhenBudgetExceeded \\ \hline
-        Select & UCTSelect \\ \hline
-        Expand & ExpandNext \\ \hline
-        ShouldEvaluate & Always \\ \hline
-        Evaluate & Simulate \\ \hline
-        Backpropagate & BackpropagateSum \\ \hline
-        GetBestMove & MostRobustChild \\ \hline
+        \shterm & WhenBudgetExceeded \\ \hline
+        \select & UCTSelect \\ \hline
+        \expand & ExpandNext \\ \hline
+        \sheval & Always \\ \hline
+        \eval & Simulate \\ \hline
+        \bp & BackpropagateSum \\ \hline
+        \gbm & MostRobustChild \\ \hline
     \end{tabular}
     \caption{MiniMax and MCTS as implementations of GTS. Pseudocode
     for the component functions can be found in Appendix \todo}
     \label{tab:minimax_mcts_schematics}
 \end{table}
 
-In order for such a framework to be descriptive at all some limitations
-must be put on the component functions: 
+While this is certainly a big step forward, GTS lacks a key feature that makes it impossible to implement much more than the basic versions of MiniMax and MCTS, which is the ability to do pruning. First off, in GTS it is only possible to call \bp together with a call to \eval. This makes it difficult to implement techniques such as $\alpha\beta$-pruning, where expansion of a node stops if the last child attains a value outside the $\alpha\beta$ bounds. In this case \expand returns the input node, but this node does not need to be evaluated, it just needs to backpropagate values from its children. To alleviate this issue an additional component function \shbp is introduced, and \bp is now conditional on that instead of \sheval.
 
-While this is certainly a big step forward, GTS lacks some key features
-that makes it impossible to implement much more than the basic versions
-of MiniMax and MCTS, and both have to do with pruning. First off, in 
-GTS it is only possible to call \bp together with a call to \eval. This
-makes it difficult to implement techniques such as $\alpha\beta$-pruning,
-where expansion of a node stops if the last child attains a value outside
-the $\alpha\beta$ bounds. In this case \expand returns the input node,
-but this node does not need to be evaluated, it just needs to
-backpropagate values from its children. To alleviate this issue an
-additional component function \shbp is introduced, and \bp is now
-conditional on that instead of \sheval.
+Splitting control over evaluation and backpropagation makes proactive pruning possible, but retroactive pruning is still impossible because the search tree in GTS can only grow, since none of the component functions are allowed to remove nodes from the tree. This excludes a wide class of search algorithms such as iterative deepening and MCTS with retroactive pruning of unpromising nodes. All the algorithm needs is a component function that lets it remove nodes from the search tree, and for this purpose \trim and \shtrim are introduced as the last step in the main loop. With these modifications, the Extended General Tree Search (EGTS) looks like this:
 
-Secondly the search tree in GTS can only grow, since none of the
-component functions are allowed to remove nodes from the tree. This
-excludes a wide class of search algorithms such as iterative deepening
-and MCTS with retroactive pruning of unpromising nodes. All the
-algorithm needs is a component function that lets it remove nodes
-from the search tree, and for this \reflect is introduced as the
-last step in the main loop. With these modifications, the Extended
-General Tree Search (EGTS) looks like this:
-
-\input{algorithms/generaltreesearch_2.tex}
+\input{algorithms/extendedgeneraltreesearch.tex}
 
 % \input{tikz/generalloop}
 
+Having the ability to both grow and trim the search tree and to proactively prune branches that do not seem promising lets the framework describe a far greater class of search algorithms. The two example limitations of the GTS framework, $\alpha\beta$-pruning and iterative deepening, can be described as such:
 
-\subsection{Selection and expansion}
+\begin{table}[H]
+    \centering
+    \resizebox{.42\textwidth}{!}{
+        \begin{tabular}{|l|r|}
+            \hline
+            \multicolumn{2}{|c|}{Iterative Deepening} \\ \hline
+            \shterm & WhenBudgetExceeded \\ \hline
+            \select & DFSSelect \\ \hline
+            \expand & ExpandAll \\ \hline
+            \sheval & IfDepthReached \\ \hline
+            \eval & StaticEvaluation \\ \hline
+            \shbp & IfDepthReached \\ \hline
+            \bp & BackpropagateMiniMax \\ \hline
+            \shtrim & WhenRootHasValue \\ \hline
+            \trim & ResetTreeIncrementDepth \\ \hline
+            \gbm & GetStoredMove \\ \hline
+        \end{tabular}    
+    }
+    \quad
+    \resizebox{.48\textwidth}{!}{
+        \begin{tabular}{|l|r|}
+            \hline
+            \multicolumn{2}{|c|}{MiniMax w/ $\alpha\beta$-pruning} \\ \hline
+            \shterm & WhenRootHasValue \\ \hline
+            \select & DFSSelect \\ \hline
+            \expand & ExpandNextAlphaBeta \\ \hline
+            \sheval & IfDepthReached \\ \hline
+            \eval & StaticEvaluation \\ \hline
+            \shbp & IfDepthReachedOrFullyExpanded \\ \hline
+            \bp & BackpropagateMiniMax \\ \hline
+            \shtrim & NoOp \\ \hline
+            \trim & NoOp \\ \hline
+            \gbm & MiniMaxMove \\ \hline
+        \end{tabular}
+    }
+    \caption{MiniMax and MCTS as implementations of GTS. Pseudocode
+    for the component functions can be found in Appendix \todo}
+    \label{tab:id_ab_schematics}
+\end{table}
 
-A substantial part of any tree search algorithm is how it grows its
-search tree, and this is what the selection and expansion functions
-are responsible for.
+%\subsection{Selection and expansion}
 
-The selection function is the 'compass' of EGTS, and determines where in
-the search tree the other functions have to operate. It should be a
-pure function with respect to the search tree, such that the tree
-and its nodes do not change during the function call. It can however 
-change the frontier, and there the selection function should only pop, 
-not push.
+%A substantial part of any tree search algorithm is how it grows its search tree, and this is what the selection and expansion functions are responsible for.
 
-The expansion function determines how the node returned by Select
-grows, and aside from creating child nodes this is the only node that
-should be affected by Expand. The child nodes can be pushed to the
-frontier, but nothing should be popped.
+%The selection function is the 'compass' of EGTS, and determines where in the search tree the other functions have to operate. It should be a pure function with respect to the search tree, such that the tree and its nodes do not change during the function call. It can however change the frontier, and there the selection function should only pop, not push.
 
-\subsection{Evaluation and backpropagation}
+%The expansion function determines how the node returned by Select
+%grows, and aside from creating child nodes this is the only node that
+%should be affected by Expand. The child nodes can be pushed to the
+%frontier, but nothing should be popped.
 
-In order for the selection and expansion steps to be able to
-operate efficiently, they need information about the 'quality'
-or the expected utility of different branches. Evaluation provides
-these estimates, and backpropagation brings that information
-up the tree.
+%\subsection{Evaluation and backpropagation}
 
-The evaluation function should have absolutely no side effects, it
-should take a state and return a real number. It can be deterministic
-or stochastic.
+%In order for the selection and expansion steps to be able to
+%operate efficiently, they need information about the 'quality'
+%or the expected utility of different branches. Evaluation provides
+%these estimates, and backpropagation brings that information
+%up the tree.
 
-Backpropagation must only change internal values of nodes, not
-tree structure, and it must only propagate up the tree from
-children to parents.
+%The evaluation function should have absolutely no side effects, it
+%should take a state and return a real number. It can be deterministic
+%or stochastic.
 
-\subsection{Reflection}
-\todo Find better name, possibly separate pruning and state update
+%Backpropagation must only change internal values of nodes, not
+%tree structure, and it must only propagate up the tree from
+%children to parents.
 
-The reflection step adresses the main issue with GTS by allowing
-the algorithm to prune nodes from the tree retroactively. The name 
-hints at the agent 'reflecting' on the state of the search tree and 
-acting accordingly. 
+%\subsection{Reflection}
+%\todo Find better name, possibly separate pruning and state update
 
-Reflection can only remove nodes from the search tree and frontier,
-not add them. Reflection must not change internal values of the nodes.
+%The reflection step adresses the main issue with GTS by allowing
+%the algorithm to prune nodes from the tree retroactively. The name 
+%hints at the agent 'reflecting' on the state of the search tree and 
+%acting accordingly. 
 
-\subsection{Conditionals}
+%Reflection can only remove nodes from the search tree and frontier,
+%not add them. Reflection must not change internal values of the nodes.
+
+%\subsection{Conditionals}
 
 
-\subsection{Move selection}
-The move selection function is the only function in the algorithm
-that is not part of the main loop, and is therefore guaranteed to
-run only once. It should base its decision on the search tree, or
-on information stored from the reflection step, and it should always
-return an action that is applicable in Root.State.
-It can be stochastic by drawing from a probability distribution over
-the applicable actions.
+%\subsection{Move selection}
+%The move selection function is the only function in the algorithm
+%that is not part of the main loop, and is therefore guaranteed to
+%run only once. It should base its decision on the search tree, or
+%on information stored from the reflection step, and it should always
+%return an action that is applicable in Root.State.
+%It can be stochastic by drawing from a probability distribution over
+%the applicable actions.

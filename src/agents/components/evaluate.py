@@ -1,7 +1,7 @@
 import random
 from math import exp, ceil
 
-from src.games import GameState, ConnectFourState, NimState
+from src.games import GameState, ConnectFourState, NimState, Twenty48State
 
 class Evaluate:
     """
@@ -24,7 +24,7 @@ class Evaluate:
         while not state.is_terminal:
             action = random.choice(state.applicable_actions)
             state = state.result(action)
-
+            print(state)
         return state.utility
 
     def simulate_many(self, state):        
@@ -37,6 +37,8 @@ class Evaluate:
                 return self._static_eval_connectfour(state)
             case NimState():
                 return self._static_eval_nim(state)
+            case Twenty48State():
+                return self._static_eval_2048(state)
             case _:
                 raise ValueError(f"Unknown state type: {type(state)}")
 
@@ -97,16 +99,8 @@ class Evaluate:
         else:
             return int(bool(result))
 
+    def _static_eval_2048(self, state):
+        return state.utility
         
     def evaluate_and_simulate(self, state):
         return self.static_evaluation(state), self.simulate(state)
-
-
-if __name__ == "__main__":
-    ev = Evaluate()
-
-    for action in range(7):
-        state = ConnectFourState(7, 6)
-        state = result(state, action)
-        print(state)
-        print(ev.static_evaluation(state))

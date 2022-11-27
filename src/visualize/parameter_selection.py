@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import seaborn as sb
 sb.set()
 
+out_folder = os.path.join("latex", "images")
+
 dir_path = os.path.join("experiments", "pp_tuning")
 
 sub_dirs = os.listdir(dir_path)
@@ -24,11 +26,14 @@ observations.sort()
 x, wr = list(zip(*observations))
 x, wr, baseline = np.array(x), np.array(wr), np.ones(len(x)) / 2
 idx = np.argmax(wr)
+idx_sel = 15
 
 sb.lineplot(x=x, y=wr, ax=ax1)
 ax1.plot(x, baseline, linestyle="--")
 ax1.scatter(x[idx], wr[idx], label=f"WR({x[idx]:.1f})={wr[idx]:.2f}",
 	marker="^", c="r", zorder=2, s=100)
+ax1.scatter(x[idx_sel], wr[idx_sel], label=f"Selected",
+	c="b", zorder=2, s=100)
 ax1.set_ylim(0, 1)
 ax1.set_title("Progressive Pruning MCTS")
 ax1.set_xlabel("Pruning Factor")
@@ -61,4 +66,6 @@ ax2.set_xlabel("Number of simulations per evaluation")
 ax2.set_ylabel("Winrate vs Iterative Deepening")
 ax2.legend()
 
-plt.show()
+
+file = "connectfour_parameter_selection.pdf"
+plt.savefig(os.path.join(out_folder, file))

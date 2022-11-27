@@ -1,0 +1,169 @@
+\newsavebox{\minimax}
+\sbox{\minimax}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{MiniMax} \\ \hline
+        \shterm & WhenRootHasValue \\ \hline
+        \select & DFSSelect \\ \hline
+        \expand & ExpandAll \\ \hline
+        \sheval & IfStateIsTerminal \\ \hline
+        \eval & Utility \\ \hline
+        \shbp & IfStateIsTerminal \\ \hline
+        \bp & BackpropagateMiniMax \\ \hline
+        \shtrim & NoOp \\ \hline
+        \trim & NoOp \\ \hline
+        \gbm & MiniMaxMove \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\dlminimax}
+\sbox{\dlminimax}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Depth Limited MiniMax} \\ \hline
+        \sheval & IfDepthReached \\ \hline
+        \eval & StaticEvaluation \\ \hline
+        \shbp & IfDepthReached \\ \hline
+        \end{tabular}
+}
+
+\newsavebox{\alphabeta}
+\sbox{\alphabeta}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{MiniMax w/ $\alpha\beta$-pruning} \\ \hline
+        \expand & ExpandNextAlphaBeta \\ \hline
+        \shbp & IfDepthReachedOrFullyExpanded \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\iterativedeepening}
+\sbox{\iterativedeepening}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Iterative Deepening} \\ \hline
+        \shterm & WhenBudgetExceeded \\ \hline
+        \shtrim & WhenRootHasValue \\ \hline
+        \trim & StoreMoveResetSearchTree \\ \hline
+        \gbm & GetStoredMove \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\idalphabeta}
+\sbox{\idalphabeta}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Iterative Deepening w/ $\alpha\beta$-pruning} \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\idsimulation}
+\sbox{\idsimulation}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Iterative Deepening w/ Simulation} \\ \hline
+        \eval & SimulateMany \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\beamsearch}
+\sbox{\beamsearch}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Iterative Deepening w/ Beam Search} \\ \hline
+        \textproc{Expand} & ExpandBeam \\ \hline
+    \end{tabular}    
+}
+
+\newsavebox{\bestfirstminimax}
+\sbox{\bestfirstminimax}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Best First MiniMax} \\ \hline
+        \shterm & WhenBudgetExceeded \\ \hline
+        \select & PrincipalVariationSelect \\ \hline
+        \expand & ExpandNext \\ \hline
+        \sheval & Always \\ \hline
+        \eval & StaticEvaluation \\ \hline
+        \shbp & Always \\ \hline
+    \end{tabular}    
+}
+
+\newsavebox{\minimaxmct}
+\sbox{\minimaxmct}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{MiniMax from MCTS-Tree} \\ \hline
+        \textproc{Evaluate} & StaticAndSimulate \\ \hline
+        \textproc{Backpropagate} & BackpropagateSumAndMiniMax \\ \hline
+        \textproc{GetBestMove} & MiniMaxMove \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\mcts}
+\sbox{\mcts}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Monte Carlo Tree Search} \\ \hline
+        \shterm & WhenBudgetExceeded \\ \hline
+        \select & UCTSelect \\ \hline
+        \expand & ExpandNext \\ \hline
+        \sheval & Always \\ \hline
+        \eval & Simulate \\ \hline
+        \shbp & Always \\ \hline
+        \bp & BackpropagateSum \\ \hline
+        \shtrim & NoOp \\ \hline
+        \trim & NoOp \\ \hline
+        \gbm & MostRobustChild \\ \hline
+    \end{tabular}
+}
+
+
+\newsavebox{\mctsstatic}
+\sbox{\mctsstatic}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{MCTS w/ Static Rollout} \\ \hline
+        \eval & StaticEvaluation \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\partialexpansion}
+\sbox{\partialexpansion}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{MCTS w/ Partial Expansion} \\ \hline
+        \select & PartialExpansionSelect \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\staticweightmcts}
+\sbox{\staticweightmcts}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Statically Weighted MCTS} \\ \hline
+        \select & WeightedSelect \\ \hline
+        \eval & StaticAndSimulate \\ \hline 
+        \bp & StoreStaticBackpropagateSum \\ \hline
+        \gbm & WeightedUtilityMove \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\minimaxweightmcts}
+\sbox{\minimaxweightmcts}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{MiniMax Weighted MCTS} \\ \hline
+        \bp & BackpropagateSumAndMiniMax \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\progressivepruning}
+\sbox{\progressivepruning}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{MCTS w/ Progressive Pruning} \\ \hline
+        \shtrim & Periodic \\ \hline
+        \trim & FractionPruning \\ \hline
+    \end{tabular}
+}

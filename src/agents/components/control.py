@@ -46,7 +46,7 @@ class Control:
         return time.process_time_ns() - self.start_time > self.search_time * 1_000_000_000
     
     def when_fully_evaluated(self):
-        return self.root.evaluated
+        return self.root.eval is not None
 
     # utility methods
     def filter_unexpanded_actions(self, node: TreeSearchNode):

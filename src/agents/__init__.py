@@ -1,6 +1,7 @@
 from src.agents.minimax_agents import *
-
 from src.agents.mcts_agents import *
+from src.agents.random_agents import *
+from src.agents.maximizer_agents import *
 
 agents = (
     IterativeDeepeningAgent, 
@@ -14,5 +15,8 @@ agents = (
     MiniMaxWeightedMCTSAgent,
     StaticWeightedMCTSAgent,
     MCTSTreeMiniMaxAgent,
-    ProgressivePruningMCTSAgent
+    ProgressivePruningMCTSAgent,
+    RandomDistributionAgent,
+    ExpectiMaxAgent,
+    MaximizerMCTSAgent
 )

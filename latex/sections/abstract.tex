@@ -1,2 +1,236 @@
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
+
+\subsection{Agents}
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{cc}
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Iterative Deepening} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & DFSSelect \\ \hline
+                \textproc{Expand} & ExpandAll \\ \hline
+                \textproc{ShouldEvaluate} & IfDepthReached \\ \hline
+                \textproc{Evaluate} & StaticEvaluation \\ \hline
+                \textproc{ShouldBackpropagate} & IfDepthReached \\ \hline
+                \textproc{Backpropagate} & BackpropagateMiniMax \\ \hline
+                \textproc{Reflect} & IterateDepth \\ \hline
+                \textproc{GetBestMove} & GetStoredMove \\ \hline
+            \end{tabular}
+            &
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Iterative Deepening w/ $\alpha\beta$-pruning} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & DFSSelect \\ \hline
+                \textproc{Expand} & ExpandNextAlphaBeta \\ \hline
+                \textproc{ShouldEvaluate} & IfDepthReached \\ \hline
+                \textproc{Evaluate} & StaticEvaluation \\ \hline
+                \textproc{ShouldBackpropagate} & IfDepthReachedOrNodeExpanded \\ \hline
+                \textproc{Backpropagate} & BackpropagateMiniMax \\ \hline
+                \textproc{Reflect} & IterateDepth \\ \hline
+                \textproc{GetBestMove} & GetStoredMove \\ \hline
+            \end{tabular}
+            \\
+            \\
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Iterative Deepening w/ Simulation} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & DFSSelect \\ \hline
+                \textproc{Expand} & ExpandAll \\ \hline
+                \textproc{ShouldEvaluate} & IfDepthReached \\ \hline
+                \textproc{Evaluate} & SimulateMany \\ \hline
+                \textproc{ShouldBackpropagate} & IfDepthReached \\ \hline
+                \textproc{Backpropagate} & BackpropagateMiniMax \\ \hline
+                \textproc{Reflect} & IterateDepth \\ \hline
+                \textproc{GetBestMove} & GetStoredMove \\ \hline
+            \end{tabular}
+            &
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Beam Search} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & PrincipalVariationSelect \\ \hline
+                \textproc{Expand} & ExpandBeam \\ \hline
+                \textproc{ShouldEvaluate} & IfDepthReached \\ \hline
+                \textproc{Evaluate} & StaticEvaluation \\ \hline
+                \textproc{ShouldBackpropagate} & IfDepthReached \\ \hline
+                \textproc{Backpropagate} & BackpropagateMiniMax \\ \hline
+                \textproc{Reflect} & IterateDepth \\ \hline
+                \textproc{GetBestMove} & GetStoredMove \\ \hline
+            \end{tabular}
+            \\ \\
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Best First MiniMax} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & PrincipalVariationSelect \\ \hline
+                \textproc{Expand} & ExpandNext \\ \hline
+                \textproc{ShouldEvaluate} & Always \\ \hline
+                \textproc{Evaluate} & StaticEvaluation \\ \hline
+                \textproc{ShouldBackpropagate} & Always \\ \hline
+                \textproc{Backpropagate} & BackpropagateMiniMax \\ \hline
+                \textproc{Reflect} & NoOp \\ \hline
+                \textproc{GetBestMove} & MiniMaxMove \\ \hline
+            \end{tabular}
+            &
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{MiniMax from MCTS-Tree} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & UCTSelect \\ \hline
+                \textproc{Expand} & ExpandNext \\ \hline
+                \textproc{ShouldEvaluate} & Always \\ \hline
+                \textproc{Evaluate} & StaticAndSimulate \\ \hline
+                \textproc{ShouldBackpropagate} & Always \\ \hline
+                \textproc{Backpropagate} & BackpropagateSumAndMiniMax \\ \hline
+                \textproc{Reflect} & NoOp \\ \hline
+                \textproc{GetBestMove} & MiniMaxMove \\ \hline
+            \end{tabular}
+        \end{tabular}
+        
+    }
+    \caption{EGTS tables for all the MiniMax Based agents.}
+    \label{tab:minimax_agents_full}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \begin{tabular}{cc}
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Monte Carlo Tree Search} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & UCTSelect \\ \hline
+                \textproc{Expand} & ExpandNext \\ \hline
+                \textproc{ShouldEvaluate} & Always \\ \hline
+                \textproc{Evaluate} & Simulate \\ \hline
+                \textproc{ShouldBackpropagate} & Always \\ \hline
+                \textproc{Backpropagate} & BackpropagateSum \\ \hline
+                \textproc{Reflect} & NoOp \\ \hline
+                \textproc{GetBestMove} & MostRobustChild \\ \hline
+            \end{tabular}
+            &
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{MCTS w/ Static Rollout} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & UCTSelect \\ \hline
+                \textproc{Expand} & ExpandNext \\ \hline
+                \textproc{ShouldEvaluate} & Always \\ \hline
+                \textproc{Evaluate} & StaticEvaluation \\ \hline
+                \textproc{ShouldBackpropagate} & Always \\ \hline
+                \textproc{Backpropagate} & BackpropagateSum \\ \hline
+                \textproc{Reflect} & NoOp \\ \hline
+                \textproc{GetBestMove} & MostRobustChild \\ \hline
+            \end{tabular}
+            \\
+            \\
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Partial Expansion} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & PartialExpansionSelect \\ \hline
+                \textproc{Expand} & ExpandNext \\ \hline
+                \textproc{ShouldEvaluate} & Always \\ \hline
+                \textproc{Evaluate} & Simulate \\ \hline
+                \textproc{ShouldBackpropagate} & Always \\ \hline
+                \textproc{Backpropagate} & BackpropagateSum \\ \hline
+                \textproc{Reflect} & NoOp \\ \hline
+                \textproc{GetBestMove} & MostRobustChild \\ \hline
+            \end{tabular}
+            &
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Statically Weighted MCTS} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & WeightedSelect \\ \hline
+                \textproc{Expand} & ExpandNext \\ \hline
+                \textproc{ShouldEvaluate} & Always \\ \hline
+                \textproc{Evaluate} & StaticAndSimulate \\ \hline
+                \textproc{ShouldBackpropagate} & Always \\ \hline
+                \textproc{Backpropagate} & StoreStaticBackpropagateSum \\ \hline
+                \textproc{Reflect} & NoOp \\ \hline
+                \textproc{GetBestMove} & WeightedUtilityMove \\ \hline
+            \end{tabular}
+            \\ \\
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{MiniMax Weighted MCTS} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & WeightedSelect \\ \hline
+                \textproc{Expand} & ExpandNext \\ \hline
+                \textproc{ShouldEvaluate} & Always \\ \hline
+                \textproc{Evaluate} & StaticAndSimulate \\ \hline
+                \textproc{ShouldBackpropagate} & Always \\ \hline
+                \textproc{Backpropagate} & BackpropagateSumAndMiniMax \\ \hline
+                \textproc{Reflect} & NoOp \\ \hline
+                \textproc{GetBestMove} & WeightedUtilityMove \\ \hline
+            \end{tabular}
+            &
+            \begin{tabular}{|l|r|}
+                \hline
+                \multicolumn{2}{|c|}{Progressive Pruning MCTS} \\ \hline
+                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
+                \textproc{Select} & UCTSelect \\ \hline
+                \textproc{Expand} & ExpandNext \\ \hline
+                \textproc{ShouldEvaluate} & Always \\ \hline
+                \textproc{Evaluate} & Simulate \\ \hline
+                \textproc{ShouldBackpropagate} & Always \\ \hline
+                \textproc{Backpropagate} & BackpropagateSum \\ \hline
+                \textproc{Reflect} & FractionalPruning \\ \hline
+                \textproc{GetBestMove} & MostRobustChild \\ \hline
+            \end{tabular}
+        \end{tabular}
+        
+    }
+    \caption{EGTS tables for all the MCTS based agents.}
+    \label{tab:mcts_agents_full}
+\end{table}
+
+\subsection{Results}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/connectfour_results.pdf}
+    \caption{}
+    \label{fig:c4_results}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/connectfour_results_folded.pdf}
+    \caption{}
+    \label{fig:c4_results_folded}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/connectfour_top_four_results.pdf}
+    \caption{}
+    \label{fig:c4_top_four_results}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/connectfour_top_four_results_folded.pdf}
+    \caption{}
+    \label{fig:c4_top_four_results_folded}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/nim_top_four_results.pdf}
+    \caption{}
+    \label{fig:nim_top_four_results}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/nim_top_four_results_folded.pdf}
+    \caption{}
+    \label{fig:nim_top_four_results_folded}
+\end{figure}

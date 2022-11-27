@@ -1,0 +1,21 @@
+\begin{algorithm}[H]
+    \caption{General Tree Search (GTS)}
+    \label{alg:general_tree_search}
+    \begin{algorithmic}[1]
+    
+    \Procedure{TreeSearch}{RootState}
+        \State \textbf{global} Parameters $\leftarrow$ \textproc{Parameters}()
+        \State Frontier $\leftarrow$ \textproc{Frontier}()
+        \State Root $\leftarrow$ \textproc{Node}(State = RootState)
+        \While{\textbf{not} \shterm(Root)}
+            \State Node $\leftarrow$ \select(Root, Frontier, \{\textproc{GetChildren}\})
+            \State Leaf $\leftarrow$ \expand(Node, \{\textproc{addchildren}\})
+            \If{\sheval(Leaf)}
+                \State Value $\leftarrow$ \eval(Leaf.getState())
+                \State \bp(Leaf, Value, \{\textproc{setValues}, \textproc{getParent}\})
+            \EndIf
+        \EndWhile
+        \State \Return \gbm(Root)
+    \EndProcedure
+    \end{algorithmic}
+\end{algorithm}

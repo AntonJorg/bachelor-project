@@ -1,0 +1,30 @@
+\begin{figure}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \tikzset{
+            selected/.style={shape=rectangle, draw, line width = 1mm}
+        }
+
+        \begin{tikzpicture}[scale=12]
+            % The Tree
+            \node(mcts)[]{\usebox{\mcts}};
+            \node(mctsstatic)[below right = of mcts]{\usebox{\mctsstatic}};
+            \node(partialexpansion)[below = of mcts]{\usebox{\partialexpansion}};
+            \node(staticweightmcts)[below left = of mcts ]{\usebox{\staticweightmcts}};
+            \node(minimaxweightmcts)[below = of staticweightmcts]{\usebox{\minimaxweightmcts}};
+            \node(progressivepruning)[left = of mcts]{\usebox{\progressivepruning}};
+            \node(minimaxmct)[below = of mctsstatic]{\usebox{\minimaxmct}};
+
+            \path [->] (mcts) edge (progressivepruning);
+            \path [->] (mcts) edge (partialexpansion);
+            \path [->] (mcts) edge (mctsstatic);
+            \path [->] (mcts) edge (staticweightmcts);
+            \path [->] (staticweightmcts) edge (minimaxweightmcts);
+            \path [->] (mcts) edge (minimaxmct);
+            
+        \end{tikzpicture}        
+    }
+    
+    \caption{Inheritance graph from MCTS. \todo Change MM-MCT to use weighted select, re-run experiments}
+    \label{fig:mcts_inheritance}
+\end{figure}

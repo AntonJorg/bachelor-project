@@ -2,7 +2,7 @@ from bisect import insort
 from collections import deque
 
 from src.agents.treesearch_agent import TreeSearchAgent
-from src.games import ConnectFourState
+from src.games import ConnectFourState, CheckersState, NimState
 from src.tree import TreeSearchNode
 
 
@@ -104,9 +104,9 @@ class ProgressivePruningMCTSAgent(MCTSAgent):
 
 
 if __name__ == "__main__":
-    agent = ProgressivePruningMCTSAgent(2, 1)
+    agent = PartialExpansionAgent(2)
 
-    state = ConnectFourState(7, 6)
+    state = ConnectFourState()
 
     print(agent.search(state))
     agent.root.print_tree(max_depth=2)

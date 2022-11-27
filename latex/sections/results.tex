@@ -1,0 +1,35 @@
+\section{Results}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/connectfour_parameter_selection.pdf}
+    \caption{Parameter selection for Connect Four. Maximum winrate for each
+    agent is marked by the red triangles. Since Progressive Pruning MCTS 
+    performance is mostly stable after pruning factor $p=6$, this value
+    is chosen as the parameter for further experiments.}
+    \label{fig:parameter_selection}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/connectfour_results_average.pdf}
+    \caption{Average winrate for each agent over $500$ games against each of
+    the other agents in its group ($2500$ in total).}
+    \label{fig:c4_results_average} 
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/connectfour_top_four_results_average.pdf}
+    \caption{Average winrate for each agent over $500$ games against each of
+    the other agents in the top four group ($1500$ in total).}
+    \label{fig:c4_top_four_results_average}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/nim_top_four_results_average.pdf}
+    \caption{Average winrate for each agent over $500$ games against each of
+    the other agents in the top four group ($1500$ in total).}
+    \label{fig:nim_top_four_results_average}
+\end{figure}

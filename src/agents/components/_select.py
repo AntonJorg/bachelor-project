@@ -95,7 +95,6 @@ class Select:
             best_child = sorted(node.children, key=uct)[-1]
             return self.partial_expansion_select(best_child)
 
-
     def queue_select(self) -> TreeSearchNode:
         return self.frontier.pop()
 

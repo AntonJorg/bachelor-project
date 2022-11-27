@@ -86,6 +86,7 @@
 \usetikzlibrary{decorations.pathmorphing}
 \usetikzlibrary{shapes.geometric, arrows}
 \usetikzlibrary{trees}
+\usetikzlibrary{positioning}
 
 \usepackage{eso-pic}					% Packages for layout and graphics (example set image as background image)
 \usepackage{graphicx}
@@ -110,8 +111,26 @@
 \newcommand{\eval}[0]{\textproc{Evaluate}\xspace}
 \newcommand{\shbp}[0]{\textproc{ShouldBackpropagate}\xspace}
 \newcommand{\bp}[0]{\textproc{Backpropagate}\xspace}
-\newcommand{\reflect}[0]{\textproc{Reflect}\xspace}
+\newcommand{\shtrim}[0]{\textproc{ShouldTrim}\xspace}
+\newcommand{\trim}[0]{\textproc{Trim}\xspace}
 \newcommand{\gbm}[0]{\textproc{GetBestMove}\xspace}
+
+
+\algdef{SE}% flags used internally to indicate we're defining a new block statement
+[STRUCT]% new block type, not to be confused with loops or if-statements
+{Obj}% "\Struct{name}" will indicate the start of the struct declaration
+{EndObj}% "\EndStruct" ends the block indent
+[1]% There is one argument, which is the name of the data structure
+{\textbf{object} \textsc{#1}}% typesetting of the start of a struct
+{\textbf{end object}}% typesetting the end of the struct
+
+\algdef{SE}% flags used internally to indicate we're defining a new block statement
+[GSTRUCT]% new block type, not to be confused with loops or if-statements
+{GObj}% "\Struct{name}" will indicate the start of the struct declaration
+{EndGObj}% "\EndStruct" ends the block indent
+[1]% There is one argument, which is the name of the data structure
+{\textbf{global object} \textsc{#1}}% typesetting of the start of a struct
+{\textbf{end object}}% typesetting the end of the struct
 
 
 
