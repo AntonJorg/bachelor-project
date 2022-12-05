@@ -17,7 +17,7 @@
             \EndIf
             \If{Leaf.State $\in S^\circ$}
                 \State Value $\leftarrow U(\text{Leaf.State})$ \Comment{Evaluate node}
-                \State Backpropagate(Node, Value) \Comment{Backpropagate}
+                \State Backpropagate(Leaf, Value) \Comment{Backpropagate}
             \EndIf
         \EndWhile
         \State \Return $\arg\max_{\text{C} \in \text{Root.Children}}$ C.Utility

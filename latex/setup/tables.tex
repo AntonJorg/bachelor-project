@@ -21,6 +21,7 @@
     \begin{tabular}{|l|r|}
         \hline
         \multicolumn{2}{|c|}{Depth Limited MiniMax} \\ \hline
+        \expand & ExpandNextDepthLimited \\ \hline
         \sheval & IfDepthReached \\ \hline
         \eval & StaticEvaluation \\ \hline
         \shbp & IfDepthReached \\ \hline
@@ -94,8 +95,6 @@
     \begin{tabular}{|l|r|}
         \hline
         \multicolumn{2}{|c|}{MiniMax from MCTS-Tree} \\ \hline
-        \textproc{Evaluate} & StaticAndSimulate \\ \hline
-        \textproc{Backpropagate} & BackpropagateSumAndMiniMax \\ \hline
         \textproc{GetBestMove} & MiniMaxMove \\ \hline
     \end{tabular}
 }
@@ -165,5 +164,24 @@
         \multicolumn{2}{|c|}{MCTS w/ Progressive Pruning} \\ \hline
         \shtrim & Periodic \\ \hline
         \trim & FractionPruning \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\maximizermcts}
+\sbox{\maximizermcts}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Maximizing MCTS} \\ \hline
+        \select & UCTSelectStochasticEnvironment \\ \hline
+        \eval & SimulateStochasticEnvironment \\ \hline
+    \end{tabular}
+}
+
+\newsavebox{\idexpectimax}
+\sbox{\idexpectimax}{
+    \begin{tabular}{|l|r|}
+        \hline
+        \multicolumn{2}{|c|}{Iterative Deepening w/ ExpectiMax} \\ \hline
+        \bp & BackpropagateExpectiMax \\ \hline
     \end{tabular}
 }

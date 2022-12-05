@@ -62,8 +62,8 @@ cbar_ax = fig.add_axes([.93,.115,.03,.76])
 
 a = np.random.rand(6, 6)
 
-minimax_names = ("ID", "ID-AB", "ID-Sim", "BS", "BFMM", "MM-MCT")
-mcts_names = ("MC", "MC-SR", "PE", "SW-MC", "MW-MC", "PP")
+minimax_names = ("ID", "ID-AB", "ID-Sim", "ID-BS", "BFMM", "MM-MCT")
+mcts_names = ("MC", "MC-SR", "MC-PE", "SW-MC", "MW-MC", "MC-PP")
 
 sb.heatmap(minimax, cmap="crest", vmin=0, vmax=1, xticklabels=minimax_names, 
 	yticklabels=minimax_names, linewidth=.5, square=True, annot=True,
@@ -88,6 +88,8 @@ ax2.set_ylabel("Max Player")
 ax2.set_xlabel("Min Player")
 
 ax2.xaxis.set_label_position("top")
+
+fig.suptitle("Connect Four, Max Player Winrates, $n=250$")
 
 #plt.tight_layout()
 file = "connectfour_results.pdf"
@@ -112,9 +114,6 @@ cbar_ax = fig.add_axes([.93,.115,.03,.76])
 
 a = np.random.rand(6, 6)
 
-minimax_names = ("ID", "ID-AB", "ID-Sim", "BS", "BFMM", "MM-MCT")
-mcts_names = ("MC", "MC-SR", "PE", "SW-MC", "MW-MC", "PP")
-
 sb.heatmap(minimax, cmap="crest", vmin=0, vmax=1, xticklabels=minimax_names, 
 	yticklabels=minimax_names, linewidth=.5, square=True, annot=True,
 	fmt=".2f", ax=ax1, cbar=False)
@@ -126,18 +125,20 @@ sb.heatmap(mcts, cmap="crest", vmin=0, vmax=1, xticklabels=mcts_names,
 ax1.tick_params(axis="x", labelbottom = False, labeltop=True, top=True, bottom=False)
 
 ax1.set_title("Minimax Agents")
-ax1.set_ylabel("Max Player")
-ax1.set_xlabel("Min Player")
+ax1.set_ylabel("Agent")
+ax1.set_xlabel("Opponent")
 
 ax1.xaxis.set_label_position("top")
 
 ax2.tick_params(axis="x", labelbottom = False, labeltop=True, top=True, bottom=False)
 
 ax2.set_title("MCTS Agents")
-ax2.set_ylabel("Max Player")
-ax2.set_xlabel("Min Player")
+ax2.set_ylabel("Agent")
+ax2.set_xlabel("Opponent")
 
 ax2.xaxis.set_label_position("top")
+
+fig.suptitle("Connect Four, Combined Winrates, $n=500$")
 
 #plt.tight_layout()
 file = "connectfour_results_folded.pdf"
@@ -149,10 +150,6 @@ mcts = np.sum(mcts, axis=1) / 5
 sb.set()
 
 fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(13, 6))
-
-
-minimax_names = ("ID", "ID-AB", "ID-Sim", "BS", "BFMM", "MM-MCT")
-mcts_names = ("MC", "MC-SR", "PE", "SW-MC", "MW-MC", "PP")
 
 bar1 = ax1.bar(range(1, 7), minimax)
 

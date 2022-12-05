@@ -1,17 +1,14 @@
 from math import log, sqrt
 import random
 
-from src.agents.mcts_agents import TreeSearchAgent
+from src.agents.mcts_agents import MCTSAgent
+from src.agents.minimax_agents import IterativeDeepeningAgent
 
 
-class MaximizerMCTSAgent(TreeSearchAgent):
-    def __init__(self, search_time):
-        super().__init__()
-        self.search_time = search_time
-
-    def __repr__(self):
-        return super().__repr__() + f"+st={self.search_time}"
-
+class MaximizerMCTSAgent(MCTSAgent):
+    """
+    
+    """
     def select(self, node=None):
         if node is None:
             node = self.root
@@ -22,7 +19,7 @@ class MaximizerMCTSAgent(TreeSearchAgent):
         if not node.is_max_node:
             return self.select(random.choice(node.children))
 
-        c = max(c.cumulative_utility / c.count for c in node.children)
+        c = node.cumulative_utility / node.count
 
         def uct(child):
             exploit = child.cumulative_utility / child.count
@@ -34,12 +31,6 @@ class MaximizerMCTSAgent(TreeSearchAgent):
         best_child = sorted(node.children, key=uct)[-1]
 
         return self.select(best_child)
-
-    def expand(self, node):
-        return self.expand_next(node)
-
-    def should_evaluate(self, node):
-        return True
 
     def evaluate(self, state):
         while not state.is_terminal:
@@ -53,50 +44,10 @@ class MaximizerMCTSAgent(TreeSearchAgent):
         return state.utility
 
 
-    def should_backpropagate(self, node, value):
-        return True
-
-    def backpropagate(self, node, value):
-        self.backpropagate_sum(node, value)
-
-    def reflect(self):
-        pass
-
-    def get_best_move(self):
-        for c in self.root.children:
-            print(c.cumulative_utility / c.count)
-        return self.most_robust_child()
-
-    def should_terminate(self):
-        return self.timed_termination()
-
-
-class ExpectiMaxAgent(TreeSearchAgent):
+class IDExpectiMaxAgent(IterativeDeepeningAgent):
     """
     
     """
-    def __init__(self, depth=None):
-        super().__init__()
-        self.depth = depth
-
-    def __repr__(self):
-        return type(self).__name__
-
-    def select(self):
-        return self.queue_select()
-
-    def expand(self, node):
-        return self.expand_all_depth_limited(node)
-
-    def should_evaluate(self, node):
-        return self.if_depth_reached(node)
-
-    def evaluate(self, state):
-        return self.static_evaluation(state)
-
-    def should_backpropagate(self, node, value):
-        return self.if_depth_reached(node, value)
-
     def backpropagate(self, node, value):
         def bp(n):
             if n is None or len(n.unexpanded_actions) != 0 or any(c.eval is None for c in n.children):
@@ -112,42 +63,3 @@ class ExpectiMaxAgent(TreeSearchAgent):
            
         node.eval = value
         bp(node.parent)
-        
-    def reflect(self):
-        pass
-
-    def get_best_move(self):
-        return self.get_minimax_move()
-
-    def should_terminate(self):
-        return self.when_fully_evaluated()
-
-
-class IDExpectiMaxAgent(ExpectiMaxAgent):
-    """
-    
-    """
-    def __init__(self, search_time):
-        super().__init__(depth=1)
-        self.search_time = search_time
-        self.best_move = None
-        self.last_iter_root = None
-
-    def __repr__(self):
-        return type(self).__name__ + f"+st={self.search_time}"
-
-    def search(self, state):
-        self.depth = 2 # always terminate on max layer
-        self.best_move = None
-        return super().search(state)
-
-    def should_terminate(self):
-        return self.timed_termination()
-
-    def reflect(self):
-        return self.iterative_deepening_reflect(n=2) # always terminate on max layer
-
-    def get_best_move(self):
-        return self.get_stored_best_move()
-
-

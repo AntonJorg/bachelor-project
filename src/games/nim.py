@@ -100,15 +100,3 @@ class NimState:
             action = tuple(int(c) for c in char.split(","))
             state = self.result(action)
         return state
-
-
-if __name__ == "__main__":
-    state = NimState(5)
-
-    print(state)
-
-    while not state.is_terminal:
-        idx = int(input("Choose row: "))
-        a = int(input("Choose number to take: "))
-        state = state.result((idx, a))
-        print(state)

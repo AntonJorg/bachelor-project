@@ -1,5 +1,5 @@
 from src.agents.treesearch_agent import TreeSearchAgent
-from src.games import ConnectFourState, NimState, CheckersState
+
 
 class MiniMaxAgent(TreeSearchAgent):
     """
@@ -131,13 +131,3 @@ class BestFirstMiniMaxAgent(MiniMaxAgent):
 
     def should_terminate(self):
         return self.timed_termination()
-
-if __name__ == "__main__":
-    state = CheckersState()
-
-    agent = IterativeDeepeningSimulationAgent(.5)
-    #state = apply_many(state, "23223311120223313114")
-    print(state)
-    print(agent.search(state))
-    agent.last_iter_root.print_tree()
-    

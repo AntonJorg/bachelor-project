@@ -12,12 +12,14 @@ PYTHON_INTERPRETER = python3
 MINIMAX_AGENTS = IterativeDeepeningAgent IterativeDeepeningAlphaBetaAgent IterativeDeepeningSimulationAgent BeamSearchAgent BestFirstMiniMaxAgent MCTSTreeMiniMaxAgent
 MCTS_AGENTS = MCTSAgent MCTSEvaluationAgent PartialExpansionAgent StaticWeightedMCTSAgent MiniMaxWeightedMCTSAgent ProgressivePruningMCTSAgent
 
-TOP_FOUR = IterativeDeepeningSimulationAgent BestFirstMiniMaxAgent MCTSAgent PartialExpansionAgent
+TOP_FOUR = IterativeDeepeningSimulationAgent BeamSearchAgent MCTSAgent PartialExpansionAgent
 
 TIMES = 0.0625 0.125 0.25 0.5 1 2 4 8 16
 
 N_COMPARISON = 250
 N_TUNING = 200
+
+N_2048 = 100
 
 PP_ARGS := $(shell seq 1 .3333 15)
 SIM_ARGS := $(shell seq 2 2 50) $(shell seq 54 4 150)
@@ -86,6 +88,12 @@ c4_time: requirements
 	for time in $(TIMES) ; do \
 			$(PYTHON_INTERPRETER) src/run_experiment.py ConnectFour MCTSAgent PartialExpansionAgent $(N_COMPARISON) -loc c4_time -swap -t $$time; \
 	done
+
+2048_expectimax:
+	$(PYTHON_INTERPRETER) src/run_2048_experiment.py IDExpectiMaxAgent $(N_2048) -t 2 -loc twenty48_temp
+
+2048_mcts:
+	$(PYTHON_INTERPRETER) src/run_2048_experiment.py MaximizerMCTSAgent $(N_2048) -t 2 -loc twenty48
 
 
 # Cleanup

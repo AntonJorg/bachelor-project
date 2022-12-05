@@ -1,4 +1,5 @@
 \section{Generalizing search algorithms}
+\label{sec:generalizing}
 
 It is clear from Section \ref{sec:theory} that both MiniMax and MCTS along with their respective improvements are powerful decision making tools in an adversarial setting. What is not clear is that the two algorithms are more similar than it initially seems. The goal of this section is to introduce a more general framework in pseudocode that lets both algorithms be  implemented, while still describing the structure of the algorithms, eg. \textproc{TreeSearch}(State): \textbf{return} \textproc{GetBestMove}() would be very general, but not terribly informative.
 
@@ -8,7 +9,7 @@ The perhaps most glaring incompatibility between the two algorithms as presented
 
 \input{algorithms/iterativeminimax.tex}
 
-When looking at the iterative MiniMax in Algorithm \ref{alg:iterative_minimax}, the similarities with MCTS become more obivious. There is a selection step, an expansion step, and a backpropagation step. The only thing missing is the simulation step, but if we think of simulation as evaluating the state via a non-deterministic function, all the steps are present. The MiniMax algorithm includes an if-statement on line 9 that controls whether evaluation and backpropagation happens, but that too can be abstracted into a \textproc{ShouldEvaluate} function, which in the case of MCTS always returns true. 
+When looking at the iterative MiniMax in Algorithm \ref{alg:iterative_minimax}, the similarities with MCTS become more obivious. There is a selection step, an expansion step, and a backpropagation step. The only thing missing is the simulation step, but if we think of simulation as evaluating the state via a non-deterministic function, all the steps are present. The iterative MiniMax algorithm includes an if-statement on line 10 that controls whether evaluation and backpropagation happens, but that too can be abstracted into a \textproc{ShouldEvaluate} function, which in the case of MCTS always returns true. 
 
 Before the algorithm can be presented, it is necessary to define the types of objects that it will be acting on in such a way that it is clear what each part of the algorithm can read and write from the underlying data structures:
 
@@ -48,7 +49,7 @@ Given the GTS framework from Algoritm \ref{alg:general_tree_search}, MiniMax and
         \gbm & MostRobustChild \\ \hline
     \end{tabular}
     \caption{MiniMax and MCTS as implementations of GTS. Pseudocode
-    for the component functions can be found in Appendix \todo}
+    for the component functions can be found in Appendix \ref{appendix:componentfunctions}.}
     \label{tab:minimax_mcts_schematics}
 \end{table}
 
@@ -98,7 +99,7 @@ Having the ability to both grow and trim the search tree and to proactively prun
         \end{tabular}
     }
     \caption{MiniMax and MCTS as implementations of GTS. Pseudocode
-    for the component functions can be found in Appendix \todo}
+    for the component functions can be found in Appendix \ref{appendix:componentfunctions}.}
     \label{tab:id_ab_schematics}
 \end{table}
 

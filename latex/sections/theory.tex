@@ -1,54 +1,21 @@
 \section{Adversarial tree search}
 \label{sec:theory}
 
-Consider a deterministic zero-sum two-player game as a 4-tuple 
-$G = (S, A, R, U)$, where $S$ is the set of all states, $A$ is the
-set of all actions, some of which may not be applicable in some
-states and $R: S \times A \rightarrow S$ is the transition function
-describing the result of taking a certain action in a certain state.
-Let $S^\circ \subset S$ be the set of all terminal states, 
-then $U: S^\circ \rightarrow \mathrm{R}$ is the utility function 
-associating each terminal state with a real number. Since not all
-actions are applicable in all states, let $A(s) \subseteq A$ denote
-the subset of actions that are applicable in the state $s$. The set
-$S'(s) = \{ R(s, a) \; | \; a \in A(s) \}$ contains the successor states of $s$,
-which are all states reachable from $s$ by taking an applicable action.
+Consider a deterministic zero-sum two-player game as a 4-tuple $G = (S, A, R, U)$, where $S$ is the set of all states, $A$ is the set of all actions, some of which may not be applicable in some states and $R: S \times A \rightarrow S$ is the transition function describing the result of taking a certain action in a certain state. Let $S^\circ \subset S$ be the set of all terminal states, then $U: S^\circ \rightarrow \mathrm{R}$ is the utility function associating each terminal state with a real number. Since not all actions are applicable in all states, let $A(s) \subseteq A$ denote the subset of actions that are applicable in the state $s$. The set $S'(s) = \{ R(s, a) \; | \; a \in A(s) \}$ contains the successor states of $s$, which are all states reachable from $s$ by taking an applicable action.
 
-To enforce the zero-sum property, the first player to take action will
-recieve a utility of $U(s)$ in terminal states, while the second player
-recieves $-U(s)$. The first player will be reffered to as the Max player,
-and the second as the Min player, as they seek to respectively maximize 
-and minimize the utility function.
+To enforce the zero-sum property, the first player to take action will recieve a utility of $U(s)$ in terminal states, while the second player recieves $-U(s)$. The first player will be reffered to as the Max player, and the second as the Min player, as they seek to respectively maximize and minimize the utility function.
 
-The question is now, given a state $s_0 \in S$, what action should
-a rational agent take? To answer this question, we model the game
-as a game tree, starting with a root node containing the current state
-$s_0$. Each node in the game tree has a set of children, containing 
-one child node for each state in $S'(s)$:
+The question is now, given a state $s_0 \in S$, what action should a rational agent take? To answer this question, we model the game as a game tree, starting with a root node containing the current state $s_0$. Each node in the game tree has a set of children, containing one child node for each state in $S'(s)$:
 
 \input{tikz/gametree.tex}
 
-In the game from Figure \ref{fig:game_tree}, it is easy to see that in
-order to maximize the utility function, the Max player should take action
-$a_1$, forcing the Min player into action $a_0$, and then taking $a_0$
-for a utility of $0$. While a higher utility is available in the subtree
-stemming from first taking $a_0$, an optimal Min player would pick $a_1$
-every time, leading to a worse outcome for Max.
+In the game from Figure \ref{fig:game_tree}, it is easy to see that in order to maximize the utility function, the Max player should take action $a_1$, forcing the Min player into action $a_0$, and then taking $a_0$ for a utility of $0$. While a higher utility is available in the subtree stemming from first taking $a_0$, an optimal Min player would pick $a_1$ every time, leading to a worse outcome for Max.
 
-While it is easy to see these optimal decisions in a small game tree, even
-Tic Tac Toe has a game tree complexity (the number of nodes in the game 
-tree) on the order of $10^5$, while games like Chess and Go reach 
-$10^{123}$ and $10^{360}$ respectively. Trees of these sizes are currently
-impossible to search completely, so in order to construct a game playing
-agent based on tree search methods, it is necessary to reduce the amount
-of nodes that needs to be searched.
+While it is easy to see these optimal decisions in a small game tree, even Tic Tac Toe has a game tree complexity (the number of leaf nodes in the game tree) on the order of $10^5$, while games like Chess and Go reach $10^{123}$ and $10^{360}$ respectively. Trees of these sizes are currently impossible to search completely, so in order to construct a game playing agent based on tree search methods, it is necessary to reduce the amount of nodes that needs to be searched.
 
 \subsection{MiniMax}
 
-The classical approach to adversarial search, MiniMax builds on the
-idea of minimizing the maximum amount of utility that your opponent can
-achieve, in other words making their optimal choice as bad as possible.
-The MiniMax value of a state can be recursively defined as
+As the classical approach to adversarial search, MiniMax builds on the idea of minimizing the maximum amount of utility that your opponent can achieve, in other words making their optimal choice as bad as possible. The MiniMax value of a state can be recursively defined as
 
 \begin{equation}
     MiniMax(s) = \begin{cases}
@@ -58,9 +25,7 @@ The MiniMax value of a state can be recursively defined as
     \end{cases}
     \label{eq:MiniMax}
 \end{equation}
-where $Player(s)$ returns the player which turn it is to take action in
-state $s$. From this optimal play can be achieved by following the policy
-given by:
+where $Player(s)$ returns the player which turn it is to take action in state $s$. From this optimal play can be achieved by following the policy given by:
 \begin{equation}
     TakeAction(s) = \begin{cases}
         \arg\max_{a \in A(s)} MiniMax(R(s, a)) & Player(s) = Max \\
@@ -68,38 +33,19 @@ given by:
     \end{cases}
     \label{eq:MiniMax_policy}
 \end{equation}
-This means that optimal play for the Max player simply consists of choosing
-the action which leads to the state with the highest MiniMax value, and
-vice versa for the Min player. Take the game tree from Figure \ref{fig:game_tree}
-as an example:
+This means that optimal play for the Max player simply consists of choosing the action which leads to the state with the highest MiniMax value, and vice versa for the Min player. Take the game tree from Figure \ref{fig:game_tree} as an example:
 
 \input{tikz/MiniMax_example.tex}
 
-The pseudocode for implementing MiniMax
-is as follows:
-
 \input{algorithms/MiniMax}
 
-If MiniMax is implemented as a Depth First Search (DFS) with added backup 
-of the MiniMax values, it has a time complexity
-of $\mathcal{O}(b^m)$ and a space complexity of $\mathcal{O}(m)$,
-where $b$ is the average number of applicable actions, also called the 
-branching factor, and $m$ is the depth of the deepest node in the game tree.
-Most notably however, is that it searches the \textit{entire}
-game tree, making it infeasible for the vast majority of games.
+The pseudocode of a pure MiniMax algorithm can be seen in Algorithm \ref{alg:minimax}. If MiniMax is implemented as shown, a Depth First Search (DFS) with added backup of the MiniMax values, it has a time complexity of $\mathcal{O}(b^m)$ and a space complexity of $\mathcal{O}(m)$, where $b$ is the average number of applicable actions, also called the branching factor, and $m$ is the depth of the deepest node in the game tree. Most notably however, is that it searches the \textit{entire} game tree, making it intractable for the vast majority of games.
 
-Many methods exist to make MiniMax practical on large 
-game trees, of which these will be introduced in this paper:
-$\alpha\beta$-pruning, iterative deepening, and Best First MiniMax. 
-The first two methods are by far the most widely used, and most
-if not all modern MiniMax agents implement both.
+Many methods exist to make MiniMax practical on large game trees, three of which will be introduced in this paper: $\alpha\beta$-pruning, iterative deepening, and Best First MiniMax.  The first two methods are by far the most widely used, and most if not all modern MiniMax agents implement both.
 
 \subsubsection{AlphaBeta-pruning}
-
-$\alpha\beta$-pruning can be thought of as a simplification of
-the MiniMax formula that is applicable in certain cases, and
-as such it still guarantees optimality. Consider the following
-example:
+This is a quick introduction, for a more in depth explanation see \cite[p. 198]{russellnorvig}.
+$\alpha\beta$-pruning can be thought of as a simplification of the MiniMax formula that is applicable in certain cases, and as such it still guarantees optimality. Consider the following example:
 \begin{align*}
     MiniMax(s) &= \max(MiniMax(R(s, a_0)), MiniMax(R(s, a_1)), 
     MiniMax(R(s, a_2))) \\
@@ -107,139 +53,56 @@ example:
     &= \max(5, y_0, y_1), \;\; y_0 \leq 1, \; y_1 \leq 4 \\
     &= 5
 \end{align*}
-On the second line some values are missing, but the values that are present
-can be used to set an upper bound for their corresponding $\min$ statements,
-which in turn can be used to determine the value of the $\max$ statement.
-This method can be used all throughout the MiniMax algorithm, potentially
-cutting off huge subtrees from the search space, allowing it to search much
-deeper. Since the example is very shallow, it does not illustrate this 
-to full effect, but if the actions are expanded in the optimal order, 
-$\alpha\beta$-pruning has a time complexity of $\mathcal{O}(b^{m/2})$, which
-compared to MiniMax's $\mathcal{O}(b^{m})$ lets $\alpha\beta$-pruning search
-twice as deep in the same time. In practice the actions cannot be expanded
-in the optimal order since an optimal ordering could be used to play the
-game optimally, but existing methods can get quite close to the theoretical
-limit \needcit.
+On the second line some values are missing, but the values that are present can be used to set an upper bound for their corresponding $\min$ statements, which in turn can be used to determine the value of the $\max$ statement. This method can be used all throughout the MiniMax algorithm, potentially cutting off huge subtrees from the search space, allowing it to search much deeper. Since the example is very shallow, it does not illustrate this to full effect, but if the actions are expanded in the optimal order, $\alpha\beta$-pruning has a time complexity of $\mathcal{O}(b^{m/2})$, which compared to MiniMax's $\mathcal{O}(b^{m})$ lets $\alpha\beta$-pruning search twice as deep in the same time. In practice the actions cannot be expanded in the optimal order since an optimal ordering could be used to play the game optimally, but existing methods can get quite close to the theoretical limit \cite[p. 201]{russellnorvig}.
+
 
 \input{algorithms/alphabeta}
-
 \subsubsection{Iterative Deepening}
+Iterative deepening builds on depth limited search, which as the name suggests terminates the recursion at a predetermined depth instead of continuing to a terminal state. However, from the definition of games in the beginning of this section it is clear that only terminal states have a utility value, so the algorithm has nothing to return if recursion stops earlier. To overcome this issue, an evaluation function $E: S \rightarrow \mathbb{R}$ is introduced, representing an estimate of the true game theoretical value of the position. This evaluation function can be based on domain knowledge e.g. in chess it could be piece values and positioning principles, it can be learned using neural networks, or it can be a combination of both. A depth limited search of depth $d$ has a time complexity of $\mathcal{O}(b^d)$ and a space complexity of $\mathcal{O}(d)$,since it forces the deepest node in the tree to have depth at most $d$. Since the algorithm no longer searches the entire game tree and uses an approximation for the MiniMax value at cutoff nodes, it is no longer guaranteed optimal, but can still produce strong play with a good evaluation function.
 
-Iterative deepening builds on depth limited search, which
-as the name suggests terminates the recursion at a predetermined
-depth instead of continuing to a terminal state. However, from 
-the definition of games in the beginning of this section it is
-clear that only terminal states have a utility value, so the
-algorithm has nothing to return if recursion stops earlier. To
-overcome this issue, an evaluation function 
-$E: S \rightarrow \mathbb{R}$ is introduced, representing an
-estimate of the true MiniMax value of the position \revise. 
-This evaluation function can be based on domain knowledge e.g.
-piece values and positioning principles in chess, it can be
-learned using neural networks, or it can be a combination of both.
-A depth limited search of depth $d$ has a time complexity of 
-$\mathcal{O}(b^d)$ and a space complexity of $\mathcal{O}(d)$,
-since it forces the deepest node in the tree to have depth at most $d$.
-Since the algorithm no longer searches the entire game tree and
-uses an approximation for the MiniMax value, it is no longer
-guaranteed optimal, but can still produce strong play with a good
-evaluation function.
-
-Having the ability to limit the search to a certain depth is a
-great improvement, but it can still be difficult to estimate
-how much time a search to a given depth will take, which is a
-problem in most applications. Iterative deepening overcomes this
-issue by starting at depth $d=1$, which is guaranteed to complete
-almost instantly, storing the best move, increasing the depth to 
-$d=2$, and so on. This way when time runs out the algorithm will always
-have an action to return. The main concern about iterative deepening
-is that the algorithm has to search many nodes multiple times, thereby wasting
-time. While this is true, the amount of re-searched nodes is much smaller
-than one might think, since the exponential nature of game trees make
-shallower levels of the tree much smaller than deeper ones. Take a game
-with branching factor $b=10$, searched to depth $d=5$. A normal depth
-limited search would search $10^1+10^2+10^3+10^4+10^5=111,110$ nodes, 
-while an iterative deepening search would search 
-$5 \cdot 10^1+4 \cdot 10^2+3 \cdot 10^3+2 \cdot 10^4+10^5=123,450$ nodes,
-which is only an $11.11\%$ increase. \todo Iterative deepening can even
-decrease the number of nodes searched by improving move ordering.
+Having the ability to limit the search to a certain depth is a great improvement, but it can still be difficult to estimate how much time a search to a given depth will take, which is a problem in most applications. Iterative deepening overcomes this issue by starting at depth limit $d=1$, which is guaranteed to complete almost instantly, storing the best move, increasing the depth limit to  $d=2$, and so on. This way when time runs out the algorithm will always have an action to return. The main concern about iterative deepening is that the algorithm has to search many nodes multiple times, thereby wasting time. While this is true, the amount of re-searched nodes is much smaller than one might think, since the exponential nature of game trees make shallower levels of the tree much smaller than deeper ones. Take a game with branching factor $b=10$, searched to depth $d=5$. A normal depth limited search would search $10^1+10^2+10^3+10^4+10^5=111,110$ nodes, while an iterative deepening search would search $5 \cdot 10^1+4 \cdot 10^2+3 \cdot 10^3+2 \cdot 10^4+10^5=123,450$ nodes, which is only an $11.11\%$ increase \cite[p. 99]{russellnorvig}. If combined with $\alpha\beta$-pruning, iterative deepening can even decrease the number of nodes searched by improving move ordering.
 
 \input{algorithms/iterativedeepening.tex}
 
 \subsubsection{Best First MiniMax}
-\needcit
-The classical approach to implementing MiniMax is via DFS, since it 
-can compute the MiniMax move using linear space, and only needs
-to back up the MiniMax values once. $\alpha\beta$-pruning and iterative 
-deepening makes it possible to search less nodes and terminate early,
-but it is still only using information from the deepest nodes to guide
-the search. Best First MiniMax seeks to improve this by continually 
-expanding the most promising nodes until a time or space limit is reached,
-resulting in a tree with non-uniform depth.
+The classical approach to implementing MiniMax is via DFS, since it can compute the MiniMax move using linear space, and only needs to back up the MiniMax values once per state $\alpha\beta$-pruning and iterative deepening makes it possible to search less nodes and terminate early, but it is still only using information from the deepest nodes to guide the search. Best First MiniMax seeks to improve this by continually expanding the most promising nodes until a time or space limit is reached resulting in a tree with non-uniform depth.
 
-In a non-adversarial setting, Best First Search uses a priority queue based 
-frontier to determine which node to expand next, but that approach is
-difficult to transfer directly to adversarial search since nodes with
-high evaluation should have a high chance of leading to a win, but
-without searching the low evaluation nodes the agent does not see the
-refutations or even losing moves that an otherwise promising strategy
-might contain. Even if the frontier prioritized both extremes of the
-evaluation function, the average evaluation nodes still need to be
-explored in order to find possible extreme values in their subtrees.
-All this means that if the agent is not searching to a uniform depth,
-it needs a way to balance exploitation (expanding promising nodes) and
-exploration (expanding not so promising nodes).
+In a non-adversarial setting, Best First Search uses a priority queue based frontier to determine which node to expand next, but that approach is difficult to transfer directly to adversarial search since nodes with high evaluation should have a high chance of leading to a win, but without searching the low evaluation nodes the agent does not see the refutations or even losing moves that an otherwise promising strategy might contain. Even if the frontier prioritized both extremes of the evaluation function, the average evaluation nodes still need to be explored in order to find possible extreme values in their subtrees. All this means that if the agent is not searching to a uniform depth, it needs a way to balance exploitation (expanding promising nodes) and exploration (expanding not so promising nodes).
 
-The mechanism used by Best First MiniMax to achieve this balance is 
-the principal variation, which is illustrated on Figure \ref{fig:minimax_example}.
-As seen in the figure, the principal variation is the path from the root
-to a leaf where all nodes have the same MiniMax value, ie. the leaf is 
-where the MiniMax value of the root stems from. This means that the root
-needs a MiniMax value in order for the principal variation to exist, and
-Best First MiniMax therefore has to back up MiniMax values on each iteration,
-which is the price it pays to achieve non-uniform expansion. The algorithm
-runs three steps over and over:
+The mechanism used by Best First MiniMax \cite{Korf1996} to achieve this balance is the principal variation, which is illustrated on Figure \ref{fig:minimax_example}. As seen in the figure, the principal variation is the path from the root to a leaf where all nodes have the same MiniMax value, ie. the leaf is  where the MiniMax value of the root stems from. This means that the root needs a MiniMax value in order for the principal variation to exist, and Best First MiniMax therefore has to back up MiniMax values on each iteration, which is the price it pays to achieve non-uniform expansion. The algorithm runs three steps over and over:
 \begin{enumerate}
     \item Select the leaf at the end of the principal variation
     \item Fully expand this leaf
     \item Back up new MiniMax values 
 \end{enumerate}
-A common concern is that this would lead the algorithm to go down one
-promising path and never come back. This is not what happens, due to
-what the authors call the tempo effect. The tempo effect states that
-when expanding a max node the value tends to go up due to it taking
-on the maximum value of its children. This makes it less attractive
-to its parent min node, which decreases the chance that the max node
-will be on the principal variation during the next iteration.
+A common concern is that this would lead the algorithm to go down one promising path and never come back. This is not what happens, due to what the authors call the tempo effect. The tempo effect states that when expanding a max node the value tends to go up due to it taking on the maximum value of its children. This makes it less attractive to its parent min node, which decreases the chance that the max node will be on the principal variation during the next iteration.
 
 \input{tikz/bestfirstminimax}
 
 \newpage
 \subsection{Monte Carlo Tree Search}
 
-Monte Carlo methods in AI rely on information from many simulated games 
-played with randomly selected actions to guide decision making in the 
-current state. In its most basic form, Monte Carlo sampling generates
-all successors $\{ Result(s, a) \;|\; a \in A(s) \}$ of the current
-state, and simulates multiple games starting from each successor state
-until the budget runs out. These simulated games are called rollouts,
-and the budget can either be a fixed number of rollouts, or a time
-limit. When the budget runs out, the action leading to the successor
-state with the highest average utility is chosen as the next action.
+Monte Carlo methods in AI rely on information from many simulated games played with randomly selected actions to guide decision making in the current state. In its most basic form, Monte Carlo sampling generates all successors $S'(s)$ of the current state $s$, and simulates multiple games starting from each successor state until the budget runs out. These simulated games are called rollouts, and the budget can either be a fixed number of rollouts, or a time limit. When the budget runs out, the action leading to the successor state with the highest average utility $\hat{U}$ is chosen as the next action.
 
 \input{tikz/montecarlosampling}
 
-\todo Explain UCB on standard monte carlo sampling
+The approach in Figure \ref{fig:simple_monte_carlo} chooses which node to sample next in such a way that it keeps the number of simulations for each node balanced. This is a naive approach in the sense that if a state looks very unpromising, it will still take up the same fraction of rollouts as the more promising ones. To formalize the concept of spending time on suboptimal states, the idea of \textit{regret} is introduced. Assuming that each state $s_i$ has a true mean utility $\bar{U}_i$, the maximum mean utility is denoted $U^*$, and its state $s^*$. The regret of performing rollout $n$ from state $s_i$ is then $l_n = U^* - \bar{U}_i$, and the cumulative regret of all rollouts is $L_N = \sum_{n=0}^N l_n$. The goal is then to choose a rollout policy that minimizes $L_N$. Since all states but $s^*$ has positive regret, it is clear that balancing the rollouts evenly between all states will result in $L_N$ being linear in $N$. It can be shown that choosing the next rollout greedily, i.e. choosing the state where $\hat{U}$ is currently largest, also results in linear cumulative regret, even if random exploration is performed with probability $\epsilon$ (knowns as an $\epsilon$-greedy policy).
+To improve upon this, Auer and Fischer \cite{Auer2002} utilised the idea of upper condifence bounds, valuing states highly not only if their $\hat{U}$ value is high, but also if the number of rollouts from the state is low. This encourages exploration that still acknowledges $\hat{U}$, and results in cumulative regret that is logarithmic in $N$. Their selection policy chooses the state that maximizes the UCB1 value:
 
-Monte Carlo Tree Search (MCTS) expands the classical idea of Monte Carlo
-sampling by expanding a partial game tree containing the results of
-the simulations, and using these results to guide further simulations.
-Nodes in the game tree store the following information:
+\begin{equation}
+    \text{UCB1}(s_i) = \hat{U}_i + 
+    c\sqrt{\frac{\log{N}}{n_i}}
+\end{equation}
+
+The first term in UCB1 is the exploitation term, and makes sure that the algorithm gravitates toward states with a high utility. The second term is the exploration term, which increases the value of nodes that have not seen many rollouts compared to $N$. This prevents the algorithm from getting stuck on suboptimal nodes in case their initial few rollouts are a bad estimation of their true utility. The parameter $c$ balances the two terms, and a value of $\sqrt{2}$ is theoretically optimal for utilities on $[0, 1]$.
+
+Monte Carlo Tree Search (MCTS) \cite{Coulom2006, Chang2005} expands the classical idea of Monte Carlo sampling by expanding a partial game tree containing the results of the simulations, and using these results to guide further simulations. Nodes in the game tree store the following information:
 
 \begin{itemize}
     \item State: Game state $s \in S$
     \item Count: Number of simulations from this node or its descendants
     \item Utility: Cumulative utility from simulations from this node or its descendants
+    \item Parent: The node that generated this node
     \item Children: List of nodes containing successor states
     \item Unexpanded Actions: Actions from $A(s)$ that have not yet been used to generate a successor state 
 \end{itemize}
@@ -254,23 +117,8 @@ the steps seen in Algorithm \ref{alg:mcts}:
 
 \textbf{Select:} The selection step starts in the root of the tree,
 and progresses recursively down through the tree using the following
-rules: If the node contains a terminal state, or the node still has
-unexpanded actions, return the node. Otherwise, run the selection
-step again on the child with the highest $UCB1$ value:
-
-\begin{equation}
-    \text{UCB1}(Node) = \frac{Utility}{Count} + 
-    c\sqrt{\frac{\log{Parent.Count}}{Count}}
-\end{equation}
-
-The first term in UCB1 is called the exploitation term, and represents
-an estimate of the utility of the node. This makes sure that the algorithm
-gravitates toward states with a high utility. The second term is the
-exploration term, which increases the value of nodes that have not been
-picked much compared to their parents. This prevents the algorithm from
-getting stuck on suboptimal nodes in case the initial few rollouts from
-the parent are a bad estimation of their true utility. The application
-of UCB1 on trees is usually called UCT, or Upper Confidence bounds on Trees.
+rules: If the current node contains a terminal state, or the node still has unexpanded actions, return the node. Otherwise, run the selection
+step again on the child $C$ with the highest $UCB1$ value, where $N$ is set to $C.Parent.Count$. The application of UCB1 on trees is usually called UCT, or Upper Confidence bounds on Trees.
 Note that if backpropagation does not take into account the difference
 between Max and Min nodes, UCB1 should use a modified exploitation term 
 for the Min player. For utilities on the interval $[0,1]$, 
@@ -278,8 +126,8 @@ $1 - \frac{Utility}{Count}$ can be used.
 \begin{algorithm}
     \begin{algorithmic}[1]
         \Procedure{Select}{Node}
-            \If{$\text{Node.State} \in S^\circ$ \textbf{or} 
-            $\text{Node.UnexpandedActions}$}
+            \If{$\text{Node.State} \in S^\circ$ \textbf{or not} 
+            FullyExpanded(Node)}
                 \State \Return Node
             \EndIf
             \State Child = 
@@ -290,16 +138,16 @@ $1 - \frac{Utility}{Count}$ can be used.
 \end{algorithm}
 
 \textbf{Expand:} In the expansion step, the selected node is expanded by 
-popping an action from \lstinline|UnexpandedActions|, and adding a child 
+popping an action from Unexpanded Actions, and adding a child 
 node containing the successor state corresponding to that action. This
 child node is then also returned. If the selected node contains a terminal 
 state or has no unexpanded actions, the selected node is returned instead.
 
-\begin{algorithm}
+\begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{Expand}{Node}
-            \If{$\text{Node.State} \in S^\circ$ \textbf{or not} 
-            $\text{Node.UnexpandedActions}$}        
+            \If{$\text{Node.State} \in S^\circ$ \textbf{or} 
+            FullyExpanded(Node)}        
                 \State \Return Node
             \EndIf
             \State Action = Node.UnexpandedActions.Pop()
@@ -346,17 +194,16 @@ is then called on the roots parent.
     \end{algorithmic}    
 \end{algorithm}
 
+Usually the backpropagation step differentiates between Max and Min nodes, and assigns utilities accordingly. Since the Max nodes have Min nodes as children and has to maximize over those, it is the Min nodes that recieve $+1$ if the Max player wins, and vice versa. In this paper the responsibility of differentiating between node types is delegated to the selection step, partly because it makes the average utilities more compatible with methods introduced later, and partly because it is arguably more intuitive. To see all the steps illustrated, see Figure \ref{fig:mcts_illustrated}.
+
 \input{tikz/mcts}
-\todo Use figure in explanation, update to reflect correct 
-backpropagation
 
 \subsubsection{Partial Expansion}
-\needcit
 The base version of MCTS is forced to fully expand a node
 before any of its children can be explored. Sometimes however
 it may be more worthwile to continue exploring deeper into the
 tree immediately. To determine when this is the case, partial
-expansion introduces an upper confidence bound $\text{UCB}_c$ on 
+expansion \cite{Jacobsen2014, Frydenberg2015} introduces an upper confidence bound $\text{UCB}_c$ on 
 the reward of expanding a new child:
 
 \begin{equation}
@@ -375,7 +222,7 @@ is called on the child with the maximum UCB1:
             \If{$\text{Node.State} \in S^\circ$}
                 \State \Return Node
             \EndIf
-            \If{$\text{UCB}_c(Node) > \max \{ \text{UCB1}(c) \;|\; c \in \text{Node.Children} \}$ \textbf{and not} FullyExpanded(Node)}
+            \If{$\text{UCB}_c(\text{Node}) > \max \{ \text{UCB1}(c) \;|\; c \in \text{Node.Children} \}$ \textbf{and not} FullyExpanded(Node)}
             \State \Return Node
             \Else
             \State Child = 

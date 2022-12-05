@@ -1,48 +1,15 @@
 \section{Introduction}
 
-Designing new and efficient search algorithms is a difficult task even 
-in non-adversarial settings, and the problem only gets worse when the 
-actions of an opposing agent have to be considered. This paper seeks
-to introduce a unified framework implementing a wide class of adversarial
-search algorithms to facilitate easier development and experimentation
-in the field. 
+Designing new and efficient search algorithms is a difficult task even in non-adversarial settings, and the problem only gets worse when the actions of an opposing agent have to be considered. This paper seeks to introduce a unified framework with capability of implementing a wide class of adversarial search algorithms to facilitate easier development and experimentation in the field. Todays game playing search algorithms are often taken for granted, but current techniques are truly standing on the shoulders of giants, and no treatment of the subject would be complete without acknowledging that.
 
-Ever since the infancy of the artificial intelligence field, search
-algorithms have been a key part of designing rational agents. By
-looking many moves ahead agents can review many lines of play, and
-compare evaluations of millions of future states deep into the search
-tree to make much better decisions than an agent that simply evaluates
-the immediate consequences of its actions.
-
-In his 1928 paper 'Zur Theorie der Gesellschaftsspiele' von Neumann
-proves the minimax theorem which shows that
-\begin{equation}
+In his 1928 paper 'Zur Theorie der Gesellschaftsspiele' von Neumann proved the minimax theorem, which shows that
+\begin{equation*}
     \max_{x\in X}\min_{y\in Y} f(x, y) = \min_{y\in Y}\max_{x\in X} f(x, y)   
-\end{equation}
-holds under certain conditions. These conditions notably apply in the
-case of simultaneous games, where the expexted value of a game can be
-calculated using $x^\intercal Ay$. With this he proves that every zero-sum two-player game has
-optimal mixed strategies, which he himself states as being a prerequisite
-for the entire field of game theory. 
+\end{equation*}
+holds under certain conditions. These conditions notably apply in the case of simultaneous games, where the expexted value of a game can be calculated using a vector-matrix product. With this he proved that every zero-sum two-player game has optimal mixed strategies, which he himself stated as being a prerequisite for the development of any sort of theory of game-playing \cite{Kjeldsen2001}. 
 
-Alan Turing and David Champernowne developed the Turochamp chess program
-in 1948, which is one of the earliest examples of a minimax algorithm.
-Turochamp examines all of its own possible moves, and for each of those
-moves it examines every possible player response. If any 'notable' moves
-like checks, captures of undefended pieces, etc. are available, it
-examines these as well. All resulting positions are evaluated, and these
-evaluations were backpropagated using minimax. 
+During WWII Alan Turing reportedly had discussions with his Bletchley Park colleagues about computers solving problems by searching through the solution space, proposing ideas such as Best First Search and MiniMax \cite{Copeland2006}. Turing went on to develop the Turochamp chess program with David Champernowne in 1948, which is one of the earliest examples of a MiniMax algorithm. Turochamp examines all of its own possible moves, and for each of those moves it examines every possible player response. They also included the ability to search deeper for 'notable' moves such as checks and captures \cite{Slomson2013}. In the famous Dartmouth workshop in 1956, arranged in part by John McCarthy, Alex Bernstein presented a chess program that he was developing. After seeing this, McCarthy invented $\alpha\beta$-pruning to recommend it to Bernstein, who was alledgedly not impressed \cite{McCarthy2006}, even though it is a well known fact today that $\alpha\beta$-pruning lets minimax algorithms search \textit{twice} as deep under optimal conditions. McCarthy went on to recommend it to his students working on a  chess program in 1961, resulting in a program of similar strength to "an amateur with about 100 games experience" \cite{Kotok2004}. From there it took almost four decades and two 'AI Winters' until 1997, where IBMs Deep Blue had become strong enough to beat Garry Kasparov, the reigning world champion of chess at the time \cite{Campbell2002}.
 
-During the famous Dartmouth workshop in 1956 the topic of minimax was
-on the agenda, and John McCarthy who arranged the workshop is said to 
-have suggested using alpha beta pruning to his students working on a 
-chess program in 1961.
+Even with the huge improvements from $\alpha\beta$-pruning, traditional tree search methods struggled with games with a high branching factor, of wich Go is the most popular one in AI research. This lack of performance led researchers to seek different methods, and in \citeyear{Coulom2006} \citeauthor{Coulom2006} introduced Monte Carlo Tree Search (MCTS), which utilises the sampling approach of Monte Carlo methods combined with confidence bounds from the bandit algorithm field to expand its search tree non-uniformly \cite{Coulom2006}. In a major breakthrough, AlphaGo by Deepmind combined MCTS with neural networks for position evaluation to beat Lee Sedol, one of the strongest Go players of all time, 4 - 1 \cite{Silver2016}.
 
-Even with the huge improvements from alpha beta pruning traditional
-tree search methods struggled with games with a high branching factor,
-of wich Go is the most popular one in AI research. This lack of
-performance led researchers to seek different methods, and in 2006 
-Rémi Coulom introduced Monte Carlo Tree Search, extending
-traditional Monte Carlo methods to tree search.
-
-Many mixed algoithms using both minimax and mcts 
+Mixed algoithms exist that use both MiniMax and MCTS, mostly using small minimax searches within MCTS \cite{Baier2014}, but so far there is no unified treatment of adversarial search algorithms, as opposed to non-adversarial search where depth first, breadth first, greedy, and A*-search can all be described with the same algorithm, by changing out the frontier. Within the following sections current adversarial tree search methods are introduced, and a unifying framework is presented. Experimental work is carried out using the framework, and a commentary on the effectiveness and descriptiveness of the framework is made.

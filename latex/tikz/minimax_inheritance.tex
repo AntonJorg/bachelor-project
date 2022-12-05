@@ -2,7 +2,8 @@
     \centering
     \resizebox{\textwidth}{!}{
         \tikzset{
-            selected/.style={shape=rectangle, draw, line width = 1mm}
+            selected/.style={shape=rectangle, draw, line width = 1mm},
+            arrow/.style={line width = .5 mm, >=latex}
         }
 
         \begin{tikzpicture}[scale=12]
@@ -10,21 +11,21 @@
             \node(minimax)[]{\usebox{\minimax}};
             \node(dlminimax)[below = 3 cm of minimax]{\usebox{\dlminimax}};
             \node(alphabeta)[below right = of dlminimax]{\usebox{\alphabeta}};
-            \node(iterativedeepening)[selected, below left = of dlminimax]{\usebox{\iterativedeepening}};
+            \node(iterativedeepening)[selected, below left = 1 cm and .5 cm of dlminimax]{\usebox{\iterativedeepening}};
             \node(idalphabeta)[selected, below right = of iterativedeepening]{\usebox{\idalphabeta}};
             \node(idsim)[selected, below = of iterativedeepening]{\usebox{\idsimulation}};
             \node(bestfirst)[selected, below right = of minimax]{\usebox{\bestfirstminimax}};
             \node(beamsearch)[selected, below = of idalphabeta]{\usebox{\beamsearch}};
             
 
-            \path [->] (minimax) edge (dlminimax);
-            \path [->] (dlminimax) edge (iterativedeepening);
-            \path [->] (dlminimax) edge (alphabeta);
-            \path [->] (iterativedeepening) edge (idalphabeta);
-            \path [->] (iterativedeepening) edge (idsim);
-            \path [->] (alphabeta) edge (idalphabeta);
-            \path [->] (minimax) edge (bestfirst);
-            \path [->] (idalphabeta) edge (beamsearch);
+            \path [->, arrow] (minimax) edge (dlminimax);
+            \path [->, arrow] (dlminimax) edge (iterativedeepening);
+            \path [->, arrow] (dlminimax) edge (alphabeta);
+            \path [->, arrow] (iterativedeepening) edge (idalphabeta);
+            \path [->, arrow] (iterativedeepening) edge (idsim);
+            \path [->, arrow] (alphabeta) edge (idalphabeta);
+            \path [->, arrow] (minimax) edge (bestfirst);
+            \path [->, arrow] (idalphabeta) edge (beamsearch);
         \end{tikzpicture}        
     }
     

@@ -82,6 +82,7 @@ class Expand:
         """
         
         """
+        # TODO: Test if necessary
         if node.state.is_terminal:
             return node
 

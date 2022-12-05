@@ -10,11 +10,13 @@
             \Comment Mutable fields, stores e.g. evaluation, cumulative utility, count, etc.
             \State \textbf{private} OnFrontier = True            
             \Comment New nodes start on the frontier
+            \State \textbf{private} GeneratingAction
             \\
             \State \textbf{public} getState()
             \State \textbf{public} getValues()
             \State \textbf{public} getParentValues()
             \State \textbf{public} getChildrenValues()
+            \State \textbf{public} getGeneratingAction()
         \EndObj
         \\
         \State \textbf{function} \textproc{GetParent}(Node: \textproc{Node})

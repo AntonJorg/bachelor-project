@@ -13,7 +13,7 @@
     \tikzstyle{level 2}=[level distance=2.5mm,sibling distance=.3mm]
     % The Tree
     \node(0)[state]{$s_0$}
-    child{node[state, label=left:{\small $\hat{U}=0.25$}]{$s_1$}
+    child{node[state, label=left:{\small $\hat{U}_1=0.25$}]{$s_1$}
     child{node[win]{}
         edge from parent[decorate, decoration=snake] node[left]{Rollouts}
         }
@@ -28,7 +28,7 @@
         }
         edge from parent node[right]{$a_0$}
     }
-    child{node[state, label=left:{\small $\hat{U}=0.75$}]{$s_2$}
+    child{node[state, label=left:{\small $\hat{U}_2=0.75$}]{$s_2$}
         child{node[win]{}
         edge from parent[decorate, decoration=snake]
         }
@@ -43,7 +43,7 @@
         }
         edge from parent node[right]{$a_1$}
     }
-    child{node[state, label=left:{\small $\hat{U}=0.5$}]{$s_3$}
+    child{node[state, label=left:{\small $\hat{U}_3=0.5$}]{$s_3$}
         child{node[win]{}
         edge from parent[decorate, decoration=snake]
         }

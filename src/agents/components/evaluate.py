@@ -24,7 +24,6 @@ class Evaluate:
         while not state.is_terminal:
             action = random.choice(state.applicable_actions)
             state = state.result(action)
-            print(state)
         return state.utility
 
     def simulate_many(self, state):        

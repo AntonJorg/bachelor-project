@@ -9,8 +9,7 @@ from src.games.twenty48 import Twenty48EnvironmentState, Twenty48State
 states = (
     ConnectFourState,
     NimState,
-    CheckersState,
-    Twenty48EnvironmentState
+    Twenty48State
 )
 
 # Only for typing

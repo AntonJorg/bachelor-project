@@ -5,137 +5,44 @@ adversarial games; Connect Four, and Nim. Since the framework can be generalized
 
 \subsection{Agents}
 
-Figure \ref{fig:minimax_inheritance} shows the agents as nodes in an inheritance graph. If a node does not specify a certain component function, that function is inherited from the parent:
+Figure \ref{fig:minimax_inheritance} and \ref{fig:mcts_inheritance} show the agents as nodes in an inheritance graph. If a node does not specify a certain component function, that function is inherited from the parent:
 
 \input{tikz/minimax_inheritance.tex}
 
-\subsubsection{MiniMax Based}
+\input{tikz/mcts_inheritance.tex}
+
+The agents are split into two groups, MiniMax based, and MCTS based. Note that MiniMax from MCTS Tree inherits from MCTS, but is classified as a MiniMax based agent. This is due to the fact that, for the purposes of the experiments, agents are classified by the information they use in \gbm. The two groups can be seen below, along with shorthand names that will be used in figures:
+
+\subsubsection*{MiniMax Based}
 \begin{itemize}
     \item Iterative Deepening: ID
     \item Iterative Deepening w/ $\alpha\beta$-pruning: ID-AB
-    \item Iterative Deepening w/ Simulation: ID-SIM
-    \item Beam Search: BS
+    \item Iterative Deepening w/ Simulation: ID-Sim
+    \item Iterative Deepening w/Beam Search: ID-BS
     \item Best First MiniMax: BFMM
     \item MiniMax from MCTS Tree: MM-MCT
 \end{itemize}
 
-\subsubsection{MCTS Based}
+\subsubsection*{MCTS Based}
 \begin{itemize}
-    \item Monte Carlo Tree Search: MCTS
-    \item MCTS Static Rollout: MCTS-SR
-    \item Partial Expansion: MCTS-PE
-    \item Static Weighted MCTS: MCTS-SW
-    \item MiniMax Weighted MCTS: MCTS-MMW
-    \item Progressive Pruning MCTS: PP-MCTS
+    \item Monte Carlo Tree Search: MC
+    \item MCTS w/ Static Rollout: MC-SR
+    \item MCTS w/ Partial Expansion: MC-PE
+    \item Statically Weighted MCTS: SW-MC
+    \item MiniMax Weighted MCTS: MW-MC
+    \item MCTS w/ Progressive Pruning: MC-PP
 \end{itemize}
-
-\input{tikz/mcts_inheritance.tex}
-
-\begin{table}[H]
-    \centering
-    \resizebox{\textwidth}{!}{
-        \begin{tabular}{cc}
-            \begin{tabular}{|l|r|}
-                \hline
-                \multicolumn{2}{|c|}{Monte Carlo Tree Search} \\ \hline
-                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
-                \textproc{Select} & UCTSelect \\ \hline
-                \textproc{Expand} & ExpandNext \\ \hline
-                \textproc{ShouldEvaluate} & Always \\ \hline
-                \textproc{Evaluate} & Simulate \\ \hline
-                \textproc{ShouldBackpropagate} & Always \\ \hline
-                \textproc{Backpropagate} & BackpropagateSum \\ \hline
-                \textproc{Reflect} & NoOp \\ \hline
-                \textproc{GetBestMove} & MostRobustChild \\ \hline
-            \end{tabular}
-            &
-            \begin{tabular}{|l|r|}
-                \hline
-                \multicolumn{2}{|c|}{MCTS w/ Static Rollout} \\ \hline
-                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
-                \textproc{Select} & UCTSelect \\ \hline
-                \textproc{Expand} & ExpandNext \\ \hline
-                \textproc{ShouldEvaluate} & Always \\ \hline
-                \textproc{Evaluate} & StaticEvaluation \\ \hline
-                \textproc{ShouldBackpropagate} & Always \\ \hline
-                \textproc{Backpropagate} & BackpropagateSum \\ \hline
-                \textproc{Reflect} & NoOp \\ \hline
-                \textproc{GetBestMove} & MostRobustChild \\ \hline
-            \end{tabular}
-            \\
-            \\
-            \begin{tabular}{|l|r|}
-                \hline
-                \multicolumn{2}{|c|}{Partial Expansion} \\ \hline
-                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
-                \textproc{Select} & PartialExpansionSelect \\ \hline
-                \textproc{Expand} & ExpandNext \\ \hline
-                \textproc{ShouldEvaluate} & Always \\ \hline
-                \textproc{Evaluate} & Simulate \\ \hline
-                \textproc{ShouldBackpropagate} & Always \\ \hline
-                \textproc{Backpropagate} & BackpropagateSum \\ \hline
-                \textproc{Reflect} & NoOp \\ \hline
-                \textproc{GetBestMove} & MostRobustChild \\ \hline
-            \end{tabular}
-            &
-            \begin{tabular}{|l|r|}
-                \hline
-                \multicolumn{2}{|c|}{Statically Weighted MCTS} \\ \hline
-                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
-                \textproc{Select} & WeightedSelect \\ \hline
-                \textproc{Expand} & ExpandNext \\ \hline
-                \textproc{ShouldEvaluate} & Always \\ \hline
-                \textproc{Evaluate} & StaticAndSimulate \\ \hline
-                \textproc{ShouldBackpropagate} & Always \\ \hline
-                \textproc{Backpropagate} & StoreStaticBackpropagateSum \\ \hline
-                \textproc{Reflect} & NoOp \\ \hline
-                \textproc{GetBestMove} & WeightedUtilityMove \\ \hline
-            \end{tabular}
-            \\ \\
-            \begin{tabular}{|l|r|}
-                \hline
-                \multicolumn{2}{|c|}{MiniMax Weighted MCTS} \\ \hline
-                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
-                \textproc{Select} & WeightedSelect \\ \hline
-                \textproc{Expand} & ExpandNext \\ \hline
-                \textproc{ShouldEvaluate} & Always \\ \hline
-                \textproc{Evaluate} & StaticAndSimulate \\ \hline
-                \textproc{ShouldBackpropagate} & Always \\ \hline
-                \textproc{Backpropagate} & BackpropagateSumAndMiniMax \\ \hline
-                \textproc{Reflect} & NoOp \\ \hline
-                \textproc{GetBestMove} & WeightedUtilityMove \\ \hline
-            \end{tabular}
-            &
-            \begin{tabular}{|l|r|}
-                \hline
-                \multicolumn{2}{|c|}{Progressive Pruning MCTS} \\ \hline
-                \textproc{ShouldTerminate} & WhenBudgetExceeded \\ \hline
-                \textproc{Select} & UCTSelect \\ \hline
-                \textproc{Expand} & ExpandNext \\ \hline
-                \textproc{ShouldEvaluate} & Always \\ \hline
-                \textproc{Evaluate} & Simulate \\ \hline
-                \textproc{ShouldBackpropagate} & Always \\ \hline
-                \textproc{Backpropagate} & BackpropagateSum \\ \hline
-                \textproc{Reflect} & FractionalPruning \\ \hline
-                \textproc{GetBestMove} & MostRobustChild \\ \hline
-            \end{tabular}
-        \end{tabular}
-        
-    }
-    \caption{EGTS tables for all the MCTS based agents.}
-    \label{tab:mcts_agents}
-\end{table}
 
 \subsection{Environments}
 
 \subsubsection{Connect Four}
-Connect Four is a board filling game typically played on a rectangular board with $7$ columns and $6$ rows. Players take turns dropping one piece into a non-full column, where the piece will fall until it hits the bottom, or another piece. The first player to align four of their pieces horizontally, vertically, diagonally, or antidiagonally wins. The game is solved, and from the initial position of an empty board, the first player can force a win. A loose upper bound on the game tree complexity can be found by raising the maximum branching factor ($7$) to the maximum number of moves ($42$), giving a game tree complexity of $7^{6 \cdot 7} \approx 10^{35}$. A more precise upper bound is given in \needcit as $10^{21}$. Connect Four is a good candidate for exploring adversarial search algorithms since the states can be easily represented as bitboards, allowing for fast move making by OR-ing in new pieces as well as fast utility calculation. The fact that it is solved also makes it possible to compare agent performance to optimal play.
+Connect Four is a board filling game typically played on a rectangular board with $7$ columns and $6$ rows. Players take turns dropping one piece into a non-full column, where the piece will fall until it hits the bottom, or another piece. The first player to align four of their pieces horizontally, vertically, diagonally, or antidiagonally wins. The game is solved, and from the initial position of an empty board, the first player can force a win. The game tree complexity of Connect Four is given in \cite{Allis1994} as $10^{21}$. Connect Four is a good candidate for exploring adversarial search algorithms since the states can be easily represented as bitboards, allowing for fast move making by OR-ing in new pieces as well as fast utility calculation. The fact that it is solved also makes it possible to compare agent performance to optimal play.
 
 \subsubsection{Nim}
-Nim is a combinatorial game where players take turns removing stones from one of multiple heaps on the board. A player can take any amount of stones from a single stack, but must take at least one. The player who takes the last stone wins. Nim is also solved, and in contrast to Connect Four it is solved in a way that makes desinging an optimal evaluation function trivial. A state is a forced win for the current player if the binary digital sum of all the heap sizes is nonzero. The binary digital sum is simply the bitwise XOR value of all its inputs, and since it solves Nim in this way it is often called the nim-sum. From a state with a nonzero nim-sum it is always possible to make a move resulting in a nim-sum of zero, and from a nim-sum of zero it is impossible to remain at zero. In this paper Nim is player on a board with initial heap sizes $\{1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}$, which is a forced win for the first player under optimal play. A very loose upper bound on the game tree complexity is $55^{55} \approx 10^{95}$ \revise Calculate exactly? Should be doable.
+Nim is a combinatorial game where players take turns removing stones from one of multiple heaps on the board. A player can take any amount of stones from a single stack, but must take at least one. The player who takes the last stone wins. Nim is also solved, and in contrast to Connect Four it is solved in a way that makes desinging an optimal evaluation function trivial. A state is a forced win for the current player if the binary digital sum of all the heap sizes is nonzero. The binary digital sum is simply the bitwise XOR value of all its inputs, and since it solves Nim in this way it is often called the nim-sum. From a state with a nonzero nim-sum it is always possible to make a move resulting in a nim-sum of zero, and from a nim-sum of zero it is impossible to remain at zero. In this paper Nim is played on a board with initial heap sizes $\{1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}$, which is a forced win for the first player under optimal play. The game tree complexity for Nim with this initial state is determined by a brute force enumeration to be $5.16 \cdot 10^{47}$.
 
 \subsubsection{2048}
-As the only non-adversarial game examined in this paper, 2048 is a single player puzzle game, where the objective is to combine many smaller tiles into the titular 2048 tile. While the 2048 tile is officially declared a win, agents can reach it very regularly, so instead of measuring win percentage it is common to measure percentages of some of the higher tiles. \revise The game is played on a $4$ by $4$ grid, with the following rules: On each turn including the first, a tile spawns in an empty spot. The placement is uniformly distributed, and the value of the tile is $2$ with a $90\%$ chance, and $4$ with a $10\%$ chance. In \needcit Strandby sets an experimental value of the game tree size at $9.26 \cdot 10^{2139}$, which is far lower than the worst case upper bound: $4^{131054}\cdot 16^{131054} \approx 10^{236707}$
+As the only non-adversarial game examined in this paper, 2048 is a single player puzzle game, where the objective is to combine many smaller tiles into the titular 2048 tile. While the 2048 tile is officially declared a win, it is possible to contiune past it to create even bigger tiles. The game is played on a $4$ by $4$ grid, with the following rules: On each turn including the first, a tile spawns in an empty spot. The placement is uniformly distributed, and the value of the tile is $2$ with a $90\%$ chance, and $4$ with a $10\%$ chance. In \cite{Strandby2016} Strandby sets an experimental value of the game tree size at $9.26 \cdot 10^{2139}$, which is many times larger than the two other environments. This has to do with the maximum depth being much greater than both Connect Four and Nim, and the fact that chance nodes also grow the search tree exponentially, effectively doubling the depth compared to a deterministic environment.
 
 \subsection{Comparison}
 Firstly, the agents within each group will play against each other
@@ -147,4 +54,4 @@ Connect Four and Nim.
 
 To demonstrate that the framework also generalizes to non-adversarial environments, an ExpectiMax agent and an MCTS agent will be tested on 2048. None of the adversarial agents can be used directly (at least not with good results) since they all assume that the min-player will be actively resisting their goals, while in reality the min-player will play the role of the environment and act according to the environment rules. The modified agents are as follows:
 
-\todo TABLE OF AGENTS
+\input{tikz/maximizer_inheritance.tex}

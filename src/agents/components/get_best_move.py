@@ -49,11 +49,11 @@ class GetBestMove:
         
         """
         def weight(child):
-            if child.is_max_node:
-                exploit = (child.count - child.cumulative_utility) / child.count
+            if self.root.is_max_node:
+                exploit = child.cumulative_utility / child.count
                 evaluation = child.eval
             else:
-                exploit = child.cumulative_utility / child.count
+                exploit = 1 - child.cumulative_utility / child.count
                 evaluation = 1 - child.eval
 
             q = 1 / sqrt(child.count)

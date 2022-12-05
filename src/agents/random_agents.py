@@ -33,4 +33,3 @@ class RandomDistributionAgent(TreeSearchAgent):
     def get_best_move(self) -> int:
         return random.choices(self.root.state.applicable_actions, 
             cum_weights=self.root.state.cumulative_distribution, k=1)[0]
-

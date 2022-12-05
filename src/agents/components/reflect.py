@@ -36,7 +36,6 @@ class Reflect:
         """
         
         """
-        # TODO: Make 
         def recurse(node):
             node.children = [c for c in node.children if \
                 c.count >= node.count / (node.branching_factor + self.pruning_factor)]

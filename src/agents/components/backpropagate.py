@@ -27,18 +27,15 @@ class Backpropagate:
         """
         
         """
-        # TODO: REWRITE REWRITE REWRITE
         def bp(node):
             
             max_child_eval = max(c.eval for c in node.children if c.eval is not None)
             min_child_eval = min(c.eval for c in node.children if c.eval is not None)
             
-            if node.parent is not None or True: # temp hack
-                # TODO: Figure out if random play can be introduced while preserving cutoffs at highest level
-                if node.is_max_node:
-                    node.alpha = max(node.alpha, max_child_eval)
-                else:
-                    node.beta = min(node.beta, min_child_eval)
+            if node.is_max_node:
+                node.alpha = max(node.alpha, max_child_eval)
+            else:
+                node.beta = min(node.beta, min_child_eval)
 
             if all(c.evaluated for c in node.children) and not node.unexpanded_actions:
         

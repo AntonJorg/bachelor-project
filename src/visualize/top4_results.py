@@ -30,7 +30,7 @@ for exp in os.listdir(dir_path):
 		array[x, y] = (d["agent0_wins"] + d["draws"] / 2) / d["iterations"]
 
 fig = plt.figure()
-names = ("ID-SIM", "BFMM", "MC", "PE")
+names = ("ID-SIM", "BFMM", "MC", "MC-PE")
 
 sb.heatmap(array, cmap="crest", vmin=0, vmax=1, xticklabels=names, 
 	yticklabels=names, linewidth=.5, square=True, annot=True,
@@ -41,6 +41,8 @@ plt.tick_params(axis="x", labelbottom = False, labeltop=True, top=True, bottom=F
 plt.title("Minimax Agents")
 plt.ylabel("Max Player")
 plt.xlabel("Min Player")
+
+plt.title("Connect Four, Max Player Winrates, $n=250$")
 
 plt.gca().xaxis.set_label_position("top")
 
@@ -63,7 +65,6 @@ def fold(array):
 array = fold(array)
 
 fig = plt.figure()
-names = ("ID-SIM", "BFMM", "MC", "PE")
 
 sb.heatmap(array, cmap="crest", vmin=0, vmax=1, xticklabels=names, 
 	yticklabels=names, linewidth=.5, square=True, annot=True,
@@ -72,8 +73,10 @@ sb.heatmap(array, cmap="crest", vmin=0, vmax=1, xticklabels=names,
 plt.tick_params(axis="x", labelbottom = False, labeltop=True, top=True, bottom=False)
 
 plt.title("Minimax Agents")
-plt.ylabel("Max Player")
-plt.xlabel("Min Player")
+plt.ylabel("Agent")
+plt.xlabel("Opponent")
+
+plt.title("Connect Four, Overall Winrates, $n=500$")
 
 plt.gca().xaxis.set_label_position("top")
 
@@ -90,7 +93,7 @@ fig = plt.figure()
 
 bar1 = plt.bar(range(1, 5), array)
 
-plt.gca().set_title("Minimax Agents")
+plt.gca().set_title("Connect Four, Average Overall Winrates")
 plt.gca().set_ylabel("Average Winrate")
 plt.gca().set_xlabel("Agent")
 plt.gca().set_xticks(range(1, 5))
@@ -123,7 +126,7 @@ for exp in os.listdir(dir_path):
 		array[x, y] = (d["agent0_wins"] + d["draws"] / 2) / d["iterations"]
 
 fig = plt.figure()
-names = ("ID-SIM", "BFMM", "MC", "PE")
+names = ("ID-SIM", "BFMM", "MC", "MC-PE")
 
 sb.heatmap(array, cmap="crest", vmin=0, vmax=1, xticklabels=names, 
 	yticklabels=names, linewidth=.5, square=True, annot=True,
@@ -134,6 +137,8 @@ plt.tick_params(axis="x", labelbottom = False, labeltop=True, top=True, bottom=F
 plt.title("Minimax Agents")
 plt.ylabel("Max Player")
 plt.xlabel("Min Player")
+
+plt.title("Nim, Max Player Winrates, $n=250$")
 
 plt.gca().xaxis.set_label_position("top")
 
@@ -156,7 +161,7 @@ def fold(array):
 array = fold(array)
 
 fig = plt.figure()
-names = ("ID-SIM", "BFMM", "MC", "PE")
+names = ("ID-SIM", "BFMM", "MC", "MC-PE")
 
 sb.heatmap(array, cmap="crest", vmin=0, vmax=1, xticklabels=names, 
 	yticklabels=names, linewidth=.5, square=True, annot=True,
@@ -165,8 +170,10 @@ sb.heatmap(array, cmap="crest", vmin=0, vmax=1, xticklabels=names,
 plt.tick_params(axis="x", labelbottom = False, labeltop=True, top=True, bottom=False)
 
 plt.title("Minimax Agents")
-plt.ylabel("Max Player")
-plt.xlabel("Min Player")
+plt.ylabel("Agent")
+plt.xlabel("Opponent")
+
+plt.title("Nim, Overall Winrates, $n=500$")
 
 plt.gca().xaxis.set_label_position("top")
 
@@ -183,7 +190,7 @@ fig = plt.figure()
 
 bar1 = plt.bar(range(1, 5), array)
 
-plt.gca().set_title("Minimax Agents")
+plt.gca().set_title("Nim, Average Overall Winrates")
 plt.gca().set_ylabel("Average Winrate")
 plt.gca().set_xlabel("Agent")
 plt.gca().set_xticks(range(1, 5))

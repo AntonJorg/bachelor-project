@@ -1,13 +1,6 @@
-"""
-Python 2048 Game : Core Classes
-
-Originally written by Phil Rodgers, University of Strathclyde
-"""
-
 import random
 from itertools import accumulate, repeat, chain, islice
 from functools import reduce
-
 
 
 class Twenty48State:
@@ -17,13 +10,20 @@ class Twenty48State:
 
     def __init__(self, board=None, moves=0, score_penalty=0, action_sequence="") -> None:
         
-        self.board = board or tuple(tuple(0 for _ in range(4)) for _ in range(4))
-
-        self.applicable_actions = ["U", "D", "L", "R"]
+        self.board = board or self._init_empty_board()
 
         self.utility = sum(sum((el - 1) * 2 ** el if not el == 0 else 0 for el in row) for row in self.board) - score_penalty
 
-        self.is_terminal = self._is_board_full()
+        self.successors = {
+            "U": self._up(),
+            "D": self._down(),
+            "L": self._left(),
+            "R": self._right()
+        }
+
+        self.applicable_actions = self._init_applicable_actions()
+
+        self.is_terminal = not self.applicable_actions
 
         self.score_penalty = score_penalty
 
@@ -117,22 +117,31 @@ class Twenty48State:
         return True
 
     def result(self, action):
-        match action:
-            case "U":
-                board = self._up()
-            case "D":
-                board = self._down()
-            case "L":
-                board = self._left()
-            case "R":
-                board = self._right()
-            case _:
-                raise ValueError("Unknown action:", action)
-
+        board = self.successors.get(action)
+        if board is None:
+            raise ValueError("Unknown action:", action)
+        
         return Twenty48EnvironmentState(board, self.moves + 1, self.score_penalty, self.action_sequence + f"{action} ")
 
-    
+    def _init_empty_board(self):
+        board_positions = [(j, i) for i in range(4) for j in range(4)]
+        
+        positions = random.sample(board_positions, k=2)
+        values = random.choices((1, 2), weights=[9, 1], k=2)
 
+        chosen = {(j, i): val for (j, i), val in zip(positions, values)}
+        board = tuple(tuple(chosen.get((j, i)) or 0 for i in range(4)) for j in range(4))
+    
+        return board
+
+    def _init_applicable_actions(self):
+        valid = []
+        for a, board in self.successors.items():
+            if board != self.board:
+                valid.append(a)
+        
+        return valid
+            
 class Twenty48EnvironmentState(Twenty48State):
 
     def __init__(self, board=None, moves=-1, score_penalty=0, action_sequence="") -> None:
@@ -142,7 +151,7 @@ class Twenty48EnvironmentState(Twenty48State):
         self.applicable_actions = self._init_applicable_actions()
 
         # no need to normalize, random.choices does that automatically
-        self.distribution = [4 if val == 1 else 1 for _, _, val in self.applicable_actions]
+        self.distribution = [9 if val == 1 else 1 for _, _, val in self.applicable_actions]
         self.cumulative_distribution = list(accumulate(self.distribution))
 
         self.score_penalty = score_penalty
@@ -165,5 +174,3 @@ class Twenty48EnvironmentState(Twenty48State):
         actions = [(j, i, val) for val in (1, 2) for i in range(4) for j in range(4) if self.board[j][i] == 0]
         
         return actions 
-        
-

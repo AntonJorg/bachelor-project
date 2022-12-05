@@ -1,12 +1,10 @@
-from bisect import insort
-from collections import deque
-
 from src.agents.treesearch_agent import TreeSearchAgent
-from src.games import ConnectFourState, CheckersState, NimState
-from src.tree import TreeSearchNode
 
 
 class MCTSAgent(TreeSearchAgent):
+    """
+    
+    """
     def __init__(self, search_time):
         super().__init__()
         self.search_time = search_time
@@ -43,18 +41,27 @@ class MCTSAgent(TreeSearchAgent):
 
 
 class MCTSEvaluationAgent(MCTSAgent):
+    """
+    
+    """
     def evaluate(self, state):
         return self.static_evaluation(state)
 
 
 class PartialExpansionAgent(MCTSAgent):
+    """
+    
+    """
     def select(self):
-        return self.partial_expansion_select()
+        return self.partial_expansion_uct_select()
 
 
 class StaticWeightedMCTSAgent(MCTSAgent):
+    """
+    
+    """
     def select(self):
-        return self.partial_expansion_weighted_select()
+        return self.weighted_uct_select()
 
     def evaluate(self, state):
         return self.evaluate_and_simulate(state)
@@ -66,32 +73,26 @@ class StaticWeightedMCTSAgent(MCTSAgent):
         return self.weighted_eval_utility_move()
 
 
-class MiniMaxWeightedMCTSAgent(MCTSAgent):
-    def select(self):
-        return self.partial_expansion_weighted_select()
-
-    def evaluate(self, state):
-        return self.evaluate_and_simulate(state)
-
+class MiniMaxWeightedMCTSAgent(StaticWeightedMCTSAgent):
+    """
+    
+    """    
     def backpropagate(self, node, value):
         self.backpropagate_sum_and_minimax(node, value)
 
-    def get_best_move(self):
-        return self.weighted_eval_utility_move()
 
-
-class MCTSTreeMiniMaxAgent(MCTSAgent):
-    def evaluate(self, state):
-        return self.evaluate_and_simulate(state)
-
-    def backpropagate(self, node, value):
-        self.backpropagate_sum_and_minimax(node, value)
-
+class MCTSTreeMiniMaxAgent(MiniMaxWeightedMCTSAgent):
+    """
+    
+    """
     def get_best_move(self):
         return self.get_minimax_move()
 
 
 class ProgressivePruningMCTSAgent(MCTSAgent):
+    """
+    
+    """
     def __init__(self, search_time, pruning_factor=6):
         super().__init__(search_time)
         self.pruning_factor = pruning_factor
@@ -101,22 +102,3 @@ class ProgressivePruningMCTSAgent(MCTSAgent):
 
     def reflect(self):
         self.fractional_pruning()
-
-
-if __name__ == "__main__":
-    agent = PartialExpansionAgent(2)
-
-    state = ConnectFourState()
-
-    print(agent.search(state))
-    agent.root.print_tree(max_depth=2)
-
-
-    def f(node):
-        if node.children:
-            return max(f(c) for c in node.children)
-        else:
-            return node.depth
-
-    print(f(agent.root))
-    print(agent)

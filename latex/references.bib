@@ -1,0 +1,201 @@
+@misc{McCarthy2006,
+  author = {John McCarthy},
+  year   = {2006},
+  title  = {The Dartmouth Workshop--as planned and as it happened},
+  url    = {http://www-formal.stanford.edu/jmc/slides/dartmouth/dartmouth/node1.html}
+}
+@thesis{Strandby2016,
+  author = {Kristine Strandby},
+  title  = {Artificial Intelligence for 2048 and Threes},
+  year   = {2016}
+}
+@report{Auer2002,
+  abstract = {Reinforcement learning policies face the exploration versus exploitation dilemma, i.e. the search for a balance between exploring the environment to find profitable actions while taking the empirically best action as often as possible. A popular measure of a policy's success in addressing this dilemma is the regret, that is the loss due to the fact that the globally optimal policy is not followed all the times. One of the simplest examples of the exploration/exploitation dilemma is the multi-armed bandit problem. Lai and Robbins were the first ones to show that the regret for this problem has to grow at least logarithmically in the number of plays. Since then, policies which asymptotically achieve this regret have been devised by Lai and Robbins and many others. In this work we show that the optimal logarithmic regret is also achievable uniformly over time, with simple and efficient policies, and for all reward distributions with bounded support.},
+  author   = {Peter Auer and Paul Fischer},
+  keywords = {adaptive allocation rules,bandit problems,finite horizon regret},
+  pages    = {235-256},
+  title    = {Finite-time Analysis of the Multiarmed Bandit Problem*},
+  volume   = {47},
+  year     = {2002}
+}
+@report{Coulom2006,
+  abstract = {Monte-Carlo evaluation consists in estimating a position by averaging the outcome of several random continuations, and can serve as an evaluation function at the leaves of a min-max tree. This paper presents a new framework to combine tree search with Monte-Carlo evaluation , that does not separate between a min-max phase and a Monte-Carlo phase. Instead of backing-up the min-max value close to the root, and the average value at some depth, a more general backup operator is defined that progressively changes from averaging to min-max as the number of simulations grows. This approach provides a fine-grained control of the tree growth, at the level of individual simulations, and allows efficient selectivity methods. This algorithm was implemented in a 9 × 9 Go-playing program, Crazy Stone, that won the 10th KGS computer-Go tournament.},
+  author   = {Rémi Coulom},
+  title    = {Efficient Selectivity and Backup Operators in Monte-Carlo Tree Search},
+  url      = {https://hal.inria.fr/inria-00116992},
+  year     = {2006}
+}
+@misc{Kotok2004,
+  author = {Alan Kotok},
+  title  = {MIT Artificial Intelligence Memo 41},
+  year   = {2004},
+  url    = {http://www.kotok.org/AI_Memo_41.html}
+}
+@article{,
+  title = {Contributions to the theory of games}
+}
+@report{Korf1996,
+  abstract  = {We describe a very simple selective search algorithm for two-player games, called best-first minimax. It always expands next the node at the end of the expected line of play, which determines the minimax value of the root. It uses the same information as alpha-beta minimax, and takes roughly the same time per node generation. We present an implementation of the algorithm that reduces its space complexity from exponential to linear in the search depth, but at significant time cost. Our actual implementation saves the subtree generated for one move that is still relevant after the player and opponent move, pruning subtrees below moves not chosen by either player. We also show how to efficiently generate a class of incremental random game trees. On uniform random game trees, best-first minimax outperforms alpha-beta, when both algorithms are given the same amount of computation. On random trees with random branching factors, best-first outperforms alpha-beta for shallow depths, but eventually loses at greater depths. We obtain similar results in the game of Othello. Finally, we present a hybrid best-first extension algorithm that combines alpha-beta with best-first minimax, and performs significantly better than alpha-beta in both domains, even at greater depths. In Othello, it beats alpha-beta in two out of three games.},
+  author    = {Richard E Korf and David Maxwell Chickering},
+  journal   = {Artificial Intelligence},
+  pages     = {299-337},
+  publisher = {ELSEVIER},
+  title     = {Intelligence Best-first minimax search},
+  volume    = {84},
+  year      = {1996}
+}
+@report{,
+  abstract = {Monte-Carlo Tree Search (MCTS) methods are drawing great interest after yielding breakthrough results in computer Go. This paper proposes a Bayesian approach to MCTS that is inspired by distribution-free approaches such as UCT [13], yet significantly differs in important respects. The Bayesian framework allows potentially much more accurate (Bayes-optimal) estimation of node values and node uncertainties from a limited number of simulation trials. We further propose propagating inference in the tree via fast analytic Gaussian approximation methods: this can make the overhead of Bayesian inference manageable in domains such as Go, while preserving high accuracy of expected-value estimates. We find substantial empirical outperformance of UCT in an idealized bandit-tree test environment, where we can obtain valuable insights by comparing with known ground truth. Additionally we rigorously prove on-policy and off-policy convergence of the proposed methods.},
+  author   = {Gerald Tesauro and V T Rajan and Richard Segal},
+  title    = {Bayesian Inference in Monte-Carlo Tree Search}
+}
+@report{Kjeldsen2001,
+  author    = {Tinne Hoff Kjeldsen},
+  journal   = {Arch. Hist. Exact Sci},
+  pages     = {39-68},
+  publisher = {Springer-Verlag},
+  title     = {John von Neumann's Conception of the Minimax Theorem: A Journey Through Different Mathematical Contexts},
+  volume    = {56},
+  year      = {2001}
+}
+@inproceedings{Jacobsen2014,
+  abstract  = {Monte Carlo Tree Search (MCTS) is applied to control the player character in a clone of the popular platform game Su- per Mario Bros. Standard MCTS is applied through search in state space with the goal of moving the furthest to the right as quickly as possible. Despite parameter tuning, only moderate success is reached. Several modifications to the algorithm are then introduced specifically to deal with the behavioural pathologies that were observed. Two of the modifications are to our best knowledge novel. A combination of these modifications is found to lead to almost perfect play on linear levels. Furthermore, when adding noise to the benchmark, MCTS outperforms the best known algorithm for these levels. The analysis and algorithmic innovations in this paper are likely to be useful when applying MCTS to other video games. © 2014 is held by the owner/author(s).},
+  author    = {Emil Juul Jacobsen and Rasmus Greve and Julian Togelius},
+  doi       = {10.1145/2576768.2598392},
+  isbn      = {9781450326629},
+  journal   = {GECCO 2014 - Proceedings of the 2014 Genetic and Evolutionary Computation Conference},
+  pages     = {293-300},
+  publisher = {Association for Computing Machinery},
+  title     = {Monte mario: Platforming with MCTS},
+  year      = {2014}
+}
+@inproceedings{Frydenberg2015,
+  abstract  = {While Monte Carlo tree search (MCTS) methods have shown promise in a variety of different board games, more complex video games still present significant challenges. Recently, several modifications to the core MCTS algorithm have been proposed with the hope to increase its effectiveness on arcade-style video games. This paper investigates of how well these modifications perform in general video game playing using the general video game AI (GVG-AI) framework and introduces a new MCTS modification called UCT reverse penalty that penalizes the MCTS controller for exploring recently visited children. The results of our experiments show that a combination of two MCTS modifications can improve the performance of the vanilla MCTS controller, but the effectiveness of the modifications highly depends on the particular game being played.},
+  author    = {Frederik Frydenberg and Kasper R. Andersen and Sebastian Risi and Julian Togelius},
+  doi       = {10.1109/CIG.2015.7317937},
+  isbn      = {9781479986217},
+  journal   = {2015 IEEE Conference on Computational Intelligence and Games, CIG 2015 - Proceedings},
+  month     = {11},
+  pages     = {107-113},
+  publisher = {Institute of Electrical and Electronics Engineers Inc.},
+  title     = {Investigating MCTS modifications in general video game playing},
+  year      = {2015}
+}
+@misc{Copeland2006,
+  author  = {Jack Copeland},
+  journal = {Stanford Encyclopedia of Philosophy},
+  title   = {The Modern History of Computing},
+  url     = {https://plato.stanford.edu/entries/computing-history/},
+  year    = {2006}
+}
+@report{,
+  author  = {Gerhard Goos and Juris Hartmanis and Jan Van and Leeuwen Editorial Board and David Hutchison and Takeo Kanade and Josef Kittler and Jon M Kleinberg and Friedemann Mattern and Eth Zurich and John C Mitchell and Moni Naor and Oscar Nierstrasz and Bernhard Steffen and Madhu Sudan and Demetri Terzopoulos and Doug Tygar and Moshe Y Vardi and Gerhard Weikum},
+  journal = {Lecture Notes in},
+  title   = {Title}
+}
+@article{Chang2005,
+  abstract = {Based on recent results for multiarmed bandit problems, we propose an adaptive sampling algorithm that approximates the optimal value of a finite-horizon Markov decision process (MDP) with finite state and action spaces. The algorithm adaptively chooses which action to sample as the sampling process proceeds and generates an asymptotically unbiased estimator, whose bias is bounded by a quantity that converges to zero at rate (ln N)/N, where N is the total number of samples that are used per state sampled in each stage. The worst-case running-time complexity of the algorithm is O((|A|N) H), independent of the size of the state space, where |A| is the size of the action space and H is the horizon length. The algorithm can be used to create an approximate receding horizon control to solve infinite-horizon MDPs. To illustrate the algorithm, computational results are reported on simple examples from inventory control. © 2005 INFORMS.},
+  author   = {Hyeong Soo Chang and Michael C. Fu and Jiaqiao Hu and Steven I. Marcus},
+  doi      = {10.1287/opre.1040.0145},
+  issn     = {0030364X},
+  issue    = {1},
+  journal  = {Operations Research},
+  keywords = {Dynamic programming/optimal control: Markov finite state},
+  month    = {1},
+  pages    = {126-139},
+  title    = {An adaptive sampling algorithm for solving Markov decision processes},
+  volume   = {53},
+  year     = {2005}
+}
+@report{Sion1958,
+  author = {Maurice Sion},
+  title  = {On General Minimax Theorems},
+  year   = {1958}
+}
+@report{,
+  title = {On the Theory of Games of Strategy},
+  year  = {2016}
+}
+@report{Borel1953,
+  author = {Emile Borel},
+  issue  = {1},
+  pages  = {97-100},
+  title  = {The Theory of Play and Integral Equations with Skew Symmetric Kernels},
+  volume = {21},
+  year   = {1953}
+}
+@report{,
+  abstract = {In game-playing programs relying on the minimax principle, deeper searches generally produce better evaluations. Theoretical analyses, however, suggest that in many cases minimaxing amplifies the noise introduced by the heuristic function used to evaluate the leaves of the game tree, leading to what is known as pathological behavior, where deeper searches produce worse evaluations. In most of the previous research, positions were evaluated as losses or wins. Dependence between the values of positions close to each other was identified as the property of realistic game trees that eliminates the pathology and explains why minimax is successful in practice. In this paper we present an alternative explanation that does not rely on value dependence. We show that if real numbers are used for position values, position values tend to be further apart at lower levels of the game tree, which leads to a larger proportion of more extreme positions, where error is less probable. Decreased probability of error in searches to greater depths is sufficient to eliminate the pathology and no additional properties of game trees are required.},
+  author   = {Mitja Luštrek and Matjaž Gams and Jožef Stefan Institute and Ivan Bratko},
+  title    = {Why Minimax Works: An Alternative Explanation},
+  year     = {2005}
+}
+@incollection{Slomson2013,
+  author      = {Alan Slomson},
+  title       = {Digital Computers Applied to Games},
+  booktitle   = {Alan Turing: His Work and Impact},
+  publisher   = {Elsevier},
+  year        = {2013},
+  pages       = {623-650}
+}
+@article{Silver2016,
+   abstract = {The game of Go has long been viewed as the most challenging of classic games for artificial intelligence owing to its enormous search space and the difficulty of evaluating board positions and moves. Here we introduce a new approach to computer Go that uses 'value networks' to evaluate board positions and 'policy networks' to select moves. These deep neural networks are trained by a novel combination of supervised learning from human expert games, and reinforcement learning from games of self-play. Without any lookahead search, the neural networks play Go at the level of state-of-the-art Monte Carlo tree search programs that simulate thousands of random games of self-play. We also introduce a new search algorithm that combines Monte Carlo simulation with value and policy networks. Using this search algorithm, our program AlphaGo achieved a 99.8% winning rate against other Go programs, and defeated the human European Go champion by 5 games to 0. This is the first time that a computer program has defeated a human professional player in the full-sized game of Go, a feat previously thought to be at least a decade away.},
+   author = {David Silver and Aja Huang and Chris J. Maddison and Arthur Guez and Laurent Sifre and George Van Den Driessche and Julian Schrittwieser and Ioannis Antonoglou and Veda Panneershelvam and Marc Lanctot and Sander Dieleman and Dominik Grewe and John Nham and Nal Kalchbrenner and Ilya Sutskever and Timothy Lillicrap and Madeleine Leach and Koray Kavukcuoglu and Thore Graepel and Demis Hassabis},
+   doi = {10.1038/nature16961},
+   issn = {14764687},
+   issue = {7587},
+   journal = {Nature},
+   month = {1},
+   pages = {484-489},
+   pmid = {26819042},
+   publisher = {Nature Publishing Group},
+   title = {Mastering the game of Go with deep neural networks and tree search},
+   volume = {529},
+   year = {2016},
+}
+@report{Campbell2002,
+   abstract = {Deep Blue is the chess machine that defeated then-reigning World Chess Champion Garry Kasparov in a six-game match in 1997. There were a number of factors that contributed to this success, including: • a single-chip chess search engine, • a massively parallel system with multiple levels of parallelism, • a strong emphasis on search extensions, • a complex evaluation function, and • effective use of a Grandmaster game database. This paper describes the Deep Blue system, and gives some of the rationale that went into the design decisions behind Deep Blue. },
+   author = {Murray Campbell and A Joseph Hoane and Feng-Hsiung Hsu},
+   isbn = {00043702/01},
+   journal = {Artificial Intelligence},
+   keywords = {Computer chess,Evaluation function,Game tree search,Parallel search,Search extensions,Selective search},
+   pages = {57-83},
+   title = {Deep Blue},
+   volume = {134},
+   year = {2002},
+}
+@InProceedings{Baier2014,
+author="Baier, Hendrik
+and Winands, Mark H. M.",
+editor="Cazenave, Tristan
+and Winands, Mark H. M.
+and Bj{\"o}rnsson, Yngvi",
+title="Monte-Carlo Tree Search and Minimax Hybrids with Heuristic Evaluation Functions",
+booktitle="Computer Games",
+year="2014",
+publisher="Springer International Publishing",
+address="Cham",
+pages="45--63",
+abstract="Monte-Carlo Tree Search (MCTS) has been found to play suboptimally in some tactical domains due to its highly selective search, focusing only on the most promising moves. In order to combine the strategic strength of MCTS and the tactical strength of minimax, MCTS-minimax hybrids have been introduced, embedding shallow minimax searches into the MCTS framework. Their results have been promising even without making use of domain knowledge such as heuristic evaluation functions. This paper continues this line of research for the case where evaluation functions are available. Three different approaches are considered, employing minimax with an evaluation function in the rollout phase of MCTS, as a replacement for the rollout phase, and as a node prior to bias move selection. The latter two approaches are newly proposed. The MCTS-minimax hybrids are tested and compared to their counterparts using evaluation functions without minimax in the domains of Othello, Breakthrough, and Catch the Lion. Results showed that introducing minimax search is effective for heuristic node priors in Othello and Catch the Lion. The MCTS-minimax hybrids are also found to work well in combination with each other. For their basic implementation in this investigative study, the effective branching factor of a domain is identified as a limiting factor of the hybrid's performance.",
+isbn="978-3-319-14923-3"
+}
+@phdthesis{Allis1994,
+  author  = {Allis, L. Victor},
+  title   = {Searching for Solutions in Games and Artificial Intelligence},
+  school  = {Maastricht University},
+  year    = {1994},
+  month   = {sep}
+}
+@misc{Pons2019,
+  author       = {Pascal Pons},
+  url          = {http://blog.gamesolver.org/},
+  title        = {SOLVING CONNECT 4: HOW TO BUILD A PERFECT AI},
+  year         = {2019}
+}
+@book{russellnorvig,
+  title={Artificial Intelligence: A Modern Approach (Global Edition)},
+  author={Russell, Stuart J. and Norvig, Peter},
+  edition={4},
+  year={2020},
+  publisher={Pearson}
+}

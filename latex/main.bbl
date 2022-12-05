@@ -1,0 +1,853 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{anyt/global//global/global}
+  \entry{Auer2002}{report}{}
+    \name{author}{2}{}{%
+      {{hash=AP}{%
+         family={Auer},
+         familyi={A\bibinitperiod},
+         given={Peter},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=FP}{%
+         family={Fischer},
+         familyi={F\bibinitperiod},
+         given={Paul},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \keyw{adaptive allocation rules,bandit problems,finite horizon regret}
+    \strng{namehash}{APFP1}
+    \strng{fullhash}{APFP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{AF02}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{abstract}{%
+    Reinforcement learning policies face the exploration versus exploitation
+  dilemma, i.e. the search for a balance between exploring the environment to
+  find profitable actions while taking the empirically best action as often as
+  possible. A popular measure of a policy's success in addressing this dilemma
+  is the regret, that is the loss due to the fact that the globally optimal
+  policy is not followed all the times. One of the simplest examples of the
+  exploration/exploitation dilemma is the multi-armed bandit problem. Lai and
+  Robbins were the first ones to show that the regret for this problem has to
+  grow at least logarithmically in the number of plays. Since then, policies
+  which asymptotically achieve this regret have been devised by Lai and Robbins
+  and many others. In this work we show that the optimal logarithmic regret is
+  also achievable uniformly over time, with simple and efficient policies, and
+  for all reward distributions with bounded support.%
+    }
+    \field{pages}{235\bibrangedash 256}
+    \field{title}{Finite-time Analysis of the Multiarmed Bandit Problem*}
+    \field{volume}{47}
+    \field{year}{2002}
+  \endentry
+
+  \entry{Allis1994}{thesis}{}
+    \name{author}{1}{}{%
+      {{hash=ALV}{%
+         family={Allis},
+         familyi={A\bibinitperiod},
+         given={L.\bibnamedelima Victor},
+         giveni={L\bibinitperiod\bibinitdelim V\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ALV1}
+    \strng{fullhash}{ALV1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{All94}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{title}{Searching for Solutions in Games and Artificial Intelligence}
+    \list{institution}{1}{%
+      {Maastricht University}%
+    }
+    \field{type}{phdthesis}
+    \field{year}{1994}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{Baier2014}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=BH}{%
+         family={Baier},
+         familyi={B\bibinitperiod},
+         given={Hendrik},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=WMHM}{%
+         family={Winands},
+         familyi={W\bibinitperiod},
+         given={Mark H.\bibnamedelima M.},
+         giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod\bibinitdelim
+  M\bibinitperiod},
+      }}%
+    }
+    \name{editor}{3}{}{%
+      {{hash=CT}{%
+         family={Cazenave},
+         familyi={C\bibinitperiod},
+         given={Tristan},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=WMHM}{%
+         family={Winands},
+         familyi={W\bibinitperiod},
+         given={Mark H.\bibnamedelima M.},
+         giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod\bibinitdelim
+  M\bibinitperiod},
+      }}%
+      {{hash=BY}{%
+         family={Bj{\"o}rnsson},
+         familyi={B\bibinitperiod},
+         given={Yngvi},
+         giveni={Y\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer International Publishing}%
+    }
+    \strng{namehash}{BHWMHM1}
+    \strng{fullhash}{BHWMHM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{BW14}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{abstract}{%
+    Monte-Carlo Tree Search (MCTS) has been found to play suboptimally in some
+  tactical domains due to its highly selective search, focusing only on the
+  most promising moves. In order to combine the strategic strength of MCTS and
+  the tactical strength of minimax, MCTS-minimax hybrids have been introduced,
+  embedding shallow minimax searches into the MCTS framework. Their results
+  have been promising even without making use of domain knowledge such as
+  heuristic evaluation functions. This paper continues this line of research
+  for the case where evaluation functions are available. Three different
+  approaches are considered, employing minimax with an evaluation function in
+  the rollout phase of MCTS, as a replacement for the rollout phase, and as a
+  node prior to bias move selection. The latter two approaches are newly
+  proposed. The MCTS-minimax hybrids are tested and compared to their
+  counterparts using evaluation functions without minimax in the domains of
+  Othello, Breakthrough, and Catch the Lion. Results showed that introducing
+  minimax search is effective for heuristic node priors in Othello and Catch
+  the Lion. The MCTS-minimax hybrids are also found to work well in combination
+  with each other. For their basic implementation in this investigative study,
+  the effective branching factor of a domain is identified as a limiting factor
+  of the hybrid's performance.%
+    }
+    \field{booktitle}{Computer Games}
+    \field{isbn}{978-3-319-14923-3}
+    \field{pages}{45\bibrangedash 63}
+    \field{title}{Monte-Carlo Tree Search and Minimax Hybrids with Heuristic
+  Evaluation Functions}
+    \list{location}{1}{%
+      {Cham}%
+    }
+    \field{year}{2014}
+  \endentry
+
+  \entry{Chang2005}{article}{}
+    \name{author}{4}{}{%
+      {{hash=CHS}{%
+         family={Chang},
+         familyi={C\bibinitperiod},
+         given={Hyeong\bibnamedelima Soo},
+         giveni={H\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+      {{hash=FMC}{%
+         family={Fu},
+         familyi={F\bibinitperiod},
+         given={Michael\bibnamedelima C.},
+         giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+      {{hash=HJ}{%
+         family={Hu},
+         familyi={H\bibinitperiod},
+         given={Jiaqiao},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=MSI}{%
+         family={Marcus},
+         familyi={M\bibinitperiod},
+         given={Steven\bibnamedelima I.},
+         giveni={S\bibinitperiod\bibinitdelim I\bibinitperiod},
+      }}%
+    }
+    \keyw{Dynamic programming/optimal control: Markov finite state}
+    \strng{namehash}{CHS+1}
+    \strng{fullhash}{CHSFMCHJMSI1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Cha+05}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{abstract}{%
+    Based on recent results for multiarmed bandit problems, we propose an
+  adaptive sampling algorithm that approximates the optimal value of a
+  finite-horizon Markov decision process (MDP) with finite state and action
+  spaces. The algorithm adaptively chooses which action to sample as the
+  sampling process proceeds and generates an asymptotically unbiased estimator,
+  whose bias is bounded by a quantity that converges to zero at rate (ln N)/N,
+  where N is the total number of samples that are used per state sampled in
+  each stage. The worst-case running-time complexity of the algorithm is
+  O((|A|N) H), independent of the size of the state space, where |A| is the
+  size of the action space and H is the horizon length. The algorithm can be
+  used to create an approximate receding horizon control to solve
+  infinite-horizon MDPs. To illustrate the algorithm, computational results are
+  reported on simple examples from inventory control. © 2005 INFORMS.%
+    }
+    \verb{doi}
+    \verb 10.1287/opre.1040.0145
+    \endverb
+    \field{issn}{0030364X}
+    \field{issue}{1}
+    \field{pages}{126\bibrangedash 139}
+    \field{title}{An adaptive sampling algorithm for solving Markov decision
+  processes}
+    \field{volume}{53}
+    \field{journaltitle}{Operations Research}
+    \field{month}{01}
+    \field{year}{2005}
+  \endentry
+
+  \entry{Campbell2002}{report}{}
+    \name{author}{3}{}{%
+      {{hash=CM}{%
+         family={Campbell},
+         familyi={C\bibinitperiod},
+         given={Murray},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=HAJ}{%
+         family={Hoane},
+         familyi={H\bibinitperiod},
+         given={A\bibnamedelima Joseph},
+         giveni={A\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=HFH}{%
+         family={Hsu},
+         familyi={H\bibinitperiod},
+         given={Feng-Hsiung},
+         giveni={F\bibinithyphendelim H\bibinitperiod},
+      }}%
+    }
+    \keyw{Computer chess,Evaluation function,Game tree search,Parallel
+  search,Search extensions,Selective search}
+    \strng{namehash}{CMHAJHFH1}
+    \strng{fullhash}{CMHAJHFH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{CHH02}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{abstract}{%
+    Deep Blue is the chess machine that defeated then-reigning World Chess
+  Champion Garry Kasparov in a six-game match in 1997. There were a number of
+  factors that contributed to this success, including: • a single-chip chess
+  search engine, • a massively parallel system with multiple levels of
+  parallelism, • a strong emphasis on search extensions, • a complex
+  evaluation function, and • effective use of a Grandmaster game database.
+  This paper describes the Deep Blue system, and gives some of the rationale
+  that went into the design decisions behind Deep Blue. %
+    }
+    \field{isbn}{00043702/01}
+    \field{pages}{57\bibrangedash 83}
+    \field{title}{Deep Blue}
+    \field{volume}{134}
+    \field{journaltitle}{Artificial Intelligence}
+    \field{year}{2002}
+  \endentry
+
+  \entry{Copeland2006}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=CJ}{%
+         family={Copeland},
+         familyi={C\bibinitperiod},
+         given={Jack},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CJ1}
+    \strng{fullhash}{CJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Cop06}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{title}{The Modern History of Computing}
+    \verb{url}
+    \verb https://plato.stanford.edu/entries/computing-history/
+    \endverb
+    \field{journaltitle}{Stanford Encyclopedia of Philosophy}
+    \field{year}{2006}
+  \endentry
+
+  \entry{Coulom2006}{report}{}
+    \name{author}{1}{}{%
+      {{hash=CR}{%
+         family={Coulom},
+         familyi={C\bibinitperiod},
+         given={Rémi},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CR1}
+    \strng{fullhash}{CR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Cou06}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{abstract}{%
+    Monte-Carlo evaluation consists in estimating a position by averaging the
+  outcome of several random continuations, and can serve as an evaluation
+  function at the leaves of a min-max tree. This paper presents a new framework
+  to combine tree search with Monte-Carlo evaluation , that does not separate
+  between a min-max phase and a Monte-Carlo phase. Instead of backing-up the
+  min-max value close to the root, and the average value at some depth, a more
+  general backup operator is defined that progressively changes from averaging
+  to min-max as the number of simulations grows. This approach provides a
+  fine-grained control of the tree growth, at the level of individual
+  simulations, and allows efficient selectivity methods. This algorithm was
+  implemented in a 9 × 9 Go-playing program, Crazy Stone, that won the 10th
+  KGS computer-Go tournament.%
+    }
+    \field{title}{Efficient Selectivity and Backup Operators in Monte-Carlo
+  Tree Search}
+    \verb{url}
+    \verb https://hal.inria.fr/inria-00116992
+    \endverb
+    \field{year}{2006}
+  \endentry
+
+  \entry{Frydenberg2015}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=FF}{%
+         family={Frydenberg},
+         familyi={F\bibinitperiod},
+         given={Frederik},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=AKR}{%
+         family={Andersen},
+         familyi={A\bibinitperiod},
+         given={Kasper\bibnamedelima R.},
+         giveni={K\bibinitperiod\bibinitdelim R\bibinitperiod},
+      }}%
+      {{hash=RS}{%
+         family={Risi},
+         familyi={R\bibinitperiod},
+         given={Sebastian},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=TJ}{%
+         family={Togelius},
+         familyi={T\bibinitperiod},
+         given={Julian},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{2}{%
+      {Institute of Electrical}%
+      {Electronics Engineers Inc.}%
+    }
+    \strng{namehash}{FF+1}
+    \strng{fullhash}{FFAKRRSTJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Fry+15}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{abstract}{%
+    While Monte Carlo tree search (MCTS) methods have shown promise in a
+  variety of different board games, more complex video games still present
+  significant challenges. Recently, several modifications to the core MCTS
+  algorithm have been proposed with the hope to increase its effectiveness on
+  arcade-style video games. This paper investigates of how well these
+  modifications perform in general video game playing using the general video
+  game AI (GVG-AI) framework and introduces a new MCTS modification called UCT
+  reverse penalty that penalizes the MCTS controller for exploring recently
+  visited children. The results of our experiments show that a combination of
+  two MCTS modifications can improve the performance of the vanilla MCTS
+  controller, but the effectiveness of the modifications highly depends on the
+  particular game being played.%
+    }
+    \verb{doi}
+    \verb 10.1109/CIG.2015.7317937
+    \endverb
+    \field{isbn}{9781479986217}
+    \field{pages}{107\bibrangedash 113}
+    \field{title}{Investigating MCTS modifications in general video game
+  playing}
+    \field{journaltitle}{2015 IEEE Conference on Computational Intelligence and
+  Games, CIG 2015 - Proceedings}
+    \field{month}{11}
+    \field{year}{2015}
+  \endentry
+
+  \entry{Jacobsen2014}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=JEJ}{%
+         family={Jacobsen},
+         familyi={J\bibinitperiod},
+         given={Emil\bibnamedelima Juul},
+         giveni={E\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=GR}{%
+         family={Greve},
+         familyi={G\bibinitperiod},
+         given={Rasmus},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=TJ}{%
+         family={Togelius},
+         familyi={T\bibinitperiod},
+         given={Julian},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Association for Computing Machinery}%
+    }
+    \strng{namehash}{JEJGRTJ1}
+    \strng{fullhash}{JEJGRTJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{JGT14}
+    \field{sortinit}{J}
+    \field{sortinithash}{J}
+    \field{abstract}{%
+    Monte Carlo Tree Search (MCTS) is applied to control the player character
+  in a clone of the popular platform game Su- per Mario Bros. Standard MCTS is
+  applied through search in state space with the goal of moving the furthest to
+  the right as quickly as possible. Despite parameter tuning, only moderate
+  success is reached. Several modifications to the algorithm are then
+  introduced specifically to deal with the behavioural pathologies that were
+  observed. Two of the modifications are to our best knowledge novel. A
+  combination of these modifications is found to lead to almost perfect play on
+  linear levels. Furthermore, when adding noise to the benchmark, MCTS
+  outperforms the best known algorithm for these levels. The analysis and
+  algorithmic innovations in this paper are likely to be useful when applying
+  MCTS to other video games. © 2014 is held by the owner/author(s).%
+    }
+    \verb{doi}
+    \verb 10.1145/2576768.2598392
+    \endverb
+    \field{isbn}{9781450326629}
+    \field{pages}{293\bibrangedash 300}
+    \field{title}{Monte mario: Platforming with MCTS}
+    \field{journaltitle}{GECCO 2014 - Proceedings of the 2014 Genetic and
+  Evolutionary Computation Conference}
+    \field{year}{2014}
+  \endentry
+
+  \entry{Korf1996}{report}{}
+    \name{author}{2}{}{%
+      {{hash=KRE}{%
+         family={Korf},
+         familyi={K\bibinitperiod},
+         given={Richard\bibnamedelima E},
+         giveni={R\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=CDM}{%
+         family={Chickering},
+         familyi={C\bibinitperiod},
+         given={David\bibnamedelima Maxwell},
+         giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ELSEVIER}%
+    }
+    \strng{namehash}{KRECDM1}
+    \strng{fullhash}{KRECDM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{KC96}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{abstract}{%
+    We describe a very simple selective search algorithm for two-player games,
+  called best-first minimax. It always expands next the node at the end of the
+  expected line of play, which determines the minimax value of the root. It
+  uses the same information as alpha-beta minimax, and takes roughly the same
+  time per node generation. We present an implementation of the algorithm that
+  reduces its space complexity from exponential to linear in the search depth,
+  but at significant time cost. Our actual implementation saves the subtree
+  generated for one move that is still relevant after the player and opponent
+  move, pruning subtrees below moves not chosen by either player. We also show
+  how to efficiently generate a class of incremental random game trees. On
+  uniform random game trees, best-first minimax outperforms alpha-beta, when
+  both algorithms are given the same amount of computation. On random trees
+  with random branching factors, best-first outperforms alpha-beta for shallow
+  depths, but eventually loses at greater depths. We obtain similar results in
+  the game of Othello. Finally, we present a hybrid best-first extension
+  algorithm that combines alpha-beta with best-first minimax, and performs
+  significantly better than alpha-beta in both domains, even at greater depths.
+  In Othello, it beats alpha-beta in two out of three games.%
+    }
+    \field{pages}{299\bibrangedash 337}
+    \field{title}{Intelligence Best-first minimax search}
+    \field{volume}{84}
+    \field{journaltitle}{Artificial Intelligence}
+    \field{year}{1996}
+  \endentry
+
+  \entry{Kjeldsen2001}{report}{}
+    \name{author}{1}{}{%
+      {{hash=KTH}{%
+         family={Kjeldsen},
+         familyi={K\bibinitperiod},
+         given={Tinne\bibnamedelima Hoff},
+         giveni={T\bibinitperiod\bibinitdelim H\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer-Verlag}%
+    }
+    \strng{namehash}{KTH1}
+    \strng{fullhash}{KTH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Kje01}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{pages}{39\bibrangedash 68}
+    \field{title}{John von Neumann's Conception of the Minimax Theorem: A
+  Journey Through Different Mathematical Contexts}
+    \field{volume}{56}
+    \field{journaltitle}{Arch. Hist. Exact Sci}
+    \field{year}{2001}
+  \endentry
+
+  \entry{Kotok2004}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=KA}{%
+         family={Kotok},
+         familyi={K\bibinitperiod},
+         given={Alan},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{KA1}
+    \strng{fullhash}{KA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Kot04}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{title}{MIT Artificial Intelligence Memo 41}
+    \verb{url}
+    \verb http://www.kotok.org/AI_Memo_41.html
+    \endverb
+    \field{year}{2004}
+  \endentry
+
+  \entry{McCarthy2006}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=MJ}{%
+         family={McCarthy},
+         familyi={M\bibinitperiod},
+         given={John},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MJ1}
+    \strng{fullhash}{MJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{McC06}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{title}{The Dartmouth Workshop--as planned and as it happened}
+    \verb{url}
+    \verb http://www-formal.stanford.edu/jmc/slides/dartmouth/dartmouth/node1.h
+    \verb tml
+    \endverb
+    \field{year}{2006}
+  \endentry
+
+  \entry{Pons2019}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=PP}{%
+         family={Pons},
+         familyi={P\bibinitperiod},
+         given={Pascal},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{PP1}
+    \strng{fullhash}{PP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Pon19}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \field{title}{SOLVING CONNECT 4: HOW TO BUILD A PERFECT AI}
+    \verb{url}
+    \verb http://blog.gamesolver.org/
+    \endverb
+    \field{year}{2019}
+  \endentry
+
+  \entry{russellnorvig}{book}{}
+    \name{author}{2}{}{%
+      {{hash=RSJ}{%
+         family={Russell},
+         familyi={R\bibinitperiod},
+         given={Stuart\bibnamedelima J.},
+         giveni={S\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=NP}{%
+         family={Norvig},
+         familyi={N\bibinitperiod},
+         given={Peter},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Pearson}%
+    }
+    \strng{namehash}{RSJNP1}
+    \strng{fullhash}{RSJNP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{RN20}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \field{edition}{4}
+    \field{title}{Artificial Intelligence: A Modern Approach (Global Edition)}
+    \field{year}{2020}
+  \endentry
+
+  \entry{Silver2016}{article}{}
+    \name{author}{20}{}{%
+      {{hash=SD}{%
+         family={Silver},
+         familyi={S\bibinitperiod},
+         given={David},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=HA}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Aja},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=MCJ}{%
+         family={Maddison},
+         familyi={M\bibinitperiod},
+         given={Chris\bibnamedelima J.},
+         giveni={C\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=GA}{%
+         family={Guez},
+         familyi={G\bibinitperiod},
+         given={Arthur},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=SL}{%
+         family={Sifre},
+         familyi={S\bibinitperiod},
+         given={Laurent},
+         giveni={L\bibinitperiod},
+      }}%
+      {{hash=DGVD}{%
+         family={Driessche},
+         familyi={D\bibinitperiod},
+         given={George Van\bibnamedelima Den},
+         giveni={G\bibinitperiod\bibinitdelim V\bibinitperiod\bibinitdelim
+  D\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Schrittwieser},
+         familyi={S\bibinitperiod},
+         given={Julian},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=AI}{%
+         family={Antonoglou},
+         familyi={A\bibinitperiod},
+         given={Ioannis},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=PV}{%
+         family={Panneershelvam},
+         familyi={P\bibinitperiod},
+         given={Veda},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=LM}{%
+         family={Lanctot},
+         familyi={L\bibinitperiod},
+         given={Marc},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DS}{%
+         family={Dieleman},
+         familyi={D\bibinitperiod},
+         given={Sander},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=GD}{%
+         family={Grewe},
+         familyi={G\bibinitperiod},
+         given={Dominik},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=NJ}{%
+         family={Nham},
+         familyi={N\bibinitperiod},
+         given={John},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=KN}{%
+         family={Kalchbrenner},
+         familyi={K\bibinitperiod},
+         given={Nal},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Sutskever},
+         familyi={S\bibinitperiod},
+         given={Ilya},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=LT}{%
+         family={Lillicrap},
+         familyi={L\bibinitperiod},
+         given={Timothy},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=LM}{%
+         family={Leach},
+         familyi={L\bibinitperiod},
+         given={Madeleine},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=KK}{%
+         family={Kavukcuoglu},
+         familyi={K\bibinitperiod},
+         given={Koray},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=GT}{%
+         family={Graepel},
+         familyi={G\bibinitperiod},
+         given={Thore},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=HD}{%
+         family={Hassabis},
+         familyi={H\bibinitperiod},
+         given={Demis},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Nature Publishing Group}%
+    }
+    \strng{namehash}{SD+1}
+    \strng{fullhash}{SDHAMCJGASLDGVDSJAIPVLMDSGDNJKNSILTLMKKGTHD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Sil+16}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{abstract}{%
+    The game of Go has long been viewed as the most challenging of classic
+  games for artificial intelligence owing to its enormous search space and the
+  difficulty of evaluating board positions and moves. Here we introduce a new
+  approach to computer Go that uses 'value networks' to evaluate board
+  positions and 'policy networks' to select moves. These deep neural networks
+  are trained by a novel combination of supervised learning from human expert
+  games, and reinforcement learning from games of self-play. Without any
+  lookahead search, the neural networks play Go at the level of
+  state-of-the-art Monte Carlo tree search programs that simulate thousands of
+  random games of self-play. We also introduce a new search algorithm that
+  combines Monte Carlo simulation with value and policy networks. Using this
+  search algorithm, our program AlphaGo achieved a 99.8% winning rate against
+  other Go programs, and defeated the human European Go champion by 5 games to
+  0. This is the first time that a computer program has defeated a human
+  professional player in the full-sized game of Go, a feat previously thought
+  to be at least a decade away.%
+    }
+    \verb{doi}
+    \verb 10.1038/nature16961
+    \endverb
+    \field{issn}{14764687}
+    \field{issue}{7587}
+    \field{pages}{484\bibrangedash 489}
+    \field{title}{Mastering the game of Go with deep neural networks and tree
+  search}
+    \field{volume}{529}
+    \field{journaltitle}{Nature}
+    \field{month}{01}
+    \field{year}{2016}
+  \endentry
+
+  \entry{Slomson2013}{incollection}{}
+    \name{author}{1}{}{%
+      {{hash=SA}{%
+         family={Slomson},
+         familyi={S\bibinitperiod},
+         given={Alan},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Elsevier}%
+    }
+    \strng{namehash}{SA1}
+    \strng{fullhash}{SA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Slo13}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{booktitle}{Alan Turing: His Work and Impact}
+    \field{pages}{623\bibrangedash 650}
+    \field{title}{Digital Computers Applied to Games}
+    \field{year}{2013}
+  \endentry
+
+  \entry{Strandby2016}{thesis}{}
+    \name{author}{1}{}{%
+      {{hash=SK}{%
+         family={Strandby},
+         familyi={S\bibinitperiod},
+         given={Kristine},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SK1}
+    \strng{fullhash}{SK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Str16}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{title}{Artificial Intelligence for 2048 and Threes}
+    \field{year}{2016}
+  \endentry
+\enddatalist
+\endinput

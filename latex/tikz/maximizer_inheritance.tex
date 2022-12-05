@@ -1,0 +1,24 @@
+\begin{figure}[H]
+    \centering
+    \resizebox{\textwidth}{!}{
+        \tikzset{
+            selected/.style={shape=rectangle, draw, line width = 1mm},
+            arrow/.style={line width = .5 mm, >=latex}
+        }
+
+        \begin{tikzpicture}[scale=12]
+            % The Tree
+            \node(expectimax)[]{\usebox{\idexpectimax}};
+            \node(id)[rectangle, draw, above = of expectimax]{Iterative Deepening};
+            \node(maxmcts)[right = of expectimax]{\usebox{\maximizermcts}};
+            \node(mcts)[rectangle, draw, above = of maxmcts]{MCTS};
+
+            \path [->, arrow] (id) edge (expectimax);
+            \path [->, arrow] (mcts) edge (maxmcts);
+        \end{tikzpicture}        
+    }
+    
+    \caption{Inheritance graph for non-adversarial agents. Specifications for Iterative Deepening and MCTS can be found in Figure \ref{fig:minimax_inheritance} and Figure \ref{fig:mcts_inheritance} respectively.}
+    \label{fig:maximizer_inheritance}
+
+\end{figure}

@@ -35,7 +35,7 @@ class Select:
 
         return self.uct_select(best_child)
 
-    def partial_expansion_select(self, node: TreeSearchNode = None) -> TreeSearchNode:
+    def partial_expansion_uct_select(self, node: TreeSearchNode = None) -> TreeSearchNode:
         if node is None:
             node = self.root
 
@@ -61,21 +61,21 @@ class Select:
         else:
             self.search_info["partial_expansions"] += 1
             best_child = sorted(node.children, key=uct)[-1]
-            return self.partial_expansion_select(best_child)
+            return self.partial_expansion_uct_select(best_child)
 
-    def partial_expansion_weighted_select(self, node: TreeSearchNode = None) -> TreeSearchNode:
+    def weighted_uct_select(self, node: TreeSearchNode = None) -> TreeSearchNode:
         if node is None:
             node = self.root
 
-        if not node.children or node.state.is_terminal:
+        if node.unexpanded_actions or node.state.is_terminal:
             return node
 
-        def uct(child):
-            if child.is_max_node:
-                exploit = (child.count - child.cumulative_utility) / child.count
+        def weighted_uct(child):
+            if node.is_max_node:
+                exploit = child.cumulative_utility / child.count
                 evaluation = child.eval
             else:
-                exploit = child.cumulative_utility / child.count
+                exploit = 1 - child.cumulative_utility / child.count
                 evaluation = 1 - child.eval
 
             explore = sqrt(2) * sqrt(log(node.count) / child.count)
@@ -84,16 +84,9 @@ class Select:
 
             return evaluation * q + exploit * (1 - q) + explore
 
-        ucb_child = 0.5 + sqrt(2) * sqrt(log(node.count) / (1 + len(node.children)))
+        best_child = sorted(node.children, key=weighted_uct)[-1]
 
-        ucts = (uct(c) for c in node.children)
-        
-        if node.unexpanded_actions and max(ucts) < ucb_child:            
-            return node
-        else:
-            self.search_info["partial_expansions"] += 1
-            best_child = sorted(node.children, key=uct)[-1]
-            return self.partial_expansion_select(best_child)
+        return self.weighted_uct_select(best_child)
 
     def queue_select(self) -> TreeSearchNode:
         return self.frontier.pop()
