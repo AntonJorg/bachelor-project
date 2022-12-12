@@ -12,11 +12,7 @@ class GetBestMove:
         - Have no side effects
     """
 
-    def get_minimax_move(self) -> int:
-        """
-        
-        """
-        
+    def get_minimax_move(self):
         utils = (c.eval for c in self.root.children)
 
         m = max(utils) if self.root.is_max_node else min(utils)
@@ -26,28 +22,16 @@ class GetBestMove:
 
         return choice(optimal_nodes).generating_action
 
-    def most_robust_child(self) -> int:
-        """
-        
-        """
+    def most_robust_child(self):
         return sorted(self.root.children, key=lambda c: c.count)[-1].generating_action
 
     def random_move(self):
-        """
-        
-        """
         return choice(self.root.state.applicable_actions)
 
     def get_stored_best_move(self):
-        """
-        
-        """
         return self.best_move
 
     def weighted_eval_utility_move(self):
-        """
-        
-        """
         def weight(child):
             if self.root.is_max_node:
                 exploit = child.cumulative_utility / child.count

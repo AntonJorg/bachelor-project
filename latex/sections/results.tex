@@ -1,5 +1,6 @@
 \section{Results}
 
+\subsection{Parameter Selection}
 The parameter selection for MCTS w/ Progressive Pruning and Iterative Deepening w/ Simulation is shown in Figure \ref{fig:parameter_selection}. It is clear that MCTS w/ Progressive Pruning is heavily outperformed by MCTS when using the most agressive pruning (lowest pruning factor), and as less and less pruning is performed, they begin to achieve equal performance. To preserve as much pruning behaviour as possible, the chosen pruning factor $p$ is not the one that achieves maximum winrate ($p=11.7$), but the first one where the winrate settles around $50\%$ ($p=6$).
 
 Iterative Deepening w/ Simulation fares much better, and achieves a winrate of $86\%$ at $62$ simulations per evaluation. This definitely suggests that the static evaluation function is not of very high quality, since $62$ simulations is a lot more time consuming and by nature more noisy.
@@ -14,6 +15,7 @@ Iterative Deepening w/ Simulation fares much better, and achieves a winrate of $
     \label{fig:parameter_selection}
 \end{figure}
 
+\subsection{In-group comparison}
 The results of the main pairwise Connect Four comparison can be seen in Figure \ref{fig:c4_results_average}, and the details of each matchup is included in Appendix \ref{appendix:results}. In the MiniMax group, the standard Iterative deepening is outperformed by every single one of the other agents, including the less conventional Best First MiniMax and MiniMax from MCTS-Tree. The top two MiniMax agents are Iterative Deepening w/ Simulation, and Best First Minimax, though Best First MiniMax is very close to both Iterative Deepening w/ $\alpha\beta$-pruning and Iterative Deepening w/ Beam Search. 
 
 In the MCTS group all winrates are somewhat similar, except for MCTS w/ Static Rollout which only manages to win $12\%$ of its games. The MCTS variations are all slightly worse than basic MCTS, but MCTS w/ Partial Expansion performs at a comparable level. The two aforementioned agents are also the top two in their group. 
@@ -26,7 +28,8 @@ In the MCTS group all winrates are somewhat similar, except for MCTS w/ Static R
     \label{fig:c4_results_average} 
 \end{figure}
 
-The group consisting of the top two agents from each group is then: Iterative Deepening, Iterative Deepening w/ Simulation, MCTS, and MCTS w/ Partial Expansion. The result of the pairwise comparison of these agents on both Connect Four and Nim can be seen in Figure \ref{fig:top_four_results_average}. It is clear from these results that agent performance is highly environment specific. The extremely low winrate of Iterative Deepening w/ Simulation in Nim is not just a result of Best First MiniMax playing perfectly, it also timed out in many of the games due to the high number of simulations per evaluation, and the high branching factor of Nim. 
+\subsection{Top four comparison}
+The group consisting of the top two agents from each group is then: Iterative Deepening w/ Simulation, Best First MiniMax, MCTS, and MCTS w/ Partial Expansion. The result of the pairwise comparison of these agents on both Connect Four and Nim can be seen in Figure \ref{fig:top_four_results_average}. It is clear from these results that agent performance is highly environment specific. The extremely low winrate of Iterative Deepening w/ Simulation in Nim is not just a result of Best First MiniMax playing perfectly, it also timed out in many of the games due to the high number of simulations per evaluation, and the high branching factor of Nim. 
 
 \begin{figure}[H]
     \centering
@@ -37,7 +40,9 @@ The group consisting of the top two agents from each group is then: Iterative De
     \label{fig:top_four_results_average}
 \end{figure}
 
-Figure \ref{fig:2048_results} shows the performance of Iterative Deepening w/ ExpectiMax and Maximizing MCTS, in the 2048 environment. The ExpectiMax agent manages to win $49\%$ of its games, while the MCTS agent wins $89\%$, and even manages to achieve the 4096 tile $18\%$ of the time. This is also reflected in the average scores, where MCTS scores $56\%$ higher than ExpectiMax.
+\newpage
+\subsection{Non-adversarial search}
+Figure \ref{fig:2048_results} shows the performance of Iterative Deepening w/ ExpectiMax and Maximizing MCTS, in the 2048 environment. The ExpectiMax agent manages to win $49\%$ of its games, while the MCTS agent wins $89\%$, and even manages to achieve the 4096 tile $18\%$ of the time. This is also reflected in the average scores, where MCTS scores $57\%$ higher than ExpectiMax.
 
 \begin{figure}[H]
     \centering
@@ -45,6 +50,3 @@ Figure \ref{fig:2048_results} shows the performance of Iterative Deepening w/ Ex
     \caption{Results of 100 games of 2048 for the Iterative Deepening w/ ExpectiMax and Maximizing MCTS agents.}
     \label{fig:2048_results}
 \end{figure}
-
-
-% \todo Heavy vs light rollouts

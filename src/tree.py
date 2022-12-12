@@ -4,6 +4,10 @@ from src.games import GameState
 class TreeSearchNode:
     """
     Generic doubly linked tree data structure.
+
+    Models the Node data structure from Algorithm 7. Since python does not support private
+    attributes everything is public, and respecting component function permissions is up
+    to the implementation.
     """
     def __init__(self, state: GameState, parent: 'TreeSearchNode', generating_action: int, depth: int =0, alpha=None, beta=None):
         # data structure
@@ -37,7 +41,7 @@ class TreeSearchNode:
 
     def add_child(self, state: GameState, generating_action: int) -> 'TreeSearchNode':
         """
-        
+        Generates a new TreeSearchNode and adds it to self.children.
         """
         child = TreeSearchNode(state, self, generating_action, self.depth + 1, self.alpha, self.beta)
         self.children.append(child)
@@ -45,6 +49,9 @@ class TreeSearchNode:
         return child
 
     def reset(self) -> None:
+        """
+        Deletes all children and resets unexpanded actions.
+        """
         self.__init__(self.state, self.parent, self.generating_action, self.depth)
 
     def copy(self) -> 'TreeSearchNode':

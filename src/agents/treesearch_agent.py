@@ -10,7 +10,7 @@ from src.agents.components import components
 class TreeSearchAgent(ABC, *components):
     """
     The TreeSearchAgent implements the Extended General Tree Search Algorithm
-    in self.search, and also defines all methods called in self.search
+    (Algorithm 9) in self.search, and also defines all component functions
     as abstract methods to be implemented in subclasses.
     """
     def __init__(self):
@@ -53,7 +53,8 @@ class TreeSearchAgent(ABC, *components):
             if self.should_backpropagate(leaf, value):
                 self.backpropagate(leaf, value)
     
-            self.reflect()
+            if self.should_trim():
+                self.trim()
 
         return self.get_best_move(), self.search_info
 
@@ -83,7 +84,8 @@ class TreeSearchAgent(ABC, *components):
         """
         Takes the node returned from self.select, and decides
         which child nodes to expand and add to the search 
-        tree and frontier.
+        tree and frontier. Proactive pruning happens here,
+        because is simply entails not expanding a certain action.
         """
         pass
 
@@ -121,10 +123,17 @@ class TreeSearchAgent(ABC, *components):
         pass
 
     @abstractmethod 
-    def reflect(self) -> None:
+    def should_trim(self) -> None:
         """
-        If a specific algorithm needs to modify the search tree and/or frontier
-        during the search, this function is where it should happen.
+        Whether or not to trim the search tree.
+        """
+        pass
+
+    @abstractmethod 
+    def trim(self) -> None:
+        """
+        In EGTS, Trim is for retroactive pruning, and it is the only
+        component function that should remove nodes from the search tree.
         """
         pass
 

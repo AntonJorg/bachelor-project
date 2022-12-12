@@ -1,3 +1,4 @@
+from random import choice
 from math import sqrt, log
 
 from src.tree import TreeSearchNode
@@ -87,6 +88,26 @@ class Select:
         best_child = sorted(node.children, key=weighted_uct)[-1]
 
         return self.weighted_uct_select(best_child)
+
+    def uct_select_stochastic_environment(self, node):
+        if node.unexpanded_actions or node.state.is_terminal:
+            return node
+
+        if not node.is_max_node:
+            return self.select(choice(node.children))
+
+        c = node.cumulative_utility / node.count
+
+        def uct(child):
+            exploit = child.cumulative_utility / child.count
+
+            explore = c * sqrt(log(node.count) / child.count)
+
+            return exploit + explore
+
+        best_child = sorted(node.children, key=uct)[-1]
+
+        return self.select(best_child)
 
     def queue_select(self) -> TreeSearchNode:
         return self.frontier.pop()

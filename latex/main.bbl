@@ -277,6 +277,116 @@
     \field{year}{2002}
   \endentry
 
+  \entry{Cooper2010}{article}{}
+    \name{author}{10}{}{%
+      {{hash=CS}{%
+         family={Cooper},
+         familyi={C\bibinitperiod},
+         given={Seth},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=KF}{%
+         family={Khatib},
+         familyi={K\bibinitperiod},
+         given={Firas},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=TA}{%
+         family={Treuille},
+         familyi={T\bibinitperiod},
+         given={Adrien},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=BJ}{%
+         family={Barbero},
+         familyi={B\bibinitperiod},
+         given={Janos},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Lee},
+         familyi={L\bibinitperiod},
+         given={Jeehyung},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=BM}{%
+         family={Beenen},
+         familyi={B\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=LFA}{%
+         family={Leaver-Fay},
+         familyi={L\bibinithyphendelim F\bibinitperiod},
+         given={Andrew},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=BD}{%
+         family={Baker},
+         familyi={B\bibinitperiod},
+         given={David},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=PZ}{%
+         family={Popović},
+         familyi={P\bibinitperiod},
+         given={Zoran},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=PF}{%
+         family={Players},
+         familyi={P\bibinitperiod},
+         given={Foldit},
+         giveni={F\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Nature Publishing Group}%
+    }
+    \strng{namehash}{CS+1}
+    \strng{fullhash}{CSKFTABJLJBMLFABDPZPF1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Coo+10}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{abstract}{%
+    People exert large amounts of problem-solving effort playing computer
+  games. Simple image-and text-recognition tasks have been successfully ĝ€̃
+  crowd-sourced' through games, but it is not clear if more complex scientific
+  problems can be solved with human-directed computing. Protein structure
+  prediction is one such problem: locating the biologically relevant native
+  conformation of a protein is a formidable computational challenge given the
+  very large size of the search space. Here we describe Foldit, a multiplayer
+  online game that engages non-scientists in solving hard prediction problems.
+  Foldit players interact with protein structures using direct manipulation
+  tools and user-friendly versions of algorithms from the Rosetta structure
+  prediction methodology, while they compete and collaborate to optimize the
+  computed energy. We show that top-ranked Foldit players excel at solving
+  challenging structure refinement problems in which substantial backbone
+  rearrangements are necessary to achieve the burial of hydrophobic residues.
+  Players working collaboratively develop a rich assortment of new strategies
+  and algorithms; unlike computational approaches, they explore not only the
+  conformational space but also the space of possible search strategies. The
+  integration of human visual problem-solving and strategy development
+  capabilities with traditional computational algorithms through interactive
+  multiplayer games is a powerful new approach to solving
+  computationally-limited scientific problems. © 2010 Macmillan Publishers
+  Limited. All rights reserved.%
+    }
+    \verb{doi}
+    \verb 10.1038/nature09304
+    \endverb
+    \field{issn}{14764687}
+    \field{issue}{7307}
+    \field{pages}{756\bibrangedash 760}
+    \field{title}{Predicting protein structures with a multiplayer online game}
+    \field{volume}{466}
+    \field{journaltitle}{Nature}
+    \field{month}{08}
+    \field{year}{2010}
+  \endentry
+
   \entry{Copeland2006}{misc}{}
     \name{author}{1}{}{%
       {{hash=CJ}{%
@@ -391,10 +501,6 @@
   controller, but the effectiveness of the modifications highly depends on the
   particular game being played.%
     }
-    \verb{doi}
-    \verb 10.1109/CIG.2015.7317937
-    \endverb
-    \field{isbn}{9781479986217}
     \field{pages}{107\bibrangedash 113}
     \field{title}{Investigating MCTS modifications in general video game
   playing}
@@ -402,6 +508,47 @@
   Games, CIG 2015 - Proceedings}
     \field{month}{11}
     \field{year}{2015}
+  \endentry
+
+  \entry{Hsu2020}{report}{}
+    \name{author}{2}{}{%
+      {{hash=HYJ}{%
+         family={Hsu},
+         familyi={H\bibinitperiod},
+         given={Yu-Jhen},
+         giveni={Y\bibinithyphendelim J\bibinitperiod},
+      }}%
+      {{hash=PLD}{%
+         family={Perez-Liebana},
+         familyi={P\bibinithyphendelim L\bibinitperiod},
+         given={Diego},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{HYJPLD1}
+    \strng{fullhash}{HYJPLD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{HPL20}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{abstract}{%
+    Large action spaces is one of the most problematic aspects of turn-based
+  strategy games for all types of AI methods. Some of the state-of-the-art
+  algorithms such as Online Evolutionary Planning and Evolutionary Monte Carlo
+  Tree Search (MCTS) have tried to deal with this problem, but they required a
+  fixed number of actions in each turn. In general strategy games, this
+  assumption can't be held, as the number of actions that can be executed in a
+  turn is flexible and will vary during the game. This paper studies pruning
+  techniques and the insertion of domain knowledge to deal with high branching
+  factors in a new turn-based strategy game: Tribes. The experiments show that,
+  with the help of these techniques, MCTS can increase its performance and
+  outperform the rule-based agents and Rolling Horizon Evolutionary Algorithms.
+  Moreover, some insights into the tree shape and the behaviour of MCTS with
+  and without pruning techniques are provided.%
+    }
+    \field{title}{MCTS pruning in Turn-Based Strategy Games}
+    \field{year}{2020}
   \endentry
 
   \entry{Jacobsen2014}{inproceedings}{}
@@ -449,10 +596,6 @@
   algorithmic innovations in this paper are likely to be useful when applying
   MCTS to other video games. © 2014 is held by the owner/author(s).%
     }
-    \verb{doi}
-    \verb 10.1145/2576768.2598392
-    \endverb
-    \field{isbn}{9781450326629}
     \field{pages}{293\bibrangedash 300}
     \field{title}{Monte mario: Platforming with MCTS}
     \field{journaltitle}{GECCO 2014 - Proceedings of the 2014 Genetic and

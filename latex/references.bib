@@ -61,8 +61,6 @@
 @inproceedings{Jacobsen2014,
   abstract  = {Monte Carlo Tree Search (MCTS) is applied to control the player character in a clone of the popular platform game Su- per Mario Bros. Standard MCTS is applied through search in state space with the goal of moving the furthest to the right as quickly as possible. Despite parameter tuning, only moderate success is reached. Several modifications to the algorithm are then introduced specifically to deal with the behavioural pathologies that were observed. Two of the modifications are to our best knowledge novel. A combination of these modifications is found to lead to almost perfect play on linear levels. Furthermore, when adding noise to the benchmark, MCTS outperforms the best known algorithm for these levels. The analysis and algorithmic innovations in this paper are likely to be useful when applying MCTS to other video games. © 2014 is held by the owner/author(s).},
   author    = {Emil Juul Jacobsen and Rasmus Greve and Julian Togelius},
-  doi       = {10.1145/2576768.2598392},
-  isbn      = {9781450326629},
   journal   = {GECCO 2014 - Proceedings of the 2014 Genetic and Evolutionary Computation Conference},
   pages     = {293-300},
   publisher = {Association for Computing Machinery},
@@ -72,8 +70,6 @@
 @inproceedings{Frydenberg2015,
   abstract  = {While Monte Carlo tree search (MCTS) methods have shown promise in a variety of different board games, more complex video games still present significant challenges. Recently, several modifications to the core MCTS algorithm have been proposed with the hope to increase its effectiveness on arcade-style video games. This paper investigates of how well these modifications perform in general video game playing using the general video game AI (GVG-AI) framework and introduces a new MCTS modification called UCT reverse penalty that penalizes the MCTS controller for exploring recently visited children. The results of our experiments show that a combination of two MCTS modifications can improve the performance of the vanilla MCTS controller, but the effectiveness of the modifications highly depends on the particular game being played.},
   author    = {Frederik Frydenberg and Kasper R. Andersen and Sebastian Risi and Julian Togelius},
-  doi       = {10.1109/CIG.2015.7317937},
-  isbn      = {9781479986217},
   journal   = {2015 IEEE Conference on Computational Intelligence and Games, CIG 2015 - Proceedings},
   month     = {11},
   pages     = {107-113},
@@ -131,71 +127,92 @@
   year     = {2005}
 }
 @incollection{Slomson2013,
-  author      = {Alan Slomson},
-  title       = {Digital Computers Applied to Games},
-  booktitle   = {Alan Turing: His Work and Impact},
-  publisher   = {Elsevier},
-  year        = {2013},
-  pages       = {623-650}
+  author    = {Alan Slomson},
+  title     = {Digital Computers Applied to Games},
+  booktitle = {Alan Turing: His Work and Impact},
+  publisher = {Elsevier},
+  year      = {2013},
+  pages     = {623-650}
 }
 @article{Silver2016,
-   abstract = {The game of Go has long been viewed as the most challenging of classic games for artificial intelligence owing to its enormous search space and the difficulty of evaluating board positions and moves. Here we introduce a new approach to computer Go that uses 'value networks' to evaluate board positions and 'policy networks' to select moves. These deep neural networks are trained by a novel combination of supervised learning from human expert games, and reinforcement learning from games of self-play. Without any lookahead search, the neural networks play Go at the level of state-of-the-art Monte Carlo tree search programs that simulate thousands of random games of self-play. We also introduce a new search algorithm that combines Monte Carlo simulation with value and policy networks. Using this search algorithm, our program AlphaGo achieved a 99.8% winning rate against other Go programs, and defeated the human European Go champion by 5 games to 0. This is the first time that a computer program has defeated a human professional player in the full-sized game of Go, a feat previously thought to be at least a decade away.},
-   author = {David Silver and Aja Huang and Chris J. Maddison and Arthur Guez and Laurent Sifre and George Van Den Driessche and Julian Schrittwieser and Ioannis Antonoglou and Veda Panneershelvam and Marc Lanctot and Sander Dieleman and Dominik Grewe and John Nham and Nal Kalchbrenner and Ilya Sutskever and Timothy Lillicrap and Madeleine Leach and Koray Kavukcuoglu and Thore Graepel and Demis Hassabis},
-   doi = {10.1038/nature16961},
-   issn = {14764687},
-   issue = {7587},
-   journal = {Nature},
-   month = {1},
-   pages = {484-489},
-   pmid = {26819042},
-   publisher = {Nature Publishing Group},
-   title = {Mastering the game of Go with deep neural networks and tree search},
-   volume = {529},
-   year = {2016},
+  abstract  = {The game of Go has long been viewed as the most challenging of classic games for artificial intelligence owing to its enormous search space and the difficulty of evaluating board positions and moves. Here we introduce a new approach to computer Go that uses 'value networks' to evaluate board positions and 'policy networks' to select moves. These deep neural networks are trained by a novel combination of supervised learning from human expert games, and reinforcement learning from games of self-play. Without any lookahead search, the neural networks play Go at the level of state-of-the-art Monte Carlo tree search programs that simulate thousands of random games of self-play. We also introduce a new search algorithm that combines Monte Carlo simulation with value and policy networks. Using this search algorithm, our program AlphaGo achieved a 99.8% winning rate against other Go programs, and defeated the human European Go champion by 5 games to 0. This is the first time that a computer program has defeated a human professional player in the full-sized game of Go, a feat previously thought to be at least a decade away.},
+  author    = {David Silver and Aja Huang and Chris J. Maddison and Arthur Guez and Laurent Sifre and George Van Den Driessche and Julian Schrittwieser and Ioannis Antonoglou and Veda Panneershelvam and Marc Lanctot and Sander Dieleman and Dominik Grewe and John Nham and Nal Kalchbrenner and Ilya Sutskever and Timothy Lillicrap and Madeleine Leach and Koray Kavukcuoglu and Thore Graepel and Demis Hassabis},
+  doi       = {10.1038/nature16961},
+  issn      = {14764687},
+  issue     = {7587},
+  journal   = {Nature},
+  month     = {1},
+  pages     = {484-489},
+  pmid      = {26819042},
+  publisher = {Nature Publishing Group},
+  title     = {Mastering the game of Go with deep neural networks and tree search},
+  volume    = {529},
+  year      = {2016}
 }
 @report{Campbell2002,
-   abstract = {Deep Blue is the chess machine that defeated then-reigning World Chess Champion Garry Kasparov in a six-game match in 1997. There were a number of factors that contributed to this success, including: • a single-chip chess search engine, • a massively parallel system with multiple levels of parallelism, • a strong emphasis on search extensions, • a complex evaluation function, and • effective use of a Grandmaster game database. This paper describes the Deep Blue system, and gives some of the rationale that went into the design decisions behind Deep Blue. },
-   author = {Murray Campbell and A Joseph Hoane and Feng-Hsiung Hsu},
-   isbn = {00043702/01},
-   journal = {Artificial Intelligence},
-   keywords = {Computer chess,Evaluation function,Game tree search,Parallel search,Search extensions,Selective search},
-   pages = {57-83},
-   title = {Deep Blue},
-   volume = {134},
-   year = {2002},
+  abstract = {Deep Blue is the chess machine that defeated then-reigning World Chess Champion Garry Kasparov in a six-game match in 1997. There were a number of factors that contributed to this success, including: • a single-chip chess search engine, • a massively parallel system with multiple levels of parallelism, • a strong emphasis on search extensions, • a complex evaluation function, and • effective use of a Grandmaster game database. This paper describes the Deep Blue system, and gives some of the rationale that went into the design decisions behind Deep Blue. },
+  author   = {Murray Campbell and A Joseph Hoane and Feng-Hsiung Hsu},
+  isbn     = {00043702/01},
+  journal  = {Artificial Intelligence},
+  keywords = {Computer chess,Evaluation function,Game tree search,Parallel search,Search extensions,Selective search},
+  pages    = {57-83},
+  title    = {Deep Blue},
+  volume   = {134},
+  year     = {2002}
 }
-@InProceedings{Baier2014,
-author="Baier, Hendrik
-and Winands, Mark H. M.",
-editor="Cazenave, Tristan
-and Winands, Mark H. M.
-and Bj{\"o}rnsson, Yngvi",
-title="Monte-Carlo Tree Search and Minimax Hybrids with Heuristic Evaluation Functions",
-booktitle="Computer Games",
-year="2014",
-publisher="Springer International Publishing",
-address="Cham",
-pages="45--63",
-abstract="Monte-Carlo Tree Search (MCTS) has been found to play suboptimally in some tactical domains due to its highly selective search, focusing only on the most promising moves. In order to combine the strategic strength of MCTS and the tactical strength of minimax, MCTS-minimax hybrids have been introduced, embedding shallow minimax searches into the MCTS framework. Their results have been promising even without making use of domain knowledge such as heuristic evaluation functions. This paper continues this line of research for the case where evaluation functions are available. Three different approaches are considered, employing minimax with an evaluation function in the rollout phase of MCTS, as a replacement for the rollout phase, and as a node prior to bias move selection. The latter two approaches are newly proposed. The MCTS-minimax hybrids are tested and compared to their counterparts using evaluation functions without minimax in the domains of Othello, Breakthrough, and Catch the Lion. Results showed that introducing minimax search is effective for heuristic node priors in Othello and Catch the Lion. The MCTS-minimax hybrids are also found to work well in combination with each other. For their basic implementation in this investigative study, the effective branching factor of a domain is identified as a limiting factor of the hybrid's performance.",
-isbn="978-3-319-14923-3"
+@inproceedings{Baier2014,
+  author    = {Baier, Hendrik
+               and Winands, Mark H. M.},
+  editor    = {Cazenave, Tristan
+               and Winands, Mark H. M.
+               and Bj{\"o}rnsson, Yngvi},
+  title     = {Monte-Carlo Tree Search and Minimax Hybrids with Heuristic Evaluation Functions},
+  booktitle = {Computer Games},
+  year      = {2014},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {45--63},
+  abstract  = {Monte-Carlo Tree Search (MCTS) has been found to play suboptimally in some tactical domains due to its highly selective search, focusing only on the most promising moves. In order to combine the strategic strength of MCTS and the tactical strength of minimax, MCTS-minimax hybrids have been introduced, embedding shallow minimax searches into the MCTS framework. Their results have been promising even without making use of domain knowledge such as heuristic evaluation functions. This paper continues this line of research for the case where evaluation functions are available. Three different approaches are considered, employing minimax with an evaluation function in the rollout phase of MCTS, as a replacement for the rollout phase, and as a node prior to bias move selection. The latter two approaches are newly proposed. The MCTS-minimax hybrids are tested and compared to their counterparts using evaluation functions without minimax in the domains of Othello, Breakthrough, and Catch the Lion. Results showed that introducing minimax search is effective for heuristic node priors in Othello and Catch the Lion. The MCTS-minimax hybrids are also found to work well in combination with each other. For their basic implementation in this investigative study, the effective branching factor of a domain is identified as a limiting factor of the hybrid's performance.},
+  isbn      = {978-3-319-14923-3}
 }
 @phdthesis{Allis1994,
-  author  = {Allis, L. Victor},
-  title   = {Searching for Solutions in Games and Artificial Intelligence},
-  school  = {Maastricht University},
-  year    = {1994},
-  month   = {sep}
+  author = {Allis, L. Victor},
+  title  = {Searching for Solutions in Games and Artificial Intelligence},
+  school = {Maastricht University},
+  year   = {1994},
+  month  = {sep}
 }
 @misc{Pons2019,
-  author       = {Pascal Pons},
-  url          = {http://blog.gamesolver.org/},
-  title        = {SOLVING CONNECT 4: HOW TO BUILD A PERFECT AI},
-  year         = {2019}
+  author = {Pascal Pons},
+  url    = {http://blog.gamesolver.org/},
+  title  = {SOLVING CONNECT 4: HOW TO BUILD A PERFECT AI},
+  year   = {2019}
 }
 @book{russellnorvig,
-  title={Artificial Intelligence: A Modern Approach (Global Edition)},
-  author={Russell, Stuart J. and Norvig, Peter},
-  edition={4},
-  year={2020},
-  publisher={Pearson}
+  title     = {Artificial Intelligence: A Modern Approach (Global Edition)},
+  author    = {Russell, Stuart J. and Norvig, Peter},
+  edition   = {4},
+  year      = {2020},
+  publisher = {Pearson}
+}
+@report{Hsu2020,
+  abstract = {Large action spaces is one of the most problematic aspects of turn-based strategy games for all types of AI methods. Some of the state-of-the-art algorithms such as Online Evolutionary Planning and Evolutionary Monte Carlo Tree Search (MCTS) have tried to deal with this problem, but they required a fixed number of actions in each turn. In general strategy games, this assumption can't be held, as the number of actions that can be executed in a turn is flexible and will vary during the game. This paper studies pruning techniques and the insertion of domain knowledge to deal with high branching factors in a new turn-based strategy game: Tribes. The experiments show that, with the help of these techniques, MCTS can increase its performance and outperform the rule-based agents and Rolling Horizon Evolutionary Algorithms. Moreover, some insights into the tree shape and the behaviour of MCTS with and without pruning techniques are provided.},
+  author   = {Yu-Jhen Hsu and Diego Perez-Liebana},
+  title    = {MCTS pruning in Turn-Based Strategy Games},
+  year     = {2020}
+}
+@article{Cooper2010,
+  abstract  = {People exert large amounts of problem-solving effort playing computer games. Simple image-and text-recognition tasks have been successfully ĝ€̃ crowd-sourced' through games, but it is not clear if more complex scientific problems can be solved with human-directed computing. Protein structure prediction is one such problem: locating the biologically relevant native conformation of a protein is a formidable computational challenge given the very large size of the search space. Here we describe Foldit, a multiplayer online game that engages non-scientists in solving hard prediction problems. Foldit players interact with protein structures using direct manipulation tools and user-friendly versions of algorithms from the Rosetta structure prediction methodology, while they compete and collaborate to optimize the computed energy. We show that top-ranked Foldit players excel at solving challenging structure refinement problems in which substantial backbone rearrangements are necessary to achieve the burial of hydrophobic residues. Players working collaboratively develop a rich assortment of new strategies and algorithms; unlike computational approaches, they explore not only the conformational space but also the space of possible search strategies. The integration of human visual problem-solving and strategy development capabilities with traditional computational algorithms through interactive multiplayer games is a powerful new approach to solving computationally-limited scientific problems. © 2010 Macmillan Publishers Limited. All rights reserved.},
+  author    = {Seth Cooper and Firas Khatib and Adrien Treuille and Janos Barbero and Jeehyung Lee and Michael Beenen and Andrew Leaver-Fay and David Baker and Zoran Popović and Foldit Players},
+  doi       = {10.1038/nature09304},
+  issn      = {14764687},
+  issue     = {7307},
+  journal   = {Nature},
+  month     = {8},
+  pages     = {756-760},
+  pmid      = {20686574},
+  publisher = {Nature Publishing Group},
+  title     = {Predicting protein structures with a multiplayer online game},
+  volume    = {466},
+  year      = {2010}
 }

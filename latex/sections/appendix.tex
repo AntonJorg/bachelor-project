@@ -5,6 +5,7 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{DFSSelect}{Root, Frontier}
+            \State \Comment Note that expansion functions that do not expand all nodes at once need to place the current node back on the frontier if continued expansion is needed with this select function
             \State \Return Frontier.Pop()
         \EndProcedure
     \end{algorithmic}    
@@ -16,8 +17,9 @@
             \If{\textbf{not} IsFullyExpanded(Root)}
                 \State \Return Root
             \Else
-                \State EqChildren = \{C $\in$ \textproc{GetChildren}(Root) $|$ C.Values.Evaluation == Root.Values.Evaluation\}
-                \State Child = ChooseRandom(EqChildren)
+                \State Children = \textproc{GetChildren}(Root)
+                \State EqCh $\gets$ \{C $\in$  Children$|$ C.getValues().Evaluation == Root.getValues().Evaluation\}
+                \State Child $\gets$ ChooseRandom(EqCh)
                 \State \Return \textproc{PrincipalVariationSelect}(Child, Frontier)
             \EndIf
         \EndProcedure
@@ -30,7 +32,7 @@
             \If{\textbf{not} IsFullyExpanded(Root) \textbf{or} Root.getState() $\in S^\circ$}
                 \State \Return Root
             \EndIf
-            \State BestChild = argmax\{UCT1(C) $|$ C $\in$ \textproc{GetChildren}(Root)\}
+            \State BestChild $\gets$ argmax\{UCT1(C) $|$ C $\in$ \textproc{GetChildren}(Root)\}
             \State \Return \textproc{UCTSelect}(BestChild, Frontier)
         \EndProcedure
     \end{algorithmic}    
@@ -42,21 +44,23 @@
             \If{\textbf{not} IsFullyExpanded(Root) \textbf{or} Root.getState() $\in S^\circ$}
                 \State \Return Root
             \EndIf
-            \State Max = 0
-            \State MaximizingChild = None
-            \For{C $\in$ Children}
+            \State N $\gets$ Root.getValues().Count
+            \State Max $\gets$ 0
+            \State MaximizingChild $\gets$ None
+            \For{C $\in$ \textproc{GetChildren}(Root)}
+                \State V $\gets$ C.getValues()
                 \If{IsMaxNode(Root)}
-                    \State Eval = V.Evaluation
-                    \State Estimate = V.CumulativeUtility / V.Count
+                    \State Eval $\gets$ V.Evaluation
+                    \State Estimate $\gets$ V.CumulativeUtility / V.Count
                 \Else 
                     \State Eval = 1 - V.Evaluation
-                    \State Estimate = 1 - V.CumulativeUtility / V.Count
+                    \State Estimate $\gets$ 1 - V.CumulativeUtility / V.Count
                 \EndIf
-                \State Q = 1 / $\sqrt{\text{V.Count}}$
-                \State W = Eval $\cdot$ Q + Estimate $\cdot$ (1 - Q) + $\sqrt{2}\cdot\sqrt{\log(\text{Root.Values.Count}) / \text{C.Values.Count}}$
+                \State Q $\gets$ 1 / $\sqrt{\text{V.Count}}$
+                \State W $\gets$ Eval $\cdot$ Q + Estimate $\cdot$ (1 - Q) + $\sqrt{2}\cdot\sqrt{\log(\text{N}) / \text{V.Count}}$
                 \If{W $>$ Max}
-                    \State Max = W
-                    \State MaximizingChild = C
+                    \State Max $\gets$ W
+                    \State MaximizingChild $\gets$ C
                 \EndIf
             \EndFor 
             \State \Return \textproc{WeightedSelect}(MaximizingChild, Frontier)
@@ -67,16 +71,16 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{PartialExpansionSelect}{Root, Frontier}
-            \State Children = \textproc{GetChildren}(Root)
+            \State Children $\gets$ \textproc{GetChildren}(Root)
             \If{Length(Children) == 0 \textbf{or} Root.getState() $\in S^\circ$}
                 \State \Return Root
             \EndIf
-            \State UCTS = \{UCT1(C) $|$ C $\in$ Children\}
-            \State UCT$_c$ = 0.5 + $\sqrt{2} \cdot \sqrt{\log(\text{Root.Values.Count}) / (1+\text{Length(Children)})}$
+            \State UCTS $\gets$ \{UCT1(C) $|$ C $\in$ Children\}
+            \State UCT$_c$ $\gets$ 0.5 + $\sqrt{2} \cdot \sqrt{\log(\text{Root.getValues().Count}) / (1+\text{Length(Children)})}$
             \If{\textbf{not} IsFullyExpanded(Root) \textbf{and} UCT$_c >$ max(UCTS)}
                 \State \Return Root
             \Else
-                \State BestChild = argmax(UCTS)
+                \State BestChild $\gets$ argmax(UCTS)
                 \State \Return \textproc{PartialExpansionSelect}(BestChild, Frontier)
             \EndIf 
         \EndProcedure
@@ -90,9 +94,9 @@
     \begin{algorithmic}[1]
         \Procedure{ExpandAll}{Node}
             \While{\textbf{not} IsFullyExpanded(Node)}
-                \State Action = Node.Values.UnexpandedActions.Pop()
-                \State State = Result(Node.getState(), Action)
-                \State Leaf = \textproc{Node}(State)
+                \State Action $\gets$ Node.popUnexpandedActions()
+                \State State $\gets$ Result(Node.getState(), Action)
+                \State Leaf $\gets$ \textproc{Node}(State)
                 \State \textproc{AddChild}(Node, Leaf) 
             \EndWhile
             \State \Return Leaf
@@ -106,9 +110,9 @@
             \If{IsFullyExpanded(Node)}
                 \State \Return Node
             \EndIf
-            \State Action = Node.Values.UnexpandedActions.Pop()
-            \State State = Result(Node.getState(), Action)
-            \State Leaf = \textproc{Node}(State)
+            \State Action $\gets$ Node.popUnexpandedActions()
+            \State State $\gets$ Result(Node.getState(), Action)
+            \State Leaf $\gets$ \textproc{Node}(State)
             \State \textproc{AddChild}(Node, Leaf) 
             \State \Return Leaf
         \EndProcedure
@@ -130,10 +134,10 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{ExpandNextAlphaBeta}{Node}
-        \State ChildEvals = \{V.Evaluation $|$ V $\in$ Node.getChildrenValues()\}
-        \If{IsMaxNode(Node) \textbf{and} max(ChildEvals) > Node.Values.Beta}
+        \State ChildEvals $\gets$ \{V.Evaluation $|$ V $\in$ Node.getChildrenValues()\}
+        \If{IsMaxNode(Node) \textbf{and} max(ChildEvals) $>$ Node.Values.Beta}
             \State \Return Node
-        \ElsIf{IsMinNode(Node) \textbf{and} min(ChildEvals) > Node.Values.Alpha}
+        \ElsIf{IsMinNode(Node) \textbf{and} min(ChildEvals) $>$ Node.Values.Alpha}
             \State \Return Node
         \EndIf
         \State \Return \textproc{ExpandNextDepthLimited}(Node)
@@ -144,7 +148,7 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{ExpandBeam}{Node}
-        \State Leaf = \textproc{ExpandNextAlphaBeta}(Node)
+        \State Leaf $\gets$ \textproc{ExpandNextAlphaBeta}(Node)
         \State FilterUnexpandedActions(Leaf)
         \Comment Beam search action filtering happens here
         \State \Return Leaf
@@ -167,7 +171,7 @@
     \begin{algorithmic}[1]
         \Procedure{StaticEvaluation}{State}
             \State \Return E(State)
-            \Comment Note that E is environment specific
+            \Comment Note that in practice E needs to be implemented for each environment
         \EndProcedure
     \end{algorithmic}    
 \end{algorithm}
@@ -176,8 +180,8 @@
     \begin{algorithmic}[1]
         \Procedure{Simulate}{State}
             \While{\textbf{not} State $\in S^\circ$}
-                \State Action = ChooseRandom(A(State))
-                \State State = Result(State, Action)
+                \State Action $\gets$ ChooseRandom(A(State))
+                \State State $\gets$ Result(State, Action)
             \EndWhile
             \State \Return U(State)
         \EndProcedure
@@ -187,7 +191,7 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{SimulateMany}{State}
-            \State Utilities = [ ]
+            \State Utilities $\gets$ [ ]
             \For{i \textbf{in} \{1, \dots, Parameters.NSimulations\}}
                 \State Utilities.Add(\textproc{Simulate}(State))
             \EndFor
@@ -199,8 +203,8 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{StaticAndSimulate}{State}
-            \State Evaluation = \textproc{StaticEvaluation}(State)
-            \State Simulation = \textproc{Simulate}(State)
+            \State Evaluation $\gets$ \textproc{StaticEvaluation}(State)
+            \State Simulation $\gets$ \textproc{Simulate}(State)
             \State \Return (Evaluation, Simulation)
         \EndProcedure
     \end{algorithmic}    
@@ -212,21 +216,21 @@
     \begin{algorithmic}[1]
         \Procedure{BackpropagateMiniMax}{Node, Value}
             \Procedure{BP}{Node}
-                \State MaxEval = max\{V.Evaluation \textbf{for} V $\in$ Node.getChildrenValues()\}
-                \State MinEval = min\{V.Evaluation \textbf{for} V $\in$ Node.getChildrenValues()\}
+                \State MaxEval $\gets$ max\{V.Evaluation \textbf{for} V $\in$ Node.getChildrenValues()\}
+                \State MinEval $\gets$ min\{V.Evaluation \textbf{for} V $\in$ Node.getChildrenValues()\}
                 \If{IsMaxNode(Node)}
-                    \State Node.Values.Alpha = max\{Node.Values.Alpha, MaxEval\}
+                    \State Node.Values.Alpha $\gets$ max\{Node.getValues().Alpha, MaxEval\}
                 \Else
-                    \State Node.Values.Beta = min\{Node.Values.Beta, MinEval\}
+                    \State Node.Values.Beta $\gets$ min\{Node.getValues().Beta, MinEval\}
                 \EndIf
                 
                 \If{AllChildrenHasValue(Node) \textbf{and} IsFullyExpanded(Node)}
                     \If{IsMaxNode(Node)}
-                        \State Node.Values.Evaluation = MaxEval
+                        \State Node.getValues().Evaluation $\gets$ MaxEval
                     \Else
-                        \State Node.Values.Evaluation = MinEval
+                        \State Node.getValues().Evaluation $\gets$ MinEval
                     \EndIf
-                    \State Parent = \textproc{GetParent}(Node)
+                    \State Parent $\gets$ \textproc{GetParent}(Node)
                     \If{Parent}
                         \textproc{BP}(Parent)
                     \EndIf                    
@@ -236,8 +240,8 @@
             \If{Value \textbf{is} None}
                 \State \textproc{BP}(Node)
             \Else
-                \State Node.Values.Evaluation = Value
-                \State Parent = \textproc{GetParent}(Node)
+                \State Node.getValues().Evaluation $\gets$ Value
+                \State Parent $\gets$ \textproc{GetParent}(Node)
                 \If{Parent} 
                     \textproc{BP}(Parent)
                 \EndIf
@@ -249,9 +253,9 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{BackpropagateSum}{Node, Value}
-            \State Node.Values.CumulativeUtility += Value
-            \State Node.Values.Count += 1
-            \State Parent = \textproc{GetParent}(Node)
+            \State Node.getValues().CumulativeUtility += Value
+            \State Node.getValues().Count += 1
+            \State Parent $\gets$ \textproc{GetParent}(Node)
             \If{Parent}
                 \State \textproc{BackpropagateSum}(Parent, Value)
             \EndIf
@@ -262,9 +266,9 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{StoreStaticBackpropagateSum}{Node, Value}
-            \State Evaluation, Simulation = Value
+            \State Evaluation, Simulation $\gets$ Value
             \Comment Requires Value to be 2-tuple
-            \State Node.Values.Evaluation = Evaluation
+            \State Node.getValues().Evaluation $\gets$ Evaluation
             \State \textproc{BackpropagateSum}(Node, Simulation)
         \EndProcedure
     \end{algorithmic}    
@@ -273,7 +277,7 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{BackpropagateSumAndMiniMax}{Node, Value}
-            \State Evaluation, Simulation = Value
+            \State Evaluation, Simulation $\gets$ Value
             \Comment Requires Value to be 2-tuple
             \State \textproc{BackpropagateSum}(Node, Simulation)
             \State \textproc{BackpropagateMiniMax}(Node, Evaluation)
@@ -287,13 +291,13 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{StoreMoveResetSearchTree}{Root, Frontier}
-            \State Action = \textproc{MiniMaxMove}(Root)
-            \State Parameters.CurrentBestMove = Action
+            \State Action $\gets$ \textproc{MiniMaxMove}(Root)
+            \State Parameters.CurrentBestMove $\gets$ Action
             \State Parameters.MaxDepth += 1
             \For{C $\in$ \textproc{GetChildren}(Root)}
                 \textproc{DelChild}(Root, C)
             \EndFor
-            \State Root.OnFrontier = True
+            \State Root.OnFrontier $\gets$ True
         \EndProcedure
     \end{algorithmic}    
 \end{algorithm}
@@ -301,10 +305,10 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{FractionPruning}{Root, Frontier}
-            \State BranchingFactor = Length(Root.getState().ApplicableActions)
-            \State LowerBound = Root.Count / (BranchingFactor + Parameters.PruningFactor) 
+            \State BranchingFactor $\gets$ Length(Root.getState().ApplicableActions)
+            \State LowerBound $\gets$ Root.getValues().Count / (BranchingFactor + Parameters.PruningFactor) 
             \For{C $\in$ \textproc{GetChildren}(Root)}
-                \If{C.Values.Count $<$ LowerBound}
+                \If{C.getValues().Count $<$ LowerBound}
                     \State \textproc{DelChild}(Root, C)
                 \ElsIf{IsFullyExpanded(C)}
                     \State \textproc{FractionPruning}(C, Frontier)
@@ -322,9 +326,9 @@
     \begin{algorithmic}[1]
         \Procedure{MiniMaxMove}{Root}
             \If{IsMaxNode(Root)}
-                \State BestChild = argmax\{V.Evaluation \textbf{for} V $\in$ Root.getChildrenValues()\}
+                \State BestChild $\gets$ argmax\{V.Evaluation \textbf{for} V $\in$ Root.getChildrenValues()\}
             \Else
-                \State BestChild = argmin\{V.Evaluation \textbf{for} V $\in$ Root.getChildrenValues()\}
+                \State BestChild $\gets$ argmin\{V.Evaluation \textbf{for} V $\in$ Root.getChildrenValues()\}
             \EndIf
             \State \Return BestChild.getGeneratingAction()
         \EndProcedure
@@ -342,7 +346,7 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{MostRobustChild}{Root}
-            \State BestChild = argmax\{V.Count \textbf{for} V $\in$ Root.getChildrenValues()\}
+            \State BestChild $\gets$ argmax\{V.Count \textbf{for} V $\in$ Root.getChildrenValues()\}
             \State \Return BestChild.getGeneratingAction() 
         \EndProcedure
     \end{algorithmic}    
@@ -351,21 +355,21 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{WeightedUtilityMove}{Root}
-            \State Max = 0
-            \State MaximizingAction = None
+            \State Max $\gets$ 0
+            \State MaximizingAction $\gets$ None
             \For{V $\in$ Root.getChildrenValues()}
                 \If{IsMaxNode(Root)}
-                    \State Eval = V.Evaluation
-                    \State Estimate = V.CumulativeUtility / V.Count
+                    \State Eval $\gets$ V.Evaluation
+                    \State Estimate $\gets$ V.CumulativeUtility / V.Count
                 \Else 
-                    \State Eval = 1 - V.Evaluation
-                    \State Estimate = 1 - V.CumulativeUtility / V.Count
+                    \State Eval $\gets$ 1 - V.Evaluation
+                    \State Estimate $\gets$ 1 - V.CumulativeUtility / V.Count
                 \EndIf
-                \State Q = 1 / $\sqrt{\text{V.Count}}$
-                \State W = Eval $\cdot$ Q + Estimate $\cdot$ (1 - Q)
+                \State Q $\gets$ 1 / $\sqrt{\text{V.Count}}$
+                \State W $\gets$ Eval $\cdot$ Q + Estimate $\cdot$ (1 - Q)
                 \If{W $>$ Max}
-                    \State Max = W
-                    \State MaximizingAction = V.GeneratingAction
+                    \State Max $\gets$ W
+                    \State MaximizingAction $\gets$ V.GeneratingAction
                 \EndIf
             \EndFor 
             \State \Return MaximizingAction
@@ -378,7 +382,7 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{WhenRootHasValue}{Root}
-            \State \Return Root.Values.Evaluation != None 
+            \State \Return Root.getValues().Evaluation != None 
         \EndProcedure
     \end{algorithmic}    
 \end{algorithm}
@@ -402,7 +406,7 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{IfDepthReached}{Node, Value}
-            \State \Return Node.Values.Depth == Parameters.MaxDepth 
+            \State \Return Node.getValues().Depth == Parameters.MaxDepth 
         \EndProcedure
     \end{algorithmic}    
 \end{algorithm}
@@ -410,8 +414,8 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{IfDepthReachedOrFullyExpanded}{Node, Value}
-            \State DepthReached = Node.Values.Depth == Parameters.MaxDepth
-            \State FullyExpanded = Length(Node.Values.UnexpandedActions) == 0
+            \State DepthReached $\gets$ Node.getValues().Depth == Parameters.MaxDepth
+            \State FullyExpanded $\gets$ Length(Node.getValues().UnexpandedActions) == 0
             \State \Return DepthReached \textbf{or} FullyExpanded
         \EndProcedure
     \end{algorithmic}    
@@ -420,7 +424,7 @@
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \Procedure{WhenPeriodic}{Root}
-            \State \Return Root.count mod Parameters.PeriodLength == 0
+            \State \Return Root.getValues().Count \textbf{mod} Parameters.PeriodLength == 0
         \EndProcedure
     \end{algorithmic}    
 \end{algorithm}
@@ -432,41 +436,29 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{images/connectfour_results.pdf}
-    \caption{}
+    \caption{Winrates for the Max player in Connect Four, for the MiniMax- and MCTS-groups.}
     \label{fig:c4_results}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{images/connectfour_results_folded.pdf}
-    \caption{}
+    \caption{Combined Max- and Min-player winrates for the agents in Connect Four, for the MiniMax- and MCTS-groups.}
     \label{fig:c4_results_folded}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/connectfour_top_four_results.pdf}
-    \caption{}
+    \includegraphics[width=.49\textwidth]{images/connectfour_top_four_results.pdf}
+    \includegraphics[width=.49\textwidth]{images/connectfour_top_four_results_folded.pdf}
+    \caption{Max-player (left) and combined (right) winrates for the top four agents, playing Connect Four.}
     \label{fig:c4_top_four_results}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/connectfour_top_four_results_folded.pdf}
-    \caption{}
-    \label{fig:c4_top_four_results_folded}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{images/nim_top_four_results.pdf}
-    \caption{}
+    \includegraphics[width=.49\textwidth]{images/nim_top_four_results.pdf}
+    \includegraphics[width=.49\textwidth]{images/nim_top_four_results_folded.pdf}
+    \caption{Max-player (left) and combined (right) winrates for the top four agents, playing Nim.}
     \label{fig:nim_top_four_results}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{images/nim_top_four_results_folded.pdf}
-    \caption{}
-    \label{fig:nim_top_four_results_folded}
 \end{figure}

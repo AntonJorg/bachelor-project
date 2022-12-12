@@ -5,11 +5,11 @@
     \begin{algorithmic}[1]
     
     \Procedure{MCTS}{$s$}
-        \State Root = MCTSTreeNode($s$)
+        \State Root $\gets$ MCTSTreeNode($s$)
         \While{\textbf{not} ShouldTerminate()}
-            \State Node = Select(Root)
-            \State Leaf = Expand(Node)
-            \State Value = Simulate(Leaf)
+            \State Node $\gets$ Select(Root)
+            \State Leaf $\gets$ Expand(Node)
+            \State Value $\gets$ Simulate(Leaf)
             \State Backpropagate(Value, Leaf)
         \EndWhile
         \State \Return MostRobustChild(Root)

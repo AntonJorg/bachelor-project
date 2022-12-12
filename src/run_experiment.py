@@ -5,7 +5,6 @@ import json
 import random
 from datetime import datetime
 from functools import partial
-from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map
 
 from src.games import states

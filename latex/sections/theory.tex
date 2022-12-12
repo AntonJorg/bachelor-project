@@ -33,7 +33,7 @@ where $Player(s)$ returns the player which turn it is to take action in state $s
     \end{cases}
     \label{eq:MiniMax_policy}
 \end{equation}
-This means that optimal play for the Max player simply consists of choosing the action which leads to the state with the highest MiniMax value, and vice versa for the Min player. Take the game tree from Figure \ref{fig:game_tree} as an example:
+This means that optimal play for the Max player simply consists of choosing the action which leads to the state with the highest MiniMax value, and vice versa for the Min player. Take the game tree from Figure \ref{fig:game_tree} as an example, where by backing up the MiniMax values it becomes clear that $TakeAction(s_0)$ is equal to $a_1$ as predicted:
 
 \input{tikz/MiniMax_example.tex}
 
@@ -44,7 +44,7 @@ The pseudocode of a pure MiniMax algorithm can be seen in Algorithm \ref{alg:min
 Many methods exist to make MiniMax practical on large game trees, three of which will be introduced in this paper: $\alpha\beta$-pruning, iterative deepening, and Best First MiniMax.  The first two methods are by far the most widely used, and most if not all modern MiniMax agents implement both.
 
 \subsubsection{AlphaBeta-pruning}
-This is a quick introduction, for a more in depth explanation see \cite[p. 198]{russellnorvig}.
+What follows is a quick introduction of the concept, for a more in depth explanation see \cite[p. 198]{russellnorvig}.
 $\alpha\beta$-pruning can be thought of as a simplification of the MiniMax formula that is applicable in certain cases, and as such it still guarantees optimality. Consider the following example:
 \begin{align*}
     MiniMax(s) &= \max(MiniMax(R(s, a_0)), MiniMax(R(s, a_1)), 
@@ -60,12 +60,16 @@ On the second line some values are missing, but the values that are present can 
 \subsubsection{Iterative Deepening}
 Iterative deepening builds on depth limited search, which as the name suggests terminates the recursion at a predetermined depth instead of continuing to a terminal state. However, from the definition of games in the beginning of this section it is clear that only terminal states have a utility value, so the algorithm has nothing to return if recursion stops earlier. To overcome this issue, an evaluation function $E: S \rightarrow \mathbb{R}$ is introduced, representing an estimate of the true game theoretical value of the position. This evaluation function can be based on domain knowledge e.g. in chess it could be piece values and positioning principles, it can be learned using neural networks, or it can be a combination of both. A depth limited search of depth $d$ has a time complexity of $\mathcal{O}(b^d)$ and a space complexity of $\mathcal{O}(d)$,since it forces the deepest node in the tree to have depth at most $d$. Since the algorithm no longer searches the entire game tree and uses an approximation for the MiniMax value at cutoff nodes, it is no longer guaranteed optimal, but can still produce strong play with a good evaluation function.
 
-Having the ability to limit the search to a certain depth is a great improvement, but it can still be difficult to estimate how much time a search to a given depth will take, which is a problem in most applications. Iterative deepening overcomes this issue by starting at depth limit $d=1$, which is guaranteed to complete almost instantly, storing the best move, increasing the depth limit to  $d=2$, and so on. This way when time runs out the algorithm will always have an action to return. The main concern about iterative deepening is that the algorithm has to search many nodes multiple times, thereby wasting time. While this is true, the amount of re-searched nodes is much smaller than one might think, since the exponential nature of game trees make shallower levels of the tree much smaller than deeper ones. Take a game with branching factor $b=10$, searched to depth $d=5$. A normal depth limited search would search $10^1+10^2+10^3+10^4+10^5=111,110$ nodes, while an iterative deepening search would search $5 \cdot 10^1+4 \cdot 10^2+3 \cdot 10^3+2 \cdot 10^4+10^5=123,450$ nodes, which is only an $11.11\%$ increase \cite[p. 99]{russellnorvig}. If combined with $\alpha\beta$-pruning, iterative deepening can even decrease the number of nodes searched by improving move ordering.
+Having the ability to limit the search to a certain depth is a great improvement, but it can still be difficult to estimate how much time a search to a given depth will take, which is a problem in most applications. Iterative deepening overcomes this issue by starting at depth limit $d=1$, which is guaranteed to complete almost instantly, storing the best move, increasing the depth limit to  $d=2$, and so on. This way when time runs out the algorithm will always have an action to return. 
+
+\newpage
+The main concern about iterative deepening is that the algorithm has to search many nodes multiple times, thereby wasting time. While this is true, the amount of re-searched nodes is much smaller than one might think, since the exponential nature of game trees make shallower levels of the tree much smaller than deeper ones. Take a game with branching factor $b=10$, searched to depth $d=5$. A normal depth limited search would search $10^1+10^2+10^3+10^4+10^5=111,110$ nodes, while an iterative deepening search would search $5 \cdot 10^1+4 \cdot 10^2+3 \cdot 10^3+2 \cdot 10^4+10^5=123,450$ nodes, which is only an $11.11\%$ increase \cite[p. 99]{russellnorvig}. If combined with $\alpha\beta$-pruning, iterative deepening can even decrease the number of nodes searched by improving move ordering.
 
 \input{algorithms/iterativedeepening.tex}
 
+\newpage
 \subsubsection{Best First MiniMax}
-The classical approach to implementing MiniMax is via DFS, since it can compute the MiniMax move using linear space, and only needs to back up the MiniMax values once per state $\alpha\beta$-pruning and iterative deepening makes it possible to search less nodes and terminate early, but it is still only using information from the deepest nodes to guide the search. Best First MiniMax seeks to improve this by continually expanding the most promising nodes until a time or space limit is reached resulting in a tree with non-uniform depth.
+The classical approach to implementing MiniMax is via DFS, since it can compute the MiniMax move using linear space, and only needs to back up the MiniMax values once per state. $\alpha\beta$-pruning and iterative deepening makes it possible to search less nodes and terminate early, but it is still only using information from the deepest nodes to guide the search. Best First MiniMax seeks to improve this by continually expanding the most promising nodes until a time or space limit is reached resulting in a tree with non-uniform depth.
 
 In a non-adversarial setting, Best First Search uses a priority queue based frontier to determine which node to expand next, but that approach is difficult to transfer directly to adversarial search since nodes with high evaluation should have a high chance of leading to a win, but without searching the low evaluation nodes the agent does not see the refutations or even losing moves that an otherwise promising strategy might contain. Even if the frontier prioritized both extremes of the evaluation function, the average evaluation nodes still need to be explored in order to find possible extreme values in their subtrees. All this means that if the agent is not searching to a uniform depth, it needs a way to balance exploitation (expanding promising nodes) and exploration (expanding not so promising nodes).
 
@@ -130,13 +134,14 @@ $1 - \frac{Utility}{Count}$ can be used.
             FullyExpanded(Node)}
                 \State \Return Node
             \EndIf
-            \State Child = 
+            \State Child $\gets$ 
             $\text{arg}\max \{ \text{UCB1}(c) \;|\; c \in \text{Node.Children} \}$ 
             \State \Return Select(Child)
         \EndProcedure
     \end{algorithmic}        
 \end{algorithm}
 
+\newpage
 \textbf{Expand:} In the expansion step, the selected node is expanded by 
 popping an action from Unexpanded Actions, and adding a child 
 node containing the successor state corresponding to that action. This
@@ -150,8 +155,8 @@ state or has no unexpanded actions, the selected node is returned instead.
             FullyExpanded(Node)}        
                 \State \Return Node
             \EndIf
-            \State Action = Node.UnexpandedActions.Pop()
-            \State Leaf = MCTSTreeNode(Result(Node.State, Action))
+            \State Action $\gets$ Node.UnexpandedActions.Pop()
+            \State Leaf $\gets$ MCTSTreeNode(Result(Node.State, Action))
             \State Node.Children.Append(Leaf)
             \State \Return Leaf
         \EndProcedure
@@ -167,10 +172,10 @@ of that state.
 \begin{algorithm}
     \begin{algorithmic}[1]
         \Procedure{Simulate}{Node}
-            \State State = Node.State
+            \State State $\gets$ Node.State
             \While{\textbf{not} State $\in S^\circ$}
-                \State Action = ChooseRandom(A(State))
-                \State State = Result(State, Action)
+                \State Action $\gets$ ChooseRandom(A(State))
+                \State State $\gets$ Result(State, Action)
             \EndWhile
             \State \Return U(State)
         \EndProcedure
@@ -185,8 +190,8 @@ is then called on the roots parent.
 \begin{algorithm}
     \begin{algorithmic}[1]
         \Procedure{Backpropagate}{Leaf, Value}     
-            \State Leaf.Utility $\leftarrow$ Leaf.Utility $+$ Value
-            \State Leaf.Count $\leftarrow$ Leaf.Count $+$ 1
+            \State Leaf.Utility $\gets$ Leaf.Utility $+$ Value
+            \State Leaf.Count $\gets$ Leaf.Count $+$ 1
             \If{Leaf.Parent}        
                 \State Backpropagate(Leaf.Parent, Value)
             \EndIf
@@ -194,10 +199,11 @@ is then called on the roots parent.
     \end{algorithmic}    
 \end{algorithm}
 
-Usually the backpropagation step differentiates between Max and Min nodes, and assigns utilities accordingly. Since the Max nodes have Min nodes as children and has to maximize over those, it is the Min nodes that recieve $+1$ if the Max player wins, and vice versa. In this paper the responsibility of differentiating between node types is delegated to the selection step, partly because it makes the average utilities more compatible with methods introduced later, and partly because it is arguably more intuitive. To see all the steps illustrated, see Figure \ref{fig:mcts_illustrated}.
+Usually the backpropagation step differentiates between Max and Min nodes, and assigns utilities accordingly. Since the Max nodes have Min nodes as children and has to maximize over those, it is the Min nodes that recieve a high utility if the Max player wins, and vice versa. In this paper the responsibility of differentiating between node types is delegated to the selection step, partly because it makes the average utilities more compatible with methods introduced later, and partly because it is arguably more intuitive. To see all the steps illustrated, see Figure \ref{fig:mcts_illustrated}.
 
 \input{tikz/mcts}
 
+\newpage
 \subsubsection{Partial Expansion}
 The base version of MCTS is forced to fully expand a node
 before any of its children can be explored. Sometimes however
@@ -225,11 +231,14 @@ is called on the child with the maximum UCB1:
             \If{$\text{UCB}_c(\text{Node}) > \max \{ \text{UCB1}(c) \;|\; c \in \text{Node.Children} \}$ \textbf{and not} FullyExpanded(Node)}
             \State \Return Node
             \Else
-            \State Child = 
-            $\text{arg}\max \{ \text{UCB1}(c) \;|\; c \in \text{Node.Children} \}$ 
+            \State Child 
+            $\gets \text{arg}\max \{ \text{UCB1}(c) \;|\; c \in \text{Node.Children} \}$ 
             \State \Return \textproc{Select}(Child)
 
             \EndIf
         \EndProcedure
     \end{algorithmic}        
 \end{algorithm}
+
+\subsubsection{Pruning}
+It is not possible to perform $\alpha\beta$-pruning in MCTS methods, since node values are estimates and change quickly, especially for nodes with few simulations. It is however possible to examine the children of a node after a number of simulations, and remove them based on some criteria. This could be keeping the $n$ best children based on utilities \cite{Hsu2020}, pruning children that fall below some utility threshold, or pruning children based on visit frequency from the parent.

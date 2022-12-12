@@ -15,8 +15,5 @@ agents = (
     MiniMaxWeightedMCTSAgent,
     StaticWeightedMCTSAgent,
     MCTSTreeMiniMaxAgent,
-    ProgressivePruningMCTSAgent,
-    RandomDistributionAgent,
-    ExpectiMaxAgent,
-    MaximizerMCTSAgent
+    ProgressivePruningMCTSAgent
 )

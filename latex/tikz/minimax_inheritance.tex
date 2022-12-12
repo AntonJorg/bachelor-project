@@ -10,11 +10,11 @@
             % The Tree
             \node(minimax)[]{\usebox{\minimax}};
             \node(dlminimax)[below = 3 cm of minimax]{\usebox{\dlminimax}};
-            \node(alphabeta)[below right = of dlminimax]{\usebox{\alphabeta}};
+            \node(alphabeta)[below right = 2cm and -6cm of dlminimax]{\usebox{\alphabeta}};
             \node(iterativedeepening)[selected, below left = 1 cm and .5 cm of dlminimax]{\usebox{\iterativedeepening}};
-            \node(idalphabeta)[selected, below right = of iterativedeepening]{\usebox{\idalphabeta}};
+            \node(idalphabeta)[selected, below right = 3cm and 0cm of iterativedeepening]{\usebox{\idalphabeta}};
             \node(idsim)[selected, below = of iterativedeepening]{\usebox{\idsimulation}};
-            \node(bestfirst)[selected, below right = of minimax]{\usebox{\bestfirstminimax}};
+            \node(bestfirst)[selected, below left = of minimax]{\usebox{\bestfirstminimax}};
             \node(beamsearch)[selected, below = of idalphabeta]{\usebox{\beamsearch}};
             
 
@@ -29,7 +29,7 @@
         \end{tikzpicture}        
     }
     
-    \caption{Inheritance graph from MiniMax.}
+    \caption{Inheritance graph from MiniMax. Only agents marked with thick outlines are included in the experiments.}
     \label{fig:minimax_inheritance}
 
 \end{figure}

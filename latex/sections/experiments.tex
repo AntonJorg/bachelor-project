@@ -13,25 +13,29 @@ Figure \ref{fig:minimax_inheritance} and \ref{fig:mcts_inheritance} show the age
 
 The agents are split into two groups, MiniMax based, and MCTS based. Note that MiniMax from MCTS Tree inherits from MCTS, but is classified as a MiniMax based agent. This is due to the fact that, for the purposes of the experiments, agents are classified by the information they use in \gbm. The two groups can be seen below, along with shorthand names that will be used in figures:
 
-\subsubsection*{MiniMax Based}
-\begin{itemize}
-    \item Iterative Deepening: ID
-    \item Iterative Deepening w/ $\alpha\beta$-pruning: ID-AB
-    \item Iterative Deepening w/ Simulation: ID-Sim
-    \item Iterative Deepening w/Beam Search: ID-BS
-    \item Best First MiniMax: BFMM
-    \item MiniMax from MCTS Tree: MM-MCT
-\end{itemize}
+\begin{multicols}{2}
+    \subsubsection*{MiniMax Based}
+    \begin{itemize}
+        \item Iterative Deepening: ID
+        \item Iterative Deepening w/ $\alpha\beta$-pruning: ID-AB
+        \item Iterative Deepening w/ Simulation: ID-Sim
+        \item Iterative Deepening w/Beam Search: ID-BS
+        \item Best First MiniMax: BFMM
+        \item MiniMax from MCTS Tree: MM-MCT
+    \end{itemize}
+    \columnbreak
+    \subsubsection*{MCTS Based}
+    \begin{itemize}
+        \item Monte Carlo Tree Search: MC
+        \item MCTS w/ Static Rollout: MC-SR
+        \item MCTS w/ Partial Expansion: MC-PE
+        \item Statically Weighted MCTS: SW-MC
+        \item MiniMax Weighted MCTS: MW-MC
+        \item MCTS w/ Progressive Pruning: MC-PP
+    \end{itemize}
+\end{multicols}
 
-\subsubsection*{MCTS Based}
-\begin{itemize}
-    \item Monte Carlo Tree Search: MC
-    \item MCTS w/ Static Rollout: MC-SR
-    \item MCTS w/ Partial Expansion: MC-PE
-    \item Statically Weighted MCTS: SW-MC
-    \item MiniMax Weighted MCTS: MW-MC
-    \item MCTS w/ Progressive Pruning: MC-PP
-\end{itemize}
+\newpage
 
 \subsection{Environments}
 
@@ -44,6 +48,7 @@ Nim is a combinatorial game where players take turns removing stones from one of
 \subsubsection{2048}
 As the only non-adversarial game examined in this paper, 2048 is a single player puzzle game, where the objective is to combine many smaller tiles into the titular 2048 tile. While the 2048 tile is officially declared a win, it is possible to contiune past it to create even bigger tiles. The game is played on a $4$ by $4$ grid, with the following rules: On each turn including the first, a tile spawns in an empty spot. The placement is uniformly distributed, and the value of the tile is $2$ with a $90\%$ chance, and $4$ with a $10\%$ chance. In \cite{Strandby2016} Strandby sets an experimental value of the game tree size at $9.26 \cdot 10^{2139}$, which is many times larger than the two other environments. This has to do with the maximum depth being much greater than both Connect Four and Nim, and the fact that chance nodes also grow the search tree exponentially, effectively doubling the depth compared to a deterministic environment.
 
+\newpage
 \subsection{Comparison}
 Firstly, the agents within each group will play against each other
 such that each agent type plays against all other agent types, as well

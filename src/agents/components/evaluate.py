@@ -9,7 +9,7 @@ class Evaluate:
 
     These methods should:
         - Take a GameState
-        - Return an estimate of the utility of the state, as a float
+        - Return an estimate of the utility of the state, as a float (or a list of floats)
         - Not have any side effects
         - Not have to be deterministic
     """
@@ -29,6 +29,17 @@ class Evaluate:
     def simulate_many(self, state):        
         values = (self.simulate(state) for _ in range(self.num_simulations))
         return sum(values) / self.num_simulations
+
+    def simulate_stochastic_environment(self, state):
+        while not state.is_terminal:
+            if hasattr(state, "cumulative_distribution"):
+                action = random.choices(state.applicable_actions, 
+                    cum_weights=state.cumulative_distribution, 
+                    k=1)[0]
+            else:
+                action = random.choice(state.applicable_actions)
+            state = state.result(action)
+        return state.utility
 
     def static_evaluation(self, state):
         match state:
@@ -95,8 +106,8 @@ class Evaluate:
 
         if state.moves % 2:
             return int(not bool(result))
-        else:
-            return int(bool(result))
+            
+        return int(bool(result))
 
     def _static_eval_2048(self, state):
         return state.utility

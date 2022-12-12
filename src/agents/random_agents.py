@@ -3,6 +3,9 @@ import random
 from src.agents.treesearch_agent import TreeSearchAgent
 
 class RandomDistributionAgent(TreeSearchAgent):
+    """
+    Used to select environment effects in stochastic games.
+    """
     def __init__(self, *args) -> None:
         super().__init__()
 
@@ -27,7 +30,10 @@ class RandomDistributionAgent(TreeSearchAgent):
     def backpropagate(self, node, value):
         pass
 
-    def reflect(self):
+    def should_trim(self):
+        pass
+
+    def trim(self):
         pass
 
     def get_best_move(self) -> int:

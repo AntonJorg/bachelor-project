@@ -5,7 +5,10 @@ from functools import reduce
 
 class Twenty48State:
     """
-    States in the game 2048 where the player has control.
+    States in the game 2048 where the player has control. The board is modeled 
+    as a tuple of tuples, with the log2 value of tiles stored at their respective
+    locations. 0 is an empty tile. Rules are as in the original 2048 game,
+    which can be found at https://github.com/gabrielecirulli/2048.
     """
 
     def __init__(self, board=None, moves=0, score_penalty=0, action_sequence="") -> None:
@@ -117,6 +120,9 @@ class Twenty48State:
         return True
 
     def result(self, action):
+        """
+        The result function R: S x A -> S
+        """
         board = self.successors.get(action)
         if board is None:
             raise ValueError("Unknown action:", action)
@@ -135,6 +141,9 @@ class Twenty48State:
         return board
 
     def _init_applicable_actions(self):
+        """
+        The set A(s).
+        """
         valid = []
         for a, board in self.successors.items():
             if board != self.board:
@@ -143,6 +152,10 @@ class Twenty48State:
         return valid
             
 class Twenty48EnvironmentState(Twenty48State):
+    """
+    Separates the environment effects (spawning additional tiles) from the
+    player controls.
+    """
 
     def __init__(self, board=None, moves=-1, score_penalty=0, action_sequence="") -> None:
         

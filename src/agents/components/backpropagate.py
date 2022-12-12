@@ -7,16 +7,13 @@ class Backpropagate:
     Defines methods for implementing TreeSearchAgent.backpropagate.
 
     These methods should:
-        - Take a TreeSearchNode and a float
+        - Take a TreeSearchNode and a float (or a list of floats)
         - Not return anything
         - Only propagate up through the tree, i.e. from node to parent
         - Not change the structure of the tree
     """
 
     def backpropagate_sum(self, node: TreeSearchNode, value: float) -> None:    
-        """
-        
-        """
         node.cumulative_utility += value
         node.count += 1
     
@@ -24,9 +21,6 @@ class Backpropagate:
             self.backpropagate_sum(node.parent, value)
 
     def backpropagate_minimax(self, node: TreeSearchNode, value: float) -> None:
-        """
-        
-        """
         def bp(node):
             
             max_child_eval = max(c.eval for c in node.children if c.eval is not None)
@@ -56,11 +50,23 @@ class Backpropagate:
             if node.parent is not None:
                 bp(node.parent)
 
+    def backpropagate_expectimax(self, node, value):
+        def bp(n):
+            if n is None or len(n.unexpanded_actions) != 0 or any(c.eval is None for c in n.children):
+                return
+
+            if n.is_max_node:
+                n.eval = max(c.eval for c in n.children)
+            else:
+                n.eval = sum(c.eval * w for c, w in zip(n.children, n.state.distribution[::-1])) / sum(n.state.distribution)
+
+            if n.parent is not None:
+                bp(n.parent)
+           
+        node.eval = value
+        bp(node.parent)
 
     def backpropagate_sum_and_minimax(self, node, value):
-        """
-        
-        """
         evaluation, simulation_result = value
 
         self.backpropagate_sum(node, simulation_result)
@@ -82,9 +88,6 @@ class Backpropagate:
         bp(node.parent)
     
     def store_eval_and_backpropagate_sum(self, node, value):
-        """
-        
-        """
         evaluation, simulation_result = value
 
         node.eval = evaluation

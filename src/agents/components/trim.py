@@ -9,7 +9,7 @@ class Reflect:
         - Return nothing
     """
 
-    def iterative_deepening_reflect(self, n=1):
+    def reset_tree_increment_depth(self):
         """
         
         """
@@ -19,20 +19,19 @@ class Reflect:
             else:
                 return node.depth
 
-        if self.root.eval is not None:
-            # log before increase to reflect last completed search
-            self.search_info["depth"] = min(self.depth, deepest_node(self.root))
+        # log before increase to reflect last completed search
+        self.search_info["depth"] = min(self.depth, deepest_node(self.root))
 
-            action = self.get_minimax_move()
-            self.best_move = action
-            self.depth += n
+        action = self.get_minimax_move()
+        self.best_move = action
+        self.depth += 1
 
-            # reset search tree
-            self.last_iter_root = self.root.copy()
-            self.root.reset()
-            self.frontier.append(self.root)
+        # reset search tree
+        self.last_iter_root = self.root.copy()
+        self.root.reset()
+        self.frontier.append(self.root)
 
-    def fractional_pruning(self, frequency=100):
+    def fractional_pruning(self):
         """
         
         """
@@ -44,5 +43,4 @@ class Reflect:
                 if not c.unexpanded_actions:
                     recurse(c)
 
-        if not self.root.count % frequency:
-            recurse(self.root)
+        recurse(self.root)

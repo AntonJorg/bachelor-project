@@ -48,6 +48,9 @@ class Control:
     def when_fully_evaluated(self):
         return self.root.eval is not None
 
+    def periodic(self, frequency=100):
+        return not self.root.count % frequency
+    
     # utility methods
     def filter_unexpanded_actions(self, node: TreeSearchNode):
         match node.state:
@@ -78,14 +81,3 @@ class Control:
 
     def _nim_filter_unexpanded_actions(self, node: TreeSearchNode):
         return node.unexpanded_actions
-
-if __name__ == "__main__":
-    state = ConnectFourState(7, 6)
-
-    state = apply_many(state, "06")
-
-    node = TreeSearchNode(state, None, None)
-
-    ctrl = Control()
-
-    print(ctrl.filter_unexpanded_actions(node))
